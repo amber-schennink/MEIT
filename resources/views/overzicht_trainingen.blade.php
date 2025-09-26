@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html class="scroll-smooth" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   @include('head')
   <body class="bg-main">
     @include('nav')
@@ -17,7 +17,7 @@
         </div>
         <div class="trainingen">
           @foreach($trainingen as $key => $training)
-            <div <?php if(new DateTime($training->start_moment_4) < new DateTime()){echo 'class="opacity-75"';} ?> >
+            <div id="{{$training->id}}" <?php if(new DateTime($training->start_moment_4) < new DateTime()){echo 'class="opacity-75"';} ?> >
               <div class="datums">
                 @foreach($training as $key => $val)
                   @if(str_contains($key, 'start_moment'))

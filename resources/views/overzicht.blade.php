@@ -31,7 +31,7 @@
                 <?php 
                   $training = $trainingen->where('id', '=', $key)->first();
                 ?>
-                <div class="cursor-pointer !justify-start" onclick="location.href=`{{url('trainingen')}}`">
+                <div class="cursor-pointer !justify-start" onclick="location.href=`{{url('trainingen#' . $key)}}`">
 
                   <div class="datums">
                     @foreach($training as $key => $val)
