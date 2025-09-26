@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Sep 26, 2025 at 12:54 PM
+-- Generation Time: Sep 26, 2025 at 01:26 PM
 -- Server version: 8.4.3
 -- PHP Version: 8.3.16
 
@@ -185,8 +185,6 @@ INSERT INTO `trainingen` (`id`, `start_moment`, `start_moment_2`, `start_moment_
 (18, '2026-01-01 00:00:00', '2026-01-08 18:30:00', '2026-01-15 09:45:00', '2026-01-22 21:20:00'),
 (20, '2026-02-02 14:00:00', '2026-02-09 16:15:00', '2026-02-16 18:18:00', '2026-02-23 08:00:00');
 
--- --------------------------------------------------------
-
 --
 -- Indexes for dumped tables
 --
@@ -266,6 +264,7 @@ ALTER TABLE `intakegespreken`
 --
 ALTER TABLE `trainingen`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
