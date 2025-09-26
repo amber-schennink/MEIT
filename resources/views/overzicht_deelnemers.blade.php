@@ -96,7 +96,7 @@
         </div>
       @endif
 
-      @if($ceremonies)
+      <!-- @if($ceremonies)
         <div>
           <h3 class="mb-3 mt-20">Ceremonie<?php if($ceremonies->count() > 1){echo 's';}?></h3>
           <div class="ceremonie-container">
@@ -154,7 +154,7 @@
           </div>
         </div>
 
-      @endif
+      @endif -->
 
       <div id="pop-up" onclick="this.classList.add('!hidden')" class="!hidden">
         <div>

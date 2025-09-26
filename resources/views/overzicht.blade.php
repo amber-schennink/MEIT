@@ -15,7 +15,6 @@
       foreach($aanmeldingen_afgelopen_week as $aanmelding){
         $aanmeldingen_gesorteerd[$aanmelding->id_training][] = $aanmelding;
       }
-      echo '<script>console.log(`'.json_encode($aanmeldingen_gesorteerd).'`)</script>';
     ?>
     
     <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
@@ -78,6 +77,8 @@
                 </div>
               @endforeach
             </div>
+          @else
+            <h4 class="my-2">Er zijn nog geen nieuwe aanmeldingen sinds vorige week</h4>
           @endif
         </div>
       </div>
