@@ -100,13 +100,16 @@
       setTimeout(function() { error.classList.add('opacity-0'); }, 5000);
       return false;
     }
-    var date = new Date();
-    date.setDate(parseInt(date.getDate()) + 7);
-    if(date > new Date(dag_1.value)){
-      error.getElementsByTagName('h4')[0].innerHTML = "Er moet minstens een week zitten tussen nu en de eerste start datum";
-      error.classList.remove('opacity-0');
-      setTimeout(function() { error.classList.add('opacity-0'); }, 10000);
-      return false;
+    var edit = <?php if($edit){echo 'true';}else{echo 'false';}; ?>;
+    if(!edit){
+      var date = new Date();
+      date.setDate(parseInt(date.getDate()) + 7);
+      if(date > new Date(dag_1.value)){
+        error.getElementsByTagName('h4')[0].innerHTML = "Er moet minstens een week zitten tussen nu en de eerste start datum";
+        error.classList.remove('opacity-0');
+        setTimeout(function() { error.classList.add('opacity-0'); }, 10000);
+        return false;
+      }
     }
   }
 </script>
