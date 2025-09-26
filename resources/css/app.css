@@ -1,0 +1,162 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+  --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-lora: 'Lora';
+  --font-quattrocento: 'Quattrocento';
+  --color-main: #474f42;
+  --color-main-payed: #90a87a;
+  --color-main-light: #91a388;
+  --color-main-not-payed: #828d7f;
+  --color-second: #eb7b26;
+  --color-second-dark: #dd6b16;
+}
+
+html {
+  @apply text-white 
+}
+
+button {
+  @apply cursor-pointer min-w-52 h-12 px-2.5 py-0.5 rounded bg-second hover:bg-second-dark text-white font-lora font-[100] text-lg
+}
+button.alt {
+  @apply bg-second/75 hover:bg-second-dark/75
+}
+button.alt-2 {
+  @apply bg-second/20 border-4 border-second
+}
+button.alt-3 {
+  @apply bg-second/15 border-4 border-second/75
+}
+button.uit {
+  @apply bg-second/50
+}
+button:not(a>button):not([type=submit]){
+  @apply cursor-default
+}
+
+h2 {
+  @apply text-white font-quattrocento text-[43px]
+}
+h3 {
+  @apply text-second font-quattrocento text-[26px]
+}
+h4 {
+  @apply font-quattrocento text-2xl
+}
+h5 {
+  @apply text-second font-quattrocento text-xl
+}
+
+p {
+  @apply font-lora
+}
+
+th, td {
+  @apply text-white text-center
+}
+
+input {
+  @apply bg-main-light 
+}
+input[type=text], input[type=email], input[type=password], input[type=date], input[type=time] {
+  @apply px-4 py-2 rounded text-black outline-main
+}
+
+.overflow-x-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.trainingen {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5
+}
+.trainingen>div {
+  @apply bg-main-light px-8 py-6 rounded-xl flex flex-col justify-between
+}
+.trainingen .datums {
+  @apply flex justify-center gap-3
+}
+.trainingen .datums>div {
+  @apply mb-3 flex flex-col items-center justify-center bg-main rounded-full w-14 h-14 text-sm leading-3.5
+}
+.trainingen .datums>div>p {
+  @apply w-fit
+}
+.trainingen h6 {
+  @apply font-bold text-main mt-8
+}
+.trainingen .bloken {
+  @apply my-3 bg-main p-3 rounded-xl break-words
+}
+.trainingen .bloken > div {
+  @apply flex items-center mb-1
+}
+.trainingen .bloken > div img {
+  @apply h-7 mr-1
+}
+
+.betaal-status {
+  @apply m-auto w-fit font-semibold text-center
+}
+
+.training-overzicht {
+  @apply bg-main-light rounded p-3 grid grid-cols-2 gap-5 md:flex justify-around my-8 
+}
+.training-overzicht>div {
+  @apply bg-main rounded p-5 w-full md:w-1/5
+}
+
+.ceremonie-container {
+  @apply bg-main-light rounded-xl px-8 py-6 flex flex-col gap-4
+}
+
+.ceremonie-container > div {
+  @apply flex flex-col lg:flex-row bg-main rounded-xl px-8 py-6 justify-between items-center gap-4 
+}
+
+.ceremonie-container.intake > div {
+  @apply grid grid-cols-1 md:grid-cols-3 justify-items-center
+}
+
+.ceremonie-container > div > div {
+  @apply flex items-center;
+}
+
+.ceremonie-container img {
+  @apply h-10 mr-1
+}
+
+.betaal-opties {
+  @apply flex flex-col md:flex-row gap-8 my-8
+}
+.betaal-opties>label {
+  @apply border-8 rounded-xl p-4 cursor-pointer flex-1 md:max-w-1/3
+}
+.betaal-opties>label>*{
+  @apply select-none
+}
+.betaal-opties label:has(input[type="radio"]:checked) {
+  @apply bg-main
+}
+.betaal-opties label h4{
+  @apply mb-3
+}
+.betaal-opties input {
+  @apply hidden
+}
+
+#pop-up {
+  @apply fixed flex top-0 left-0 h-screen w-screen bg-gray-600/30
+}
+#pop-up > div {
+  @apply m-auto bg-main px-8 py-6 rounded-xl border-4 border-main-light 
+}
+#pop-up > div > div {
+  @apply flex justify-between mt-10
+}
