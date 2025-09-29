@@ -91,13 +91,13 @@ input[type=text], input[type=email], input[type=password], input[type=date], inp
 .trainingen h6 {
   @apply font-bold text-main mt-8
 }
-.trainingen .bloken {
+.trainingen .blokken {
   @apply my-3 bg-main p-3 rounded-xl break-words
 }
-.trainingen .bloken > div {
+.trainingen .blokken > div {
   @apply flex items-center mb-1
 }
-.trainingen .bloken > div img {
+.trainingen .blokken > div img {
   @apply h-7 mr-1
 }
 

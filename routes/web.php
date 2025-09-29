@@ -13,8 +13,23 @@ Route::get('/training/{id}', function ($id) {
 });
 
 Route::get('/trainingen', function () {
-  $trainingen = DB::table('trainingen')->orderBy('id','desc')->get(); 
-  return view('trainingen', ['trainingen' => $trainingen]);
+  if(session('admin') == true){
+    $trainingen = DB::table('trainingen')->orderBy('id','desc')->get();
+    $aanmeldingen = DB::table('aanmeldingen')->orderBy('id','desc')->get();
+    $deelnemers = DB::table('deelnemers')->get();
+
+    $ceremonies = DB::table('ceremonies')->get();
+    $intakegespreken = DB::table('intakegespreken')->get();
+
+    return view('overzicht_trainingen', [
+      'trainingen' => $trainingen, 'aanmeldingen' => $aanmeldingen, 'deelnemers' => $deelnemers, 
+      'ceremonies' => $ceremonies, 'intakegespreken' => $intakegespreken
+    ]);
+
+  }else{
+    $trainingen = DB::table('trainingen')->orderBy('id','desc')->get(); 
+    return view('trainingen', ['trainingen' => $trainingen]);
+  }
 });
 
 Route::get('/training_form', function () {
@@ -60,7 +75,7 @@ Route::get('/overzicht', function () {
   }
   if(session('admin')){
     $trainingen = DB::table('trainingen')->orderBy('id','desc')->get();
-    $aanmeldingen = DB::table('aanmeldingen')->get();
+    $aanmeldingen = DB::table('aanmeldingen')->orderBy('id','desc')->get();
     $deelnemers = DB::table('deelnemers')->get();
 
     $ceremonies = DB::table('ceremonies')->get();
@@ -106,15 +121,6 @@ Route::get('/overzicht', function () {
   }
 });
 Route::get('/overzicht_export', 'App\Http\Controllers\AanmeldingenController@export');
-
-// Route::get('/ceremonies/{id_deelnemer}', 'App\Http\Controllers\CeremoniesController@ceremonieNieuw');
-Route::get('/ceremonies/{id_intakegesprek}', function ($id_intakegesprek) {
-  $intakegesprek = DB::table('intakegespreken')->where('id', '=', $id_intakegesprek)->first();
-  $deelnemer = DB::table('deelnemers')->where('id', '=', $intakegesprek->id_deelnemer)->first();
-  return view('ceremonie_form', ['intakegesprek' => $intakegesprek, 'deelnemer' => $deelnemer]);
-});
-
-Route::post('/ceremonies', 'App\Http\Controllers\CeremoniesController@ceremonieNieuw');
 
 Route::get('/login', function () {
   return view('login');

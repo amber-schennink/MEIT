@@ -66,7 +66,7 @@
                 @if($beschikbaar > 0)
                   <a <?php echo 'href="../aanmelden/'.$training->id.'"' ?>><button class="w-full">Aanmelden</button></a>
                 @else
-                  <button <?php echo 'href="../aanmelden/'.$training->id.'"' ?> class="alt w-full">Opgeven wachtlijst</button>
+                  <a <?php echo 'href="../aanmelden/'.$training->id.'"' ?>><button class="alt w-full">Opgeven wachtlijst</button></a>
                 @endif
               @endif
             </div>

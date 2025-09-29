@@ -22,7 +22,7 @@ class TrainingenController extends Controller {
     );
     DB::table('trainingen')->insert($data_training);
 
-    return Redirect::to('overzicht');
+    return Redirect::to('trainingen');
   }
   public function trainingAanpassen($id, Request $request){
     if($request->first_name){
@@ -55,7 +55,7 @@ class TrainingenController extends Controller {
     }
     
     DB::table('trainingen')->delete($id);
-    return Redirect::to('overzicht');
+    return Redirect::to('trainingen');
   }
 }
 
