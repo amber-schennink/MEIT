@@ -18,5 +18,14 @@ class CeremoniesController extends Controller {
 
     return Redirect::to('overzicht');
   }
+  public function gesprekMogenlijkheidNieuw(Request $request){
+    $data_ceremonie = array(
+      "datum" => $request->datum,
+      "begin_tijd" => $request->begin_tijd,
+      "eind_tijd" => $request->eind_tijd,
+    );
+    DB::table('intake_mogenlijkheden')->insert($data_ceremonie);
+    return Redirect::to('overzicht');
+  }
 }
 ?>

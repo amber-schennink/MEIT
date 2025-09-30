@@ -16,6 +16,7 @@
   --color-main-not-payed: #828d7f;
   --color-second: #eb7b26;
   --color-second-dark: #dd6b16;
+  --color-second-darker: #874315;
 }
 
 html {
@@ -35,7 +36,7 @@ button.alt-3 {
   @apply bg-second/15 border-4 border-second/75
 }
 button.uit {
-  @apply bg-second/50
+  @apply bg-second/50 !cursor-default pointer-events-none
 }
 button:not(a>button):not([type=submit]){
   @apply cursor-default
@@ -69,7 +70,7 @@ input[type=text], input[type=email], input[type=password], input[type=date], inp
   @apply px-4 py-2 rounded text-black outline-main
 }
 
-.overflow-x-scroll::-webkit-scrollbar {
+.overflow-x-scroll::-webkit-scrollbar, #scroll-container::-webkit-scrollbar {
   display: none;
 }
 
@@ -115,21 +116,50 @@ input[type=text], input[type=email], input[type=password], input[type=date], inp
 .ceremonie-container {
   @apply bg-main-light rounded-xl px-8 py-6 flex flex-col gap-4
 }
-
 .ceremonie-container > div {
   @apply flex flex-col lg:flex-row bg-main rounded-xl px-8 py-6 justify-between items-center gap-4 
 }
-
 .ceremonie-container.intake > div {
   @apply grid grid-cols-1 md:grid-cols-3 justify-items-center
 }
-
 .ceremonie-container > div > div {
   @apply flex items-center;
 }
-
 .ceremonie-container img {
   @apply h-10 mr-1
+}
+
+.schema {
+  @apply relative w-[90%] m-auto
+}
+.schema img {
+  @apply absolute w-[5%] top-0 bottom-0 h-fit m-auto cursor-pointer
+}
+.schema img.uit {
+  @apply cursor-default opacity-50
+}
+.schema .tijden{
+  @apply absolute w-full flex flex-col gap-[26px] top-10 z-20
+}
+
+#scroll-container {
+  @apply flex overflow-x-scroll ml-12 scroll-smooth snap-x snap-mandatory
+}
+.schema-block {
+  @apply bg-main-light rounded-xl px-8 py-6 grid grid-cols-7 grid-flow-col justify-items-center gap-1 snap-center snap-always min-w-full;
+  grid-template-rows: 24px 600px;
+}
+.schema-block>div {
+  @apply bg-second-darker h-full w-full relative rounded overflow-hidden
+}
+.schema-block>div>div {
+  @apply bg-second absolute w-full text-center
+}
+.schema-block p {
+  @apply absolute left-0 right-0 z-30 top-1
+}
+.ghost-block {
+  @apply h-[50px] !bg-second/75 hidden z-30
 }
 
 .betaal-opties {

@@ -80,10 +80,11 @@ Route::get('/overzicht', function () {
 
     $ceremonies = DB::table('ceremonies')->get();
     $intakegespreken = DB::table('intakegespreken')->get();
+    $intake_mogenlijkheden = DB::table('intake_mogenlijkheden')->get();
 
     return view('overzicht', [
       'trainingen' => $trainingen, 'aanmeldingen' => $aanmeldingen, 'deelnemers' => $deelnemers, 
-      'ceremonies' => $ceremonies, 'intakegespreken' => $intakegespreken
+      'ceremonies' => $ceremonies, 'intakegespreken' => $intakegespreken, 'intake_mogenlijkheden' => $intake_mogenlijkheden
     ]);
   }else{
     $deelnemer = DB::table('deelnemers')->where('id', '=', session('id'))->first();
@@ -121,6 +122,16 @@ Route::get('/overzicht', function () {
   }
 });
 Route::get('/overzicht_export', 'App\Http\Controllers\AanmeldingenController@export');
+
+Route::get('/ceremonies/{id_intakegesprek}', function ($id_intakegesprek) {
+  $intakegesprek = DB::table('intakegespreken')->where('id', '=', $id_intakegesprek)->first();
+  $deelnemer = DB::table('deelnemers')->where('id', '=', $intakegesprek->id_deelnemer)->first();
+  return view('ceremonie_form', ['intakegesprek' => $intakegesprek, 'deelnemer' => $deelnemer]);
+});
+
+Route::post('/ceremonies', 'App\Http\Controllers\CeremoniesController@ceremonieNieuw');
+
+Route::post('/gesprek_mogenlijkheden', 'App\Http\Controllers\CeremoniesController@gesprekMogenlijkheidNieuw');
 
 Route::get('/login', function () {
   return view('login');

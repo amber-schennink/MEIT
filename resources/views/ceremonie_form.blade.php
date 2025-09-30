@@ -4,8 +4,6 @@
   <body class="bg-main">
     @include('nav')
     <?php
-      use Illuminate\Support\Facades\DB; 
-
       $maanden = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
       $prijs = 444;
 
