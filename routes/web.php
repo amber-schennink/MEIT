@@ -129,6 +129,20 @@ Route::get('/ceremonies/{id_intakegesprek}', function ($id_intakegesprek) {
   return view('ceremonie_form', ['intakegesprek' => $intakegesprek, 'deelnemer' => $deelnemer]);
 });
 
+Route::get('ceremonies', function (){
+  if(session('admin') == true){
+    $deelnemers = DB::table('deelnemers')->get();
+    $ceremonies = DB::table('ceremonies')->get();
+    $intakegespreken = DB::table('intakegespreken')->get();
+    $intake_mogenlijkheden = DB::table('intake_mogenlijkheden')->get();
+
+    return view('overzicht_ceremonies', [
+      'deelnemers' => $deelnemers, 'ceremonies' => $ceremonies, 
+      'intakegespreken' => $intakegespreken, 'intake_mogenlijkheden' => $intake_mogenlijkheden
+    ]);
+  }
+});
+
 Route::post('/ceremonies', 'App\Http\Controllers\CeremoniesController@ceremonieNieuw');
 
 Route::post('/gesprek_mogenlijkheden', 'App\Http\Controllers\CeremoniesController@gesprekMogenlijkheidNieuw');

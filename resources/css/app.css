@@ -159,7 +159,7 @@ input[type=text], input[type=email], input[type=password], input[type=date], inp
   @apply absolute left-0 right-0 z-30 top-1
 }
 .ghost-block {
-  @apply h-[50px] !bg-second/75 hidden z-30
+  @apply h-[50px] !bg-second/75 z-30
 }
 
 .betaal-opties {

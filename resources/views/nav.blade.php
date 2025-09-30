@@ -2,6 +2,7 @@
   <nav class="w-[70%] mx-auto flex gap-5">
     <a href="{{url('/')}}"><img class="h-32" src="{{asset('assets/logo.svg')}}" /></a>
     <a class="ml-auto h-fit" href="{{url('trainingen')}}"><p>Trainingen</p></a>
+    <a class="h-fit" href="{{url('ceremonies')}}"><p>Ceremonies</p></a>
     @if(session('login'))
       <a class="h-fit" href="{{url('overzicht')}}"><p>Overzicht</p></a>
       <a class="h-fit" href="{{url('logout')}}"><p>Log out</p></a>

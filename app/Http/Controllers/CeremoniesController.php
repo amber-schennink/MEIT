@@ -19,13 +19,18 @@ class CeremoniesController extends Controller {
     return Redirect::to('overzicht');
   }
   public function gesprekMogenlijkheidNieuw(Request $request){
+    $zelfde_datum = DB::table('intake_mogenlijkheden')->where('datum', '=', $request->datum)->first();
+    if($zelfde_datum != null){
+      return redirect()->back()->withErrors(['msg' => 'Er is al een intakegesprek mogenlijkheid ingepland op deze dag']);
+      die();
+    }
     $data_ceremonie = array(
       "datum" => $request->datum,
       "begin_tijd" => $request->begin_tijd,
       "eind_tijd" => $request->eind_tijd,
     );
     DB::table('intake_mogenlijkheden')->insert($data_ceremonie);
-    return Redirect::to('overzicht');
+    return Redirect::to('ceremonies');
   }
 }
 ?>
