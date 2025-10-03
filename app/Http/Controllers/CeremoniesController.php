@@ -23,8 +23,8 @@ class CeremoniesController extends Controller {
     $mogenlijkheid = DB::table('intake_mogenlijkheden')->where('id', '=', $request->id_mogenlijkheid)->first();
     $intakegesprekken = DB::table('intakegesprekken')->where('datum', '=', $request->datum)->get();
 
+    // check of tijden binnen de intake mogenlijkheid passen
     $begin_tijd = new DateTime($mogenlijkheid->begin_tijd);
-    [$begin_uur, $begin_min] = explode(':', $begin_tijd->format('H:i'));
     $eind_tijd = new DateTime($mogenlijkheid->eind_tijd);
     [$eind_uur, $eind_min] = explode(':', $eind_tijd->format('H:i'));
     $eind_uur = str_pad($eind_uur - 1, 2, '0', STR_PAD_LEFT);
@@ -33,6 +33,8 @@ class CeremoniesController extends Controller {
       die();
     }
 
+
+    //check of de tijden niet overlappen met andere aanmeldingen
     foreach ($intakegesprekken as $gesprek) {
       $begin_gesprek = new DateTime($gesprek->begin_tijd);
       [$begin_gesprek_uur, $begin_gesprek_min] = explode(':', $begin_gesprek->format('H:i'));
@@ -40,7 +42,7 @@ class CeremoniesController extends Controller {
 
       $eind_gesprek = new DateTime($gesprek->eind_tijd);
       
-      if(($begin_gesprek_uur . ":" . $begin_gesprek_min <= $request->begin_tijd) || ($eind_gesprek->format('H:i') >= $request->begin_tijd)){
+      if(($begin_gesprek_uur . ":" . $begin_gesprek_min < $request->begin_tijd) && ($eind_gesprek->format('H:i') > $request->begin_tijd)){
         return redirect()->back()->withErrors(['msg' => 'Het is niet mogenlijk om voor dit moment een intake gesprek te plannen']);
         die();
       }
@@ -56,12 +58,16 @@ class CeremoniesController extends Controller {
     $request_eind_tijd = new DateTime($request->begin_tijd);
 
 
+    //splits mogenlijkheid blok op in 2 indien mogenlijk
     $begin_diff = $begin_tijd->diff($request_begin_tijd);
     if($begin_diff->h > 0){
       [$mogenlijkheid_uur, $mogenlijkheid_min] = explode(':', $mogenlijkheid->begin_tijd);
-      
-      $mogenlijkheid_uur = str_pad($mogenlijkheid_uur + $begin_diff->h, 2, '0', STR_PAD_LEFT);
       $mogenlijkheid_min = str_pad($mogenlijkheid_min + $begin_diff->i, 2, '0', STR_PAD_LEFT);
+      if($mogenlijkheid_min >= 60){
+        $mogenlijkheid_min = str_pad($mogenlijkheid_min - 60, 2, '0', STR_PAD_LEFT);
+        $mogenlijkheid_uur++;
+      }
+      $mogenlijkheid_uur = str_pad($mogenlijkheid_uur + $begin_diff->h, 2, '0', STR_PAD_LEFT);
       $eind_tijd_mogenlijkheid = $mogenlijkheid_uur . ':' . $mogenlijkheid_min;
 
       $data_mogenlijkheid = [
@@ -89,14 +95,13 @@ class CeremoniesController extends Controller {
     }
     DB::table('intake_mogenlijkheden')->delete($mogenlijkheid->id);
 
-
+    //upload data
     $data_intakegesprekken = [
       "id_deelnemer" => $id_deelnemer,
       "datum" => $request->datum,
       "begin_tijd" => $request->begin_tijd,
       "eind_tijd" => $request->eind_tijd,
     ];
-    
 
     DB::table('intakegesprekken')->insert($data_intakegesprekken);
     return Redirect::to('overzicht');

@@ -76,6 +76,14 @@
   </body>
 </html>
 
+@if($errors->any())
+  <script>
+    <?php echo 'alert("'.$errors->first().'");'; ?>
+    document.getElementById('intakegesprek-form-datum').value ='';
+    document.getElementById('intakegesprek-form-begin-tijd').value = '';
+  </script>
+@endif
+
 <script>
   function scrollSchema(side) {
     var container = document.getElementById('scroll-container')
@@ -110,7 +118,6 @@
       ghost.classList.add('hidden')
     });
 
-    // console.log(document.getElementById(mogenlijkheid_id))
     ghost_block = document.getElementById(mogenlijkheid_id);
     ghost_block.classList.remove('hidden')
     document.getElementById('intakegesprek-form-id-mogenlijkheid').value = mogenlijkheid_id;
