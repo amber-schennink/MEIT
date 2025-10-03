@@ -19,11 +19,11 @@ Route::get('/trainingen', function () {
     $deelnemers = DB::table('deelnemers')->get();
 
     $ceremonies = DB::table('ceremonies')->get();
-    $intakegespreken = DB::table('intakegespreken')->get();
+    $intakegesprekken = DB::table('intakegesprekken')->get();
 
     return view('overzicht_trainingen', [
       'trainingen' => $trainingen, 'aanmeldingen' => $aanmeldingen, 'deelnemers' => $deelnemers, 
-      'ceremonies' => $ceremonies, 'intakegespreken' => $intakegespreken
+      'ceremonies' => $ceremonies, 'intakegesprekken' => $intakegesprekken
     ]);
 
   }else{
@@ -79,12 +79,12 @@ Route::get('/overzicht', function () {
     $deelnemers = DB::table('deelnemers')->get();
 
     $ceremonies = DB::table('ceremonies')->get();
-    $intakegespreken = DB::table('intakegespreken')->get();
+    $intakegesprekken = DB::table('intakegesprekken')->get();
     $intake_mogenlijkheden = DB::table('intake_mogenlijkheden')->get();
 
     return view('overzicht', [
       'trainingen' => $trainingen, 'aanmeldingen' => $aanmeldingen, 'deelnemers' => $deelnemers, 
-      'ceremonies' => $ceremonies, 'intakegespreken' => $intakegespreken, 'intake_mogenlijkheden' => $intake_mogenlijkheden
+      'ceremonies' => $ceremonies, 'intakegesprekken' => $intakegesprekken, 'intake_mogenlijkheden' => $intake_mogenlijkheden
     ]);
   }else{
     $deelnemer = DB::table('deelnemers')->where('id', '=', session('id'))->first();
@@ -113,18 +113,18 @@ Route::get('/overzicht', function () {
     $wachtlijst = DB::table('trainingen')->whereIn('id', $ids_wachtlijst)->orderBy('id','desc')->get();
     
     $ceremonies = DB::table('ceremonies')->where('id_deelnemer', '=', session('id'))->get();
-    $intakegespreken = DB::table('intakegespreken')->where('id_deelnemer', '=', session('id'))->get();
+    $intakegesprekken = DB::table('intakegesprekken')->where('id_deelnemer', '=', session('id'))->get();
 
     return view('overzicht_deelnemers', [
       'trainingen' => $trainingen, 'betaal_statuses' => $betaal_statuses, 'deelnemer' => $deelnemer, 'wachtlijst' => $wachtlijst, 'beschikbaar' => $beschikbaar, 
-      'ceremonies' => $ceremonies, 'intakegespreken' => $intakegespreken
+      'ceremonies' => $ceremonies, 'intakegesprekken' => $intakegesprekken
     ]);
   }
 });
 Route::get('/overzicht_export', 'App\Http\Controllers\AanmeldingenController@export');
 
 Route::get('/ceremonies/{id_intakegesprek}', function ($id_intakegesprek) {
-  $intakegesprek = DB::table('intakegespreken')->where('id', '=', $id_intakegesprek)->first();
+  $intakegesprek = DB::table('intakegesprekken')->where('id', '=', $id_intakegesprek)->first();
   $deelnemer = DB::table('deelnemers')->where('id', '=', $intakegesprek->id_deelnemer)->first();
   return view('ceremonie_form', ['intakegesprek' => $intakegesprek, 'deelnemer' => $deelnemer]);
 });
@@ -133,18 +133,23 @@ Route::get('ceremonies', function (){
   if(session('admin') == true){
     $deelnemers = DB::table('deelnemers')->get();
     $ceremonies = DB::table('ceremonies')->get();
-    $intakegespreken = DB::table('intakegespreken')->get();
+    $intakegesprekken = DB::table('intakegesprekken')->get();
     $intake_mogenlijkheden = DB::table('intake_mogenlijkheden')->get();
 
     return view('overzicht_ceremonies', [
       'deelnemers' => $deelnemers, 'ceremonies' => $ceremonies, 
-      'intakegespreken' => $intakegespreken, 'intake_mogenlijkheden' => $intake_mogenlijkheden
+      'intakegesprekken' => $intakegesprekken, 'intake_mogenlijkheden' => $intake_mogenlijkheden
     ]);
+  }else{
+    $intakegesprekken = DB::table('intakegesprekken')->get();
+    $intake_mogenlijkheden = DB::table('intake_mogenlijkheden')->get();
+    return view('ceremonies', ['intakegesprekken' => $intakegesprekken, 'intake_mogenlijkheden' => $intake_mogenlijkheden]);
   }
 });
 
 Route::post('/ceremonies', 'App\Http\Controllers\CeremoniesController@ceremonieNieuw');
 
+Route::post('/intakegesprek', 'App\Http\Controllers\CeremoniesController@intakegesprekNieuw');
 Route::post('/gesprek_mogenlijkheden', 'App\Http\Controllers\CeremoniesController@gesprekMogenlijkheidNieuw');
 
 Route::get('/login', function () {

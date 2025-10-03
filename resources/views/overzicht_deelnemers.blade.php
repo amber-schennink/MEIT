@@ -122,11 +122,11 @@
         </div>
       @endif
 
-      @if($intakegespreken)
+      @if($intakegesprekken)
         <div>
           <h3 class="mb-3 mt-20">Telefonisch intakegesprek</h3>
           <div class="ceremonie-container">
-            @foreach($intakegespreken as $intakegesprek)
+            @foreach($intakegesprekken as $intakegesprek)
               <div>
                 <?php 
                   $datum = new DateTime($intakegesprek->datum); 

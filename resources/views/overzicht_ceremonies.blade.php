@@ -5,11 +5,9 @@
     @include('nav')
 
     <?php 
-    
       $maanden = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
       $schema_start = 8;
       $schema_eindig = 20;
-    
     ?>
     
     <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
@@ -52,7 +50,7 @@
         <div>
           <h3 class="mb-3 mt-6">Intakegesprekken</h3>
           <div class="ceremonie-container intake">
-            @foreach($intakegespreken as $intakegesprek)
+            @foreach($intakegesprekken as $intakegesprek)
               <?php 
                 $datum = new DateTime($intakegesprek->datum);
                 $begin_tijd = new DateTime($intakegesprek->begin_tijd);

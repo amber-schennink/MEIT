@@ -140,10 +140,10 @@ INSERT INTO `deelnemers` (`id`, `voornaam`, `tussenvoegsel`, `achternaam`, `emai
 -- --------------------------------------------------------
 
 --
--- Table structure for table `intakegespreken`
+-- Table structure for table `intakegesprekken`
 --
 
-CREATE TABLE `intakegespreken` (
+CREATE TABLE `intakegesprekken` (
   `id` int NOT NULL,
   `id_deelnemer` int NOT NULL,
   `datum` date NOT NULL,
@@ -152,10 +152,10 @@ CREATE TABLE `intakegespreken` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Dumping data for table `intakegespreken`
+-- Dumping data for table `intakegesprekken`
 --
 
-INSERT INTO `intakegespreken` (`id`, `id_deelnemer`, `datum`, `begin_tijd`, `eind_tijd`) VALUES
+INSERT INTO `intakegesprekken` (`id`, `id_deelnemer`, `datum`, `begin_tijd`, `eind_tijd`) VALUES
 (2, 5, '2025-09-24', '13:15:00', '16:15:00'),
 (4, 13, '2025-09-30', '09:40:00', '11:00:00');
 
@@ -214,9 +214,9 @@ ALTER TABLE `deelnemers`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `intakegespreken`
+-- Indexes for table `intakegesprekken`
 --
-ALTER TABLE `intakegespreken`
+ALTER TABLE `intakegesprekken`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -254,9 +254,9 @@ ALTER TABLE `deelnemers`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
--- AUTO_INCREMENT for table `intakegespreken`
+-- AUTO_INCREMENT for table `intakegesprekken`
 --
-ALTER TABLE `intakegespreken`
+ALTER TABLE `intakegesprekken`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
