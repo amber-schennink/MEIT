@@ -50,7 +50,7 @@ use Illuminate\Support\Facades\DB;
             </div>
           @endforeach
         </div>
-        <div>
+        <div id="intakegesprekken">
           <h3 class="mb-3 mt-6">Intakegesprekken</h3>
           <div class="ceremonie-container intake">
             @foreach($intakegesprekken as $intakegesprek)

@@ -10,115 +10,38 @@
 
       use Illuminate\Support\Facades\Config;
 
-use function PHPUnit\Framework\isEmpty;
-
       $schema_start = Config::get('info.schema_start');
       $schema_eindig = Config::get('info.schema_eindig');
       $maanden = Config::get('info.maanden');
 
       $datum = new DateTime();
       $datum->modify('-7 days');
-      $aanmeldingen_afgelopen_week = $aanmeldingen->where('created_at', '>=', $datum->format('Y-m-d'));
-    
-      $aanmeldingen_gesorteerd = [];
-      foreach($aanmeldingen_afgelopen_week as $aanmelding){
-        $aanmeldingen_gesorteerd[$aanmelding->id_training][] = $aanmelding;
-      }
-      $intakegesprekken_afgelopen_week = $intakegesprekken->where('created_at', '>=', $datum->format('Y-m-d'));
-      $intakegesprekken_gesorteerd = [];
-      foreach($intakegesprekken_afgelopen_week as $intakegesprek){
-        $intakegesprekken_gesorteerd[$intakegesprek->datum][] = $intakegesprek;
-      }
+      $aanmeldingen_afgelopen_week = $aanmeldingen->where('created_at', '>=', $datum->format('Y-m-d'))->count();
+      $ceremonies_afgelopen_week = $ceremonies->where('created_at', '>=', $datum->format('Y-m-d'))->count();
+      $intakegesprekken_afgelopen_week = $intakegesprekken->where('created_at', '>=', $datum->format('Y-m-d'))->count();
     ?>
     
     <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
-      <div id="trainingen">
+      <div>
         <div class="flex flex-col md:flex-row justify-between items-center mb-3">
           <h2>Overzicht</h2>
         </div>
-        <div class="my-5">
-          <a class="w-fit block" href="{{url('trainingen')}}"><h3 class="w-fit">Trainingen</h3></a>
-          @if($aanmeldingen_gesorteerd)
-            <h5 class="my-2 !text-white">Er zijn {{$aanmeldingen_afgelopen_week->count()}} nieuwe aanmeldingen sinds vorige week</h5>
-            <div class="trainingen">
-              @foreach($aanmeldingen_gesorteerd as $key => $aanmeldingen)
-                <?php 
-                  $training = $trainingen->where('id', '=', $key)->first();
-                ?>
-                <div class="cursor-pointer !justify-start" onclick="location.href=`{{url('trainingen#' . $key)}}`">
-
-                  <div class="datums">
-                    @foreach($training as $key => $val)
-                      @if(str_contains($key, 'start_moment'))
-                        <?php
-                          $datetime = new DateTime($val);
-                          $maand = $datetime->format('m') - 1;
-                        ?>
-                        <div>
-                          <p>{{$datetime->format('j')}}</p>
-                          <p>{{substr($maanden[$maand], 0, 3)}}</p>
-                        </div>
-                      @endif
-                    @endforeach
-                  </div>
-                  @foreach($aanmeldingen as $aanmelding)
-                    <?php 
-                      $created = new DateTime($aanmelding->created_at);
-                      $deelnemer = $deelnemers->where('id', '=', $aanmelding->id_deelnemer)->first();
-                    ?>
-                    <p class="mx-auto text-main font-semibold mt-6">{{$created->format('j-m-Y')}}</p>
-                    <div class="blokken items-center">
-                      <div>
-                        <img src="{{asset('assets/user.svg')}}" /> 
-                        <p>{{$deelnemer->voornaam}} {{$deelnemer->tussenvoegsel}} {{$deelnemer->achternaam}}</p>
-                      </div>
-                      @if($aanmelding->betaal_status == 2)
-                        <p class="text-green-400 betaal-status">Betaald</p>
-                      @elseif($aanmelding->betaal_status == 1)
-                        <?php 
-                          $deadline = new DateTime($training->start_moment);
-                          $deadline->modify('-7 day');
-                        ?>
-                        <p class="text-orange-400 betaal-status">In termijnen <br> (deadline {{$deadline->format('j')}} {{$maanden[$deadline->format('m') - 1]}})</p>
-                        @if($deadline < new DateTime())
-                          <p class="text-red-400 betaal-status">Deadline is verstreken!</p>
-                        @endif
-                      @else
-                        <p class="text-red-400  betaal-status">Op wachtlijst</p>
-                      @endif
-                    </div>
-                  @endforeach
-                </div>
-              @endforeach
-            </div>
-          @else
-            <h5 class="my-2 !text-white">Er zijn nog geen nieuwe aanmeldingen sinds vorige week</h5>
-          @endif
-        </div>
-        <div class="my-5">
-          <a class="w-fit block" href="{{url('ceremonies')}}"><h3 class="w-fit">Ceremonies</h3></a>
-            @if($intakegesprekken_gesorteerd)
-              <h5 class="my-2 !text-white">Er zijn {{$intakegesprekken_afgelopen_week->count()}} nieuwe intake gesprekken ingepland sinds vorige week</h5>
-              <div class="trainingen">
-                @foreach($intakegesprekken_gesorteerd as $key => $gesprekken)
-                  <div class="!justify-start">
-                    <?php $datum = new Datetime($key) ?>
-                    <p class="mx-auto text-main font-semibold">{{$datum->format('j-m-Y')}}</p>
-                    @foreach($gesprekken as $gesprek)
-                      <?php
-                       $begin_tijd = new DateTime($gesprek->begin_tijd);
-                       $eind_tijd = new DateTime($gesprek->eind_tijd);
-                      ?>
-                      <div class="blokken">
-                        <p class="text-center">{{$begin_tijd->format('H:i')}} - {{$eind_tijd->format('H:i')}}</p>
-                      </div>
-                    @endforeach
-                  </div>
-                @endforeach
-              </div>
-            @else
-              <h5 class="my-2 !text-white">Er zijn nog geen nieuwe intake gesprekken ingepland sinds vorige week</h5>
-            @endif
+        <div class="mt-5 mb-7 trainingen">
+          <div onclick="location.href = `{{url('trainingen')}}`" class="text-center !bg-trainingen cursor-pointer">
+            <p class="text-3xl">{{$aanmeldingen_afgelopen_week}}</p> 
+            <p class="text-xl">nieuwe aanmelding<?php if($aanmeldingen_afgelopen_week != 1) echo 'en'; ?></p>
+            <p class="text-sm">sinds vorige week</p> 
+          </div>
+          <div onclick="location.href = `{{url('ceremonies')}}`" class="text-center !bg-ceremonies cursor-pointer">
+            <p class="text-3xl">{{$ceremonies_afgelopen_week}}</p> 
+            <p class="text-xl">nieuwe ceremonie<?php if($ceremonies_afgelopen_week != 1) echo 's'; ?></p>
+            <p class="text-sm">sinds vorige week</p> 
+          </div>
+          <div onclick="location.href = `{{url('ceremonies#intakegesprekken')}}`" class="text-center !bg-intakegesprekken cursor-pointer">
+            <p class="text-3xl">{{$intakegesprekken_afgelopen_week}}</p> 
+            <p class="text-xl">nieuwe intakegesprek<?php if($intakegesprekken_afgelopen_week != 1) echo 'ken'; ?></p>
+            <p class="text-sm">sinds vorige week</p> 
+          </div>
         </div>
       </div>
       <div>
