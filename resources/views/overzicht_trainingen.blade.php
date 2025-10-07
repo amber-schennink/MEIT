@@ -4,7 +4,10 @@
   <body class="bg-main">
     @include('nav')
 
-    <?php $maanden = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'] ?>
+    <?php 
+      use Illuminate\Support\Facades\Config;
+      $maanden = Config::get('info.maanden');
+    ?>
     
     <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
       <div id="trainingen">
@@ -26,7 +29,7 @@
                       $maand = $datetime->format('m') - 1;
                     ?>
                     <div>
-                      <p>{{ltrim($datetime->format('d'), '0')}}</p>
+                      <p>{{$datetime->format('j')}}</p>
                       <p>{{substr($maanden[$maand], 0, 3)}}</p>
                     </div>
                   @endif
@@ -70,7 +73,7 @@
                             $deadline = new DateTime($training->start_moment);
                             $deadline->modify('-7 day');
                           ?>
-                          <p class="text-orange-400 betaal-status">1 termijn betaald <br> (deadline {{ltrim($deadline->format('d'), '0')}} {{$maanden[$deadline->format('m') - 1]}})</p>
+                          <p class="text-orange-400 betaal-status">1 termijn betaald <br> (deadline {{$deadline->format('j')}} {{$maanden[$deadline->format('m') - 1]}})</p>
                           @if($deadline < new DateTime())
                             <p class="text-red-400 betaal-status">Deadline is verstreken!</p>
                           @endif

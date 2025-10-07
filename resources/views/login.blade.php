@@ -16,11 +16,9 @@
     ?>
     <form action="{{url('login')}}" method="POST" class="m-auto w-fit flex flex-col gap-4 my-8 font-semibold">
       @csrf
-      <p>Email</p>
-      <input type="email" name="email" required/>
-      <p>Wachtwoord</p>
-      <input type="password" name="wachtwoord" required/>
-      <button class="mt-5" type="submit">Log in</button>
+      @include('form_info_deelnemer')
+      <script>switchToLogin()</script>
+      <button id="login_button" class="mt-5" type="submit">Log in</button>
     </form>
 
   </body>

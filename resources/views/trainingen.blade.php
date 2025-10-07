@@ -7,7 +7,8 @@
     <?php
       use Illuminate\Support\Facades\DB;
 
-      $maanden = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
+      use Illuminate\Support\Facades\Config;
+      $maanden = Config::get('info.maanden');
     ?>
     <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
       <h2>Trainingen</h2>
@@ -36,7 +37,7 @@
                     $maand = $datetime->format('m') - 1;
                   @endphp
                   <div>
-                    <p>{{ltrim($datetime->format('d'), '0')}}</p>
+                    <p>{{$datetime->format('j')}}</p>
                     <p>{{substr($maanden[$maand], 0, 3)}}</p>
                   </div>
                 @endif

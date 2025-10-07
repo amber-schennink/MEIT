@@ -6,6 +6,7 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Config;
 
 class AanmeldingenController extends Controller {
   public function nieuweAanmelding(Request $request){
@@ -79,7 +80,7 @@ class AanmeldingenController extends Controller {
     $columns = ['Voornaam', 'Tussenvoegsel', 'Achternaam', 'Email', 'Betaal status'];
 
     $callback = function() use ($aanmeldingen, $trainingen, $deelnemers, $columns){
-      $maanden = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
+      $maanden = Config::get('info.maanden');
       $file = fopen('php://output', 'w');
       fputcsv($file, $columns, ";");
 
@@ -97,12 +98,12 @@ class AanmeldingenController extends Controller {
           $maand = $start->format('m') - 1;
           $deadline = $start->modify('-7 day');
           $deadline_maand = $deadline->format('m') - 1;
-          $line = ['Training ' . $start->format('d') . ' ' . $maanden[$maand]];
+          $line = ['Training ' . $start->format('j') . ' ' . $maanden[$maand]];
           if($aanmelding->betaal_status == 2){
             $line[] = 'Betaald';
           }elseif($aanmelding->betaal_status == 1){
             $line[] = '1 termijn betaald';
-            $line[] = 'de deadline voor het 2de termijn is ' . $deadline->format('d') . ' ' . $maanden[$deadline_maand];
+            $line[] = 'de deadline voor het 2de termijn is ' . $deadline->format('j') . ' ' . $maanden[$deadline_maand];
           }else{
             $line[] = 'Staat op wachtlijst';
           }

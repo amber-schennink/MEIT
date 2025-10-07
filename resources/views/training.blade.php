@@ -10,7 +10,8 @@
 
       $datetime = new DateTime($training->start_moment);
 
-      $maanden = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
+      use Illuminate\Support\Facades\Config;
+      $maanden = Config::get('info.maanden');
 
       $aanmeldingen = DB::table('aanmeldingen')
         ->where('id_training', '=', $training->id)
@@ -44,7 +45,7 @@
             
             <div>
               <h3>Week {{$i}}</h3>
-              <p>{{ltrim($datetime->format('d'), '0')}} {{$maanden[$maand]}}</p>
+              <p>{{$datetime->format('j')}} {{$maanden[$maand]}}</p>
               <p>{{$time}} - {{date('H:i', strtotime($time) + 60*60*3)}}</p>
               <p>{{$teksten[$i - 1]}}</p>
             </div>

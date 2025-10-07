@@ -4,8 +4,9 @@
   <body class="bg-main">
     @include('nav')
     <?php
-      $maanden = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
-      $prijs = 444;
+      use Illuminate\Support\Facades\Config;
+      $maanden = Config::get('info.maanden');
+      $prijs = Config::get('info.prijs');
 
       if(!session('login') || session('admin') != true){
         redirect(url('/'));

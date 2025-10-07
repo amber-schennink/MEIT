@@ -5,9 +5,12 @@
     @include('nav')
 
     <?php 
-      $maanden = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
-      $schema_start = 8;
-      $schema_eindig = 20;
+      use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
+
+      $schema_start = Config::get('info.schema_start');
+      $schema_eindig = Config::get('info.schema_eindig');
+      $maanden = Config::get('info.maanden');
     ?>
     
     <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
@@ -22,7 +25,7 @@
             <div>
               <div>
                 <img src="{{asset('assets/date.svg')}}" /> 
-                <p>{{ltrim($datum->format('d'), '0')}} {{$maanden[$datum->format('m') - 1]}}</p>
+                <p>{{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}</p>
               </div>
               <div>
                 <img src="{{asset('assets/time.svg')}}" /> 
@@ -83,7 +86,7 @@
                 </div>
                 <div>
                   <img src="{{asset('assets/date.svg')}}" /> 
-                  <p>{{ltrim($datum->format('d'), '0')}} {{$maanden[$datum->format('m') - 1]}}</p>
+                  <p>{{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}</p>
                 </div>
                 <div>
                   <img src="{{asset('assets/time.svg')}}" /> 
@@ -101,36 +104,52 @@
           <div class="schema">
             <img id="schema-knop-l" onclick="scrollSchema('l')" class="-left-[5%] uit" src="{{asset('assets/arrow_left.svg')}}" />
             <div class="tijden pointer-events-none">
-              @for($i = 0; $i <= $schema_eindig-$schema_start; $i++)
+              @for($i = 0; $i <= $schema_eindig->format('H') - $schema_start->format('H'); $i++)
                 <div class="flex items-center">
-                  <p class="w-12 min-w-12">{{$i + $schema_start}}:00</p>
+                  <p class="w-12 min-w-12">{{$i + $schema_start->format('H')}}:{{$schema_start->format('i')}}</p>
                   <div class="bg-main-light h-0.5 w-full"></div>
                 </div>
               @endfor
             </div>
             <div id="scroll-container">
               @for($i = 0; $i < 5; $i++)
-                <div class="schema-block">
+                <div class="schema-block" style="grid-template-rows: 24px  <?php echo ($schema_eindig->format('H') - $schema_start->format('H')) * 50 . 'px;'; ?>">
                   <?php 
                     $datum = new DateTime(); 
                     $datum->modify('last sunday +1 day');
                     $datum->modify('+'. $i . 'weeks')
                   ?>
                   @for($j = 1; $j <= 7; $j++)
-                    <?php $mogenlijkheden = $intake_mogenlijkheden->where('datum', '=', $datum->format('Y-m-d')); ?>
-                    <h6>{{$datum->format('d')}} {{$maanden[$datum->format('m') - 1]}}</h6>
-                    <div id="{{$datum->format('Y-m-d')}}" class="cursor-pointer" <?php echo 'onclick="setDatum(`'. $datum->format('Y-m-d') .'`)"';?>>
-                      @foreach($mogenlijkheden as $mogenlijkheid)
-                        <?php 
-                          $begin_tijd = new DateTime($mogenlijkheid->begin_tijd);
-                          $eind_tijd = new DateTime($mogenlijkheid->eind_tijd);
-                          $duur = $begin_tijd->diff($eind_tijd);
-                          $top = ($begin_tijd->format('H') - $schema_start) * 50 + ($begin_tijd->format('i') / 60) * 50;
-                          $height = $duur->h * 50 + ($duur->i / 60) * 50 
-                        ?>
-                        <div <?php echo 'style="top: '. $top .'px;height: '. $height .'px; "'?>>
-                          <p>{{$begin_tijd->format('H:i')}} - {{$eind_tijd->format('H:i')}}</p>
-                        </div>
+                    <?php 
+                      $data = [];
+                      $data['ceremonies'] = $ceremonies->where('datum', '=', $datum->format('Y-m-d')); 
+                      $data['intakegesprekken'] = $intakegesprekken->where('datum', '=', $datum->format('Y-m-d')); 
+                      $data['mogenlijkheden'] = $intake_mogenlijkheden->where('datum', '=', $datum->format('Y-m-d')); 
+                      $next_datum = new DateTime($datum->format('Y-m-d'));
+                      $next_datum->modify('+1 day');
+
+                      $data['trainingen'] = DB::table('trainingen')->where(
+                        [['start_moment', '>=', $datum->format('Y-m-d H:i:s')],['start_moment', '<=', $next_datum->format('Y-m-d H:i:s')]]
+                      )->orWhere(function ($query) use ($datum, $next_datum){
+                        $query->where('start_moment_2', '>=', $datum->format('Y-m-d H:i:s'))->where('start_moment_2', '<=', $next_datum->format('Y-m-d H:i:s'));
+                      })->orWhere(function ($query) use ($datum, $next_datum){
+                        $query->where('start_moment_3', '>=', $datum->format('Y-m-d H:i:s'))->where('start_moment_3', '<=', $next_datum->format('Y-m-d H:i:s'));
+                      })->orWhere(function ($query) use ($datum, $next_datum){
+                        $query->where('start_moment_4', '>=', $datum->format('Y-m-d H:i:s'))->where('start_moment_4', '<=', $next_datum->format('Y-m-d H:i:s'));
+                      })->get();
+                    ?>
+                    <h6>{{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}</h6>
+                    
+
+                    @if($data['mogenlijkheden']->isEmpty() && $data['intakegesprekken']->isEmpty())
+                      <div id="{{$datum->format('Y-m-d')}}" class="cursor-pointer" <?php echo 'onclick="setDatum(`'. $datum->format('Y-m-d') .'`)"';?>>
+                    @else
+                      <div id="{{$datum->format('Y-m-d')}}">
+                    @endif
+                      @foreach($data as $key => $col)
+                        @foreach($col as $val)
+                          <?php echo setSchemaData($key, $val, $datum, 'overzicht_ceremonies') ?>
+                        @endforeach
                       @endforeach
                       <div class="ghost-block hidden">
                         <p><span class="ghost-begin-tijd">00:00</span> - <span class="ghost-eind-tijd">00:00</span></p>
@@ -142,6 +161,12 @@
               @endfor
             </div>
             <img id="schema-knop-r" onclick="scrollSchema('r')" class="-right-[5%]" src="{{asset('assets/arrow_right.svg')}}" />
+          </div>
+          <div class="mt-4 ml-[10%]">
+            <p class="before:content-[''] before:bg-intakegesprekken before:h-5 before:w-5 before:block flex gap-2">Intakegesprekken</p>
+            <p class="before:content-[''] before:bg-mogenlijkheden before:h-5 before:w-5 before:block flex gap-2">Intakegesprek mogenlijkheden</p>
+            <p class="before:content-[''] before:bg-ceremonies before:h-5 before:w-5 before:block flex gap-2">Ceremonies</p>
+            <p class="before:content-[''] before:bg-trainingen before:h-5 before:w-5 before:block flex gap-2">Trainingen</p>
           </div>
           <form action="{{url('gesprek_mogenlijkheden')}}" method="POST" class="m-auto w-fit">
             @csrf
@@ -155,6 +180,13 @@
     </div>
   </body>
 </html>
+<style>
+  .\!bg-intakegesprekken, .before\:bg-intakegesprekken::before , 
+  .\!bg-ceremonies, .before\:bg-ceremonies::before, 
+  .\!bg-trainingen, .before\:bg-trainingen::before{
+    opacity: 70%;
+  }
+</style>
 @if($errors->any())
   <script>
     <?php echo 'alert("'.$errors->first().'");'; ?>
@@ -165,6 +197,13 @@
 @endif
 
 <script>
+  var schema_start = '<?php echo str_pad($schema_start->format('H:i'), 5, '0', STR_PAD_LEFT); ?>';
+    var [uur_start, min_start] = schema_start.split(':');
+  var schema_eindig = '<?php echo str_pad($schema_eindig->format('H:i'), 5, '0', STR_PAD_LEFT); ?>'; 
+  var input_begin = document.getElementById('mogenlijkheid-form-begin-tijd')
+  var input_eind = document.getElementById('mogenlijkheid-form-eind-tijd')
+  var button = document.getElementById('mogenlijkheid-form-button')
+
   function scrollSchema(side) {
     var container = document.getElementById('scroll-container')
     var knopL = document.getElementById('schema-knop-l')
@@ -198,21 +237,15 @@
     document.getElementById('mogenlijkheid-form-datum').value = datum
   }
   function setTijden(begintijd, eindtijd){
-    input_begin = document.getElementById('mogenlijkheid-form-begin-tijd')
-    input_eind = document.getElementById('mogenlijkheid-form-eind-tijd')
+    ghosts = document.querySelectorAll('.ghost-block')
     input_begin.style.border = "none"
     input_eind.style.border = "none"
-    ghosts = document.querySelectorAll('.ghost-block')
-    button = document.getElementById('mogenlijkheid-form-button')
     var [uur_begin, min_begin] = begintijd.split(':');
     var [uur_eind, min_eind] = eindtijd.split(':');
     button.classList.remove('uit')
 
-    schema_start = '<?php if(strlen($schema_start) <2){echo '0';} echo $schema_start ?>';
-    schema_eindig = '<?php if(strlen($schema_eindig) <2){echo '0';} echo $schema_eindig ?>';
-
     if(begintijd){
-      if(begintijd < schema_start+':00' || begintijd > schema_eindig+':00'){
+      if(begintijd < schema_start || begintijd > schema_eindig){
         input_begin.style.border = "red solid 2px"
         button.classList.add('uit')
         if(ghosts[0].getElementsByClassName('ghost-begin-tijd')[0].innerHTML != "00:00"){
@@ -220,11 +253,10 @@
             ghost.getElementsByClassName('ghost-begin-tijd')[0].innerHTML = "00:00";
             ghost.style.marginTop = "0px";
           })
-          uur_begin = schema_start
-          min_begin = "00"
+          var [uur_begin, min_begin] = schema_start.split(':');
         }
       }else{
-        m_top = (uur_begin - schema_start) * 50 + (min_begin / 60) * 50;
+        m_top = (uur_begin - uur_start) * 50 + ((min_begin - min_start) / 60) * 50;
 
         ghosts.forEach(ghost => {
           ghost.getElementsByClassName('ghost-begin-tijd')[0].innerHTML = begintijd;
@@ -232,11 +264,10 @@
         });
       }
     }else{
-      uur_begin = schema_start
-      min_begin = '00'
+      var [uur_begin, min_begin] = schema_start.split(':');
     }
     if(eindtijd){
-      if(eindtijd < schema_start+':00' || eindtijd > schema_eindig+':00'){
+      if(eindtijd < schema_start || eindtijd > schema_eindig){
         input_eind.style.border = "red solid 2px"
         if(ghosts[0].getElementsByClassName('ghost-eind-tijd')[0].innerHTML != "00:00"){
           ghosts.forEach(ghost => {

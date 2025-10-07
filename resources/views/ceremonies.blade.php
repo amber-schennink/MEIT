@@ -3,28 +3,31 @@
   @include('head')
   <body class="bg-main">
     @include('nav')
-    <?php 
-      $maanden = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
-      $schema_start = 8;
-      $schema_eindig = 20;
+    <?php
+
+      use Illuminate\Support\Facades\Config;
+
+      $schema_start = Config::get('info.schema_start');
+      $schema_eindig = Config::get('info.schema_eindig');
+      $maanden = Config::get('info.maanden');
     ?>
     
     <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
       <h2 class="mb-3">Ceremonies</h2>
-      <h3>Inschrijven intakegesprek</h3>
+      <h3 class="ml-[10%]">Inschrijven intakegesprek</h3>
       <div class="schema">
         <img id="schema-knop-l" onclick="scrollSchema('l')" class="-left-[5%] uit" src="{{asset('assets/arrow_left.svg')}}" />
         <div class="tijden pointer-events-none">
-          @for($i = 0; $i <= $schema_eindig-$schema_start; $i++)
+          @for($i = 0; $i <= $schema_eindig->format('H') - $schema_start->format('H'); $i++)
             <div class="flex items-center">
-              <p class="w-12 min-w-12">{{$i + $schema_start}}:00</p>
+              <p class="w-12 min-w-12">{{$i + $schema_start->format('H')}}:{{$schema_start->format('i')}}</p>
               <div class="bg-main-light h-0.5 w-full"></div>
             </div>
           @endfor
         </div>
         <div id="scroll-container">
           @for($i = 0; $i < 5; $i++)
-            <div class="schema-block">
+            <div class="schema-block" style="grid-template-rows: 24px <?php echo ($schema_eindig->format('H') - $schema_start->format('H')) * 50 . 'px;'; ?>">
               <?php 
                 $datum = new DateTime(); 
                 $datum->modify('last sunday +1 day');
@@ -32,17 +35,17 @@
               ?>
               @for($j = 1; $j <= 7; $j++)
                 <?php $mogenlijkheden = $intake_mogenlijkheden->where('datum', '=', $datum->format('Y-m-d')); ?>
-                <h6>{{$datum->format('d')}} {{$maanden[$datum->format('m') - 1]}}</h6>
+                <h6>{{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}</h6>
                 <div id="{{$datum->format('Y-m-d')}}" <?php if($datum < new DateTime()){echo 'style="opacity: 75%; pointer-events: none;"';};?>>
                   @foreach($mogenlijkheden as $mogenlijkheid)
                     <?php 
                       $begin_tijd = new DateTime($mogenlijkheid->begin_tijd);
                       $eind_tijd = new DateTime($mogenlijkheid->eind_tijd);
                       $duur = $begin_tijd->diff($eind_tijd);
-                      $top = ($begin_tijd->format('H') - $schema_start) * 50 + ($begin_tijd->format('i') / 60) * 50;
+                      $top = ($begin_tijd->format('H') - $schema_start->format('H')) * 50 + ($begin_tijd->format('i') / 60) * 50;
                       $height = $duur->h * 50 + ($duur->i / 60) * 50;
                     ?>
-                    <div class="relative cursor-pointer" <?php echo 'style="top: '. $top .'px;height: '. $height .'px; "'; echo 'onclick="setBlock(`'.$mogenlijkheid->id.'`); setTijden()"'; //echo 'onclick="setDatum(`'. $datum->format('Y-m-d') .'`)"';?>>
+                    <div class="relative cursor-pointer !bg-mogenlijkheden" <?php echo 'style="top: '. $top .'px;height: '. $height .'px; "'; echo 'onclick="setBlock(`'.$mogenlijkheid->id.'`); setTijden()"'; ?>>
                       <div id="{{$mogenlijkheid->id}}" class="ghost-block relative !bg-[#f9b51d]/75 hidden">
                         <p><span class="ghost-begin-tijd">00:00</span> - <span class="ghost-eind-tijd">00:00</span></p>
                       </div>
@@ -106,7 +109,6 @@
     }
   }
   const intake_mogenlijkheden = <?php echo json_encode($intake_mogenlijkheden); ?>;
-  console.log(intake_mogenlijkheden);
   function setBlock(mogenlijkheid_id){
     block_data = intake_mogenlijkheden.find(obj => {
       return obj.id == mogenlijkheid_id
@@ -123,7 +125,6 @@
     document.getElementById('intakegesprek-form-id-mogenlijkheid').value = mogenlijkheid_id;
     
     document.getElementById('intakegesprek-form-datum').value = block_data['datum']
-    // setTijden()
 
   }
   function setDatum(datum){
@@ -149,6 +150,7 @@
     document.getElementById('intakegesprek-form-datum').value = datum
     setTijden()
   }
+
   function setTijden(begintijd){
     ghost = document.querySelectorAll('.ghost-block:not(.hidden)')[0]
     if(!ghost){
@@ -157,7 +159,6 @@
     block_data = intake_mogenlijkheden.find(obj => {
       return obj.id == ghost.id
     })
-    console.log(block_data)
     other_blocks_data = intake_mogenlijkheden.filter(obj => {
       return obj.datum == block_data.datum && obj.id != ghost.id
     })

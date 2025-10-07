@@ -6,8 +6,9 @@
     <?php
       use Illuminate\Support\Facades\DB; 
 
-      $maanden = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
-      $prijs = 444;
+      use Illuminate\Support\Facades\Config;
+      $maanden = Config::get('info.maanden');
+      $prijs = Config::get('info.prijs');
     ?>
     
     <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
@@ -29,37 +30,7 @@
             <p>{{$deelnemer->email}}</p>
           </div>
         @else
-          <h3>Info deelnemer <span class="text-sm text-white">Heb je al een acount? <a href="{{url('login?training='.$training->id)}}" class="underline underline-offset-2">Login</a></span></h3>
-          <div class="my-8 font-semibold flex flex-col gap-4">
-            <div class="flex flex-col md:flex-row gap-4 mt-1">
-              <label class="flex-1">
-                <p>Voornaam*</p>
-                <input class="w-full mt-1" name="voornaam" type="text" required/>
-              </label>
-              <label class="md:max-w-[20%]">
-                <p>Tussenvoegsel</p>
-                <input class="mt-1 w-full" name="tussenvoegsel" type="text"/>
-              </label>
-              <label class="flex-1">
-                <p>Achternaam*</p>
-                <input class="w-full mt-1" name="achternaam" type="text" required/>
-              </label>
-            </div>
-            <label>
-              <p>E-mail*</p>
-              <input class="mt-1 w-full" name="email" type="email" required/>
-            </label>
-            <div class="flex flex-col md:flex-row gap-4">
-              <label class="flex-1">
-                <p>Wachtwoord*</p>
-                <input class="w-full mt-1" id="ww" name="wachtwoord" type="password" required/>
-              </label>
-              <label class="flex-1">
-                <p>Bevestig wachtwoord*</p>
-                <input class="w-full mt-1" id="wwb" name="wachtwoord-bevestiging" type="password" required/>
-              </label>
-            </div>
-          </div>
+          @include('form_info_deelnemer')
         @endif
         <h3>Info training</h3>
         <div class="training-overzicht">
@@ -70,7 +41,7 @@
                 $time = $datetime->format('H:i');
               ?>
               <div class="my-3">
-                <p>{{$datetime->format('d')}} {{$maanden[$datetime->format('m') - 1]}}</p>
+                <p>{{$datetime->format('j')}} {{$maanden[$datetime->format('m') - 1]}}</p>
                 <p>{{$time}} - {{date('H:i', strtotime($time) + 60*60*3)}}</p>
               </div>
             @endif
@@ -91,7 +62,7 @@
                   $datetime = new DateTime($training->start_moment);
                   $datetime->modify('-7 day');
                 ?>
-                <p>Betaal nu €{{$prijs / 2}},- en €{{$prijs / 2}},- voor <span class="font-semibold">{{ltrim($datetime->format('d'), '0')}} {{$maanden[$datetime->format('m') - 1]}}</span></p>
+                <p>Betaal nu €{{$prijs / 2}},- en €{{$prijs / 2}},- voor <span class="font-semibold">{{$datetime->format('j')}} {{$maanden[$datetime->format('m') - 1]}}</span></p>
                 <h4 class="text-xl ml-auto mt-auto !mb-0 font-bold w-fit">2 x €{{$prijs / 2}},-</h4>
                 <input type="radio" name="betaal_optie" value="1"/>
               </label>

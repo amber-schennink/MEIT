@@ -55,7 +55,7 @@ class CeremoniesController extends Controller {
     $request_eind_uur = str_pad($request_eind_uur + 1, 2, '0', STR_PAD_LEFT);
 
     $request['eind_tijd'] = $request_eind_uur . ':' . $request_eind_min;
-    $request_eind_tijd = new DateTime($request->begin_tijd);
+    $request_eind_tijd = new DateTime($request->eind_tijd);
 
 
     //splits mogenlijkheid blok op in 2 indien mogenlijk
@@ -82,8 +82,12 @@ class CeremoniesController extends Controller {
     if($eind_diff->h > 0){
       [$mogenlijkheid_uur, $mogenlijkheid_min] = explode(':', $mogenlijkheid->eind_tijd);
       
-      $mogenlijkheid_uur = str_pad($mogenlijkheid_uur - $eind_diff->h + 1, 2, '0', STR_PAD_LEFT);
       $mogenlijkheid_min = str_pad($mogenlijkheid_min - $eind_diff->i, 2, '0', STR_PAD_LEFT);
+      if($mogenlijkheid_min < 0){
+        $mogenlijkheid_min = str_pad($mogenlijkheid_min + 60, 2, '0', STR_PAD_LEFT);
+        $mogenlijkheid_uur--;
+      }
+      $mogenlijkheid_uur = str_pad($mogenlijkheid_uur - $eind_diff->h + 1, 2, '0', STR_PAD_LEFT);
       $begin_tijd_mogenlijkheid = $mogenlijkheid_uur . ':' . $mogenlijkheid_min;
 
       $data_mogenlijkheid = [
@@ -108,7 +112,8 @@ class CeremoniesController extends Controller {
   }
   public function gesprekMogenlijkheidNieuw(Request $request){
     $zelfde_datum = DB::table('intake_mogenlijkheden')->where('datum', '=', $request->datum)->first();
-    if($zelfde_datum != null){
+    $zelfde_datum_intake = DB::table('intakegesprekken')->where('datum', '=', $request->datum)->first();
+    if($zelfde_datum != null || $zelfde_datum_intake != null){
       return redirect()->back()->withErrors(['msg' => 'Er is al een intakegesprek mogenlijkheid ingepland op deze dag']);
       die();
     }

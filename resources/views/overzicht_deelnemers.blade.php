@@ -5,8 +5,9 @@
     @include('nav')
 
     <?php 
-      $maanden = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
-      $prijs = 444;
+      use Illuminate\Support\Facades\Config;
+      $maanden = Config::get('info.maanden');
+      $prijs = Config::get('info.prijs');
     ?>
     
     <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
@@ -32,7 +33,7 @@
                       $maand = $datetime->format('m') - 1;
                     ?>
                     <div>
-                      <p>{{ltrim($datetime->format('d'), '0')}}</p>
+                      <p>{{$datetime->format('j')}}</p>
                       <p>{{substr($maanden[$maand], 0, 3)}}</p>
                     </div>
                   @endif
@@ -48,7 +49,7 @@
                   $deadline_maand = $deadline->format('m') - 1;
                 ?>
                 <p>Eerste termijn van €{{$prijs / 2}},- betaald</p>
-                <p>Tweede temijn van €{{$prijs / 2}},- betalen voor <span class="font-semibold underline underline-offset-2">{{ltrim($deadline->format('d'), '0')}} {{$maanden[$deadline_maand]}}</span></p> 
+                <p>Tweede temijn van €{{$prijs / 2}},- betalen voor <span class="font-semibold underline underline-offset-2">{{$deadline->format('j')}} {{$maanden[$deadline_maand]}}</span></p> 
                   
                 @if($datetime < new DateTime())
                   <h4 class="!text-xl">Sorry de deadline voor het betalen van het tweede termijn is verlopen</h4>
@@ -74,7 +75,7 @@
                       $maand = $datetime->format('m') - 1;
                     ?>
                     <div>
-                      <p>{{ltrim($datetime->format('d'), '0')}}</p>
+                      <p>{{$datetime->format('j')}}</p>
                       <p>{{substr($maanden[$maand], 0, 3)}}</p>
                     </div>
                   @endif
@@ -96,7 +97,7 @@
         </div>
       @endif
 
-      @if($ceremonies)
+      @if($ceremonies->isNotEmpty())
         <div>
           <h3 class="mb-3 mt-20">Ceremonie<?php if($ceremonies->count() > 1){echo 's';}?></h3>
           <div class="ceremonie-container">
@@ -105,7 +106,7 @@
                 <?php $datum = new DateTime($ceremonie->datum); ?>
                 <div>
                   <img src="{{asset('assets/date.svg')}}" />
-                  <p>{{ltrim($datum->format('d'), '0')}} {{$maanden[$datum->format('m') - 1]}}</p>
+                  <p>{{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}</p>
                 </div>
                 <div>
                   <img src="{{asset('assets/time.svg')}}" /> 
@@ -122,7 +123,7 @@
         </div>
       @endif
 
-      @if($intakegesprekken)
+      @if($intakegesprekken->isNotEmpty())
         <div>
           <h3 class="mb-3 mt-20">Telefonisch intakegesprek</h3>
           <div class="ceremonie-container">
@@ -138,7 +139,7 @@
                 ?>
                 <div>
                   <img src="{{asset('assets/date.svg')}}" />
-                  <p>{{ltrim($datum->format('d'), '0')}} {{$maanden[$datum->format('m') - 1]}}</p>
+                  <p>{{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}</p>
                 </div>
                 <div>
                   <img src="{{asset('assets/time.svg')}}" /> 

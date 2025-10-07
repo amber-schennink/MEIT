@@ -1,5 +1,6 @@
 <div>
-  <h3>Info deelnemer <span id="deelnemer_form_span" class="text-sm text-white">Heb je al een acount? <span onclick="switchToLogin()" class="underline underline-offset-2 cursor-pointer">Login</span></span></h3>
+  <h3 id="deelnemer_form_h3_form">Info deelnemer <span class="text-sm text-white">Heb je al een acount? <span onclick="switchToLogin()" class="underline underline-offset-2 cursor-pointer">Login</span></span></h3>
+  <h3 id="deelnemer_form_h3_login" class="hidden">Login <span id="deelnemer_form_span" class="text-sm text-white">Nog geen acount? <span onclick="switchToForm()" class="underline underline-offset-2 cursor-pointer">Aanmelden</span></span></h3>
   <input id="deelnemer_type" class="hidden" name="deelnemer_type" value="form" readonly/>
   <div id="deelnemer_form" class="my-8 font-semibold flex flex-col gap-4">
     <div class="flex flex-col md:flex-row gap-4 mt-1">
@@ -20,6 +21,10 @@
       <p>E-mail*</p>
       <input class="mt-1 w-full" name="deelnemer_email" type="email" required/>
     </label>
+    <label>
+      <p>Telefoonnummer</p>
+      <input class="mt-1 w-full" name="deelnemer_telefoon" type="tel"/>
+    </label>
     <div class="flex flex-col md:flex-row gap-4">
       <label class="flex-1">
         <p>Wachtwoord*</p>
@@ -31,14 +36,14 @@
       </label>
     </div>
   </div>
-  <div id="deelnemer_login" class="hidden flex flex-col md:flex-row gap-4 my-8">
+  <div id="deelnemer_login" class="hidden flex flex-col md:flex-row gap-4 my-8 font-semibold">
     <label class="flex-1">
-      <p>Email</p>
-      <input class="w-full mt-1" type="email" name="deelnemer_email"/>
+      <p>Email*</p>
+      <input class="w-full mt-1" type="email" name="login_email"/>
     </label>
     <label class="flex-1">
-      <p>Wachtwoord</p>
-      <input class="w-full mt-1" type="password" name="deelnemer_wachtwoord"/>
+      <p>Wachtwoord*</p>
+      <input class="w-full mt-1" type="password" name="login_wachtwoord"/>
     </label>
   </div>
   <script>
@@ -55,8 +60,36 @@
       inputs.forEach(input => {
         input.required = true;
       });
-      document.getElementById('deelnemer_form_span').classList.add('hidden')
+      login_button = document.getElementById('login_button');
+      if(login_button){
+        login_button.innerHTML = 'Login';
+      }
+      document.getElementById('deelnemer_form_h3_form').classList.add('hidden')
+      document.getElementById('deelnemer_form_h3_login').classList.remove('hidden')
       document.getElementById('deelnemer_type').value = "login"
+    }
+    function switchToForm(){
+      form = document.getElementById('deelnemer_form')
+      form.classList.remove('hidden')
+      inputs = [... form.getElementsByTagName('input')]
+      inputs.forEach(input => {
+        if(input.name != 'deelnemer_tussenvoegsel' && input.name != 'deelnemer_telefoon'){
+          input.required = true;
+        }
+      });
+      login = document.getElementById('deelnemer_login')
+      login.classList.add('hidden')
+      inputs = [... login.getElementsByTagName('input')]
+      inputs.forEach(input => {
+        input.required = false;
+      });
+      login_button = document.getElementById('login_button');
+      if(login_button){
+        login_button.innerHTML = 'Aanmelden';
+      }
+      document.getElementById('deelnemer_form_h3_form').classList.remove('hidden')
+      document.getElementById('deelnemer_form_h3_login').classList.add('hidden')
+      document.getElementById('deelnemer_type').value = "form"
     }
   </script>
 </div>

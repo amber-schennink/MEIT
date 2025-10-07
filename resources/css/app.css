@@ -17,6 +17,11 @@
   --color-second: #eb7b26;
   --color-second-dark: #dd6b16;
   --color-second-darker: #874315;
+
+  --color-intakegesprekken: #d53039;
+  --color-mogenlijkheden: #e77621;
+  --color-ceremonies: #286fdb;
+  --color-trainingen: #1fab57;
 }
 
 html {
@@ -66,7 +71,7 @@ th, td {
 input {
   @apply bg-main-light 
 }
-input[type=text], input[type=email], input[type=password], input[type=date], input[type=time] {
+input[type=text], input[type=email], input[type=tel], input[type=password], input[type=date], input[type=time] {
   @apply px-4 py-2 rounded text-black outline-main
 }
 
@@ -147,7 +152,6 @@ input[type=text], input[type=email], input[type=password], input[type=date], inp
 }
 .schema-block {
   @apply bg-main-light rounded-xl px-8 py-6 grid grid-cols-7 grid-flow-col justify-items-center gap-1 snap-center snap-always min-w-full;
-  grid-template-rows: 24px 600px;
 }
 .schema-block>div {
   @apply bg-second-darker h-full w-full relative rounded overflow-hidden
