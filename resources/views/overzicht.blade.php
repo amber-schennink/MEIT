@@ -68,7 +68,7 @@
                     $data = [];
                     $data['ceremonies'] = $ceremonies->where('datum', '=', $datum->format('Y-m-d')); 
                     $data['intakegesprekken'] = $intakegesprekken->where('datum', '=', $datum->format('Y-m-d')); 
-                    $data['mogenlijkheden'] = $intake_mogenlijkheden->where('datum', '=', $datum->format('Y-m-d')); 
+                    $data['mogelijkheden'] = $intake_mogelijkheden->where('datum', '=', $datum->format('Y-m-d')); 
                     $next_datum = new DateTime($datum->format('Y-m-d'));
                     $next_datum->modify('+1 day');
 
@@ -103,7 +103,7 @@
         </div>
         <div class="mt-4 ml-[10%]">
           <p class="before:content-[''] before:bg-intakegesprekken before:h-5 before:w-5 before:block flex gap-2">Intakegesprekken</p>
-          <p class="before:content-[''] before:bg-mogenlijkheden before:h-5 before:w-5 before:block flex gap-2">Intakegesprek mogenlijkheden</p>
+          <p class="before:content-[''] before:bg-mogelijkheden before:h-5 before:w-5 before:block flex gap-2">Intakegesprek mogelijkheden</p>
           <p class="before:content-[''] before:bg-ceremonies before:h-5 before:w-5 before:block flex gap-2">Ceremonies</p>
           <p class="before:content-[''] before:bg-trainingen before:h-5 before:w-5 before:block flex gap-2">Trainingen</p>
         </div>

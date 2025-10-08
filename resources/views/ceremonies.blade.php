@@ -34,10 +34,10 @@
                 $datum->modify('+'. $i . 'weeks')
               ?>
               @for($j = 1; $j <= 7; $j++)
-                <?php $mogenlijkheden = $intake_mogenlijkheden->where('datum', '=', $datum->format('Y-m-d')); ?>
+                <?php $mogelijkheden = $intake_mogelijkheden->where('datum', '=', $datum->format('Y-m-d')); ?>
                 <h6>{{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}</h6>
                 <div id="{{$datum->format('Y-m-d')}}" <?php if($datum < new DateTime()){echo 'style="opacity: 75%; pointer-events: none;"';};?>>
-                  @foreach($mogenlijkheden as $mogenlijkheid)
+                  @foreach($mogelijkheden as $mogenlijkheid)
                     <?php 
                       $begin_tijd = new DateTime($mogenlijkheid->begin_tijd);
                       $eind_tijd = new DateTime($mogenlijkheid->eind_tijd);
@@ -45,7 +45,7 @@
                       $top = ($begin_tijd->format('H') - $schema_start->format('H')) * 50 + ($begin_tijd->format('i') / 60) * 50;
                       $height = $duur->h * 50 + ($duur->i / 60) * 50;
                     ?>
-                    <div class="relative cursor-pointer !bg-mogenlijkheden" <?php echo 'style="top: '. $top .'px;height: '. $height .'px; "'; echo 'onclick="setBlock(`'.$mogenlijkheid->id.'`); setTijden()"'; ?>>
+                    <div class="relative cursor-pointer !bg-mogelijkheden" <?php echo 'style="top: '. $top .'px;height: '. $height .'px; "'; echo 'onclick="setBlock(`'.$mogenlijkheid->id.'`); setTijden()"'; ?>>
                       <div id="{{$mogenlijkheid->id}}" class="ghost-block relative !bg-[#f9b51d]/75 hidden">
                         <p><span class="ghost-begin-tijd">00:00</span> - <span class="ghost-eind-tijd">00:00</span></p>
                       </div>
@@ -108,9 +108,9 @@
       }
     }
   }
-  const intake_mogenlijkheden = <?php echo json_encode($intake_mogenlijkheden); ?>;
+  const intake_mogelijkheden = <?php echo json_encode($intake_mogelijkheden); ?>;
   function setBlock(mogenlijkheid_id){
-    block_data = intake_mogenlijkheden.find(obj => {
+    block_data = intake_mogelijkheden.find(obj => {
       return obj.id == mogenlijkheid_id
     })
     
@@ -156,10 +156,10 @@
     if(!ghost){
       return
     }
-    block_data = intake_mogenlijkheden.find(obj => {
+    block_data = intake_mogelijkheden.find(obj => {
       return obj.id == ghost.id
     })
-    other_blocks_data = intake_mogenlijkheden.filter(obj => {
+    other_blocks_data = intake_mogelijkheden.filter(obj => {
       return obj.datum == block_data.datum && obj.id != ghost.id
     })
     document.getElementById('intakegesprek-form-id-mogenlijkheid').value = ghost.id

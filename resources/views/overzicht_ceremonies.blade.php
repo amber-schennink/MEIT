@@ -99,7 +99,7 @@ use Illuminate\Support\Facades\DB;
         </div>
         <div>
           <div class="flex items-center">
-            <h4 class="text-second mb-3 mt-6">Intake mogenlijkheden</h4>
+            <h4 class="text-second mb-3 mt-6">Intake mogelijkheden</h4>
           </div>
           <div class="schema">
             <img id="schema-knop-l" onclick="scrollSchema('l')" class="-left-[5%] uit" src="{{asset('assets/arrow_left.svg')}}" />
@@ -124,7 +124,7 @@ use Illuminate\Support\Facades\DB;
                       $data = [];
                       $data['ceremonies'] = $ceremonies->where('datum', '=', $datum->format('Y-m-d')); 
                       $data['intakegesprekken'] = $intakegesprekken->where('datum', '=', $datum->format('Y-m-d')); 
-                      $data['mogenlijkheden'] = $intake_mogenlijkheden->where('datum', '=', $datum->format('Y-m-d')); 
+                      $data['mogelijkheden'] = $intake_mogelijkheden->where('datum', '=', $datum->format('Y-m-d')); 
                       $next_datum = new DateTime($datum->format('Y-m-d'));
                       $next_datum->modify('+1 day');
 
@@ -141,7 +141,7 @@ use Illuminate\Support\Facades\DB;
                     <h6>{{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}</h6>
                     
 
-                    @if($data['mogenlijkheden']->isEmpty() && $data['intakegesprekken']->isEmpty())
+                    @if($data['mogelijkheden']->isEmpty() && $data['intakegesprekken']->isEmpty())
                       <div id="{{$datum->format('Y-m-d')}}" class="cursor-pointer" <?php echo 'onclick="setDatum(`'. $datum->format('Y-m-d') .'`)"';?>>
                     @else
                       <div id="{{$datum->format('Y-m-d')}}">
@@ -164,11 +164,11 @@ use Illuminate\Support\Facades\DB;
           </div>
           <div class="mt-4 ml-[10%]">
             <p class="before:content-[''] before:bg-intakegesprekken before:h-5 before:w-5 before:block flex gap-2">Intakegesprekken</p>
-            <p class="before:content-[''] before:bg-mogenlijkheden before:h-5 before:w-5 before:block flex gap-2">Intakegesprek mogenlijkheden</p>
+            <p class="before:content-[''] before:bg-mogelijkheden before:h-5 before:w-5 before:block flex gap-2">Intakegesprek mogelijkheden</p>
             <p class="before:content-[''] before:bg-ceremonies before:h-5 before:w-5 before:block flex gap-2">Ceremonies</p>
             <p class="before:content-[''] before:bg-trainingen before:h-5 before:w-5 before:block flex gap-2">Trainingen</p>
           </div>
-          <form action="{{url('gesprek_mogenlijkheden')}}" method="POST" class="m-auto w-fit">
+          <form action="{{url('gesprek_mogelijkheden')}}" method="POST" class="m-auto w-fit">
             @csrf
             <input onchange="setDatum(this.value)" id="mogenlijkheid-form-datum" name="datum" type="date" required/>
             <input class="ml-4 mr-2" onchange="setTijden(this.value, document.getElementById('mogenlijkheid-form-eind-tijd').value)" id="mogenlijkheid-form-begin-tijd" name="begin_tijd" type="time" required />

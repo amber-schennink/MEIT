@@ -64,8 +64,7 @@ class AanmeldingenController extends Controller {
     ])->delete();
     return Redirect::to('overzicht');
   }
-  public function export()
-  {
+  public function export(){
     $headers = [
       "Content-type" => "text/csv",
       "Content-Disposition" => "attachment; filename=file.csv",

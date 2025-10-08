@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CheckoutController;
 
 Route::get('/', function () {
   return view('home');
@@ -65,7 +66,12 @@ Route::get('/aanmelden/{id}', function ($id) {
   return view('aanmelden', ['training' => $training, 'wachtlijst' => $wachtlijst, 'beschikbaar' => $beschikbaar]);
 });
 
-Route::post('/aanmelden', 'App\Http\Controllers\AanmeldingenController@nieuweAanmelding');
+Route::post('/aanmelden', [CheckoutController::class, 'start'])->name('checkout.start');
+Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+Route::get('/checkout/cancel',  [CheckoutController::class, 'cancel'])->name('checkout.cancel');
+
+// Alleen nodig voor 2-termijnen (de 2e helft later afschrijven, off_session):
+Route::get('/checkout/charge-remaining/{aanmelding}', [CheckoutController::class, 'chargeRemaining'])->name('checkout.charge_remaining');
 
 Route::get('/afmelden/{id_training}', 'App\Http\Controllers\AanmeldingenController@afmelden');
 
@@ -80,11 +86,11 @@ Route::get('/overzicht', function () {
 
     $ceremonies = DB::table('ceremonies')->get();
     $intakegesprekken = DB::table('intakegesprekken')->get();
-    $intake_mogenlijkheden = DB::table('intake_mogenlijkheden')->get();
+    $intake_mogelijkheden = DB::table('intake_mogelijkheden')->get();
 
     return view('overzicht', [
       'trainingen' => $trainingen, 'aanmeldingen' => $aanmeldingen, 'deelnemers' => $deelnemers, 
-      'ceremonies' => $ceremonies, 'intakegesprekken' => $intakegesprekken, 'intake_mogenlijkheden' => $intake_mogenlijkheden
+      'ceremonies' => $ceremonies, 'intakegesprekken' => $intakegesprekken, 'intake_mogelijkheden' => $intake_mogelijkheden
     ]);
   }else{
     $deelnemer = DB::table('deelnemers')->where('id', '=', session('id'))->first();
@@ -116,7 +122,7 @@ Route::get('/overzicht', function () {
     $intakegesprekken = DB::table('intakegesprekken')->where('id_deelnemer', '=', session('id'))->get();
 
     return view('overzicht_deelnemers', [
-      'trainingen' => $trainingen, 'betaal_statuses' => $betaal_statuses, 'deelnemer' => $deelnemer, 'wachtlijst' => $wachtlijst, 'beschikbaar' => $beschikbaar, 
+      'trainingen' => $trainingen, 'aanmeldingen' => $aanmeldingen, 'betaal_statuses' => $betaal_statuses, 'deelnemer' => $deelnemer, 'wachtlijst' => $wachtlijst, 'beschikbaar' => $beschikbaar, 
       'ceremonies' => $ceremonies, 'intakegesprekken' => $intakegesprekken
     ]);
   }
@@ -134,23 +140,23 @@ Route::get('ceremonies', function (){
     $deelnemers = DB::table('deelnemers')->get();
     $ceremonies = DB::table('ceremonies')->get();
     $intakegesprekken = DB::table('intakegesprekken')->get();
-    $intake_mogenlijkheden = DB::table('intake_mogenlijkheden')->get();
+    $intake_mogelijkheden = DB::table('intake_mogelijkheden')->get();
 
     return view('overzicht_ceremonies', [
       'deelnemers' => $deelnemers, 'ceremonies' => $ceremonies, 
-      'intakegesprekken' => $intakegesprekken, 'intake_mogenlijkheden' => $intake_mogenlijkheden
+      'intakegesprekken' => $intakegesprekken, 'intake_mogelijkheden' => $intake_mogelijkheden
     ]);
   }else{
     $intakegesprekken = DB::table('intakegesprekken')->get();
-    $intake_mogenlijkheden = DB::table('intake_mogenlijkheden')->get();
-    return view('ceremonies', ['intakegesprekken' => $intakegesprekken, 'intake_mogenlijkheden' => $intake_mogenlijkheden]);
+    $intake_mogelijkheden = DB::table('intake_mogelijkheden')->get();
+    return view('ceremonies', ['intakegesprekken' => $intakegesprekken, 'intake_mogelijkheden' => $intake_mogelijkheden]);
   }
 });
 
 Route::post('/ceremonies', 'App\Http\Controllers\CeremoniesController@ceremonieNieuw');
 
 Route::post('/intakegesprek', 'App\Http\Controllers\CeremoniesController@intakegesprekNieuw');
-Route::post('/gesprek_mogenlijkheden', 'App\Http\Controllers\CeremoniesController@gesprekMogenlijkheidNieuw');
+Route::post('/gesprek_mogelijkheden', 'App\Http\Controllers\CeremoniesController@gesprekMogenlijkheidNieuw');
 
 Route::get('/login', function () {
   return view('login');

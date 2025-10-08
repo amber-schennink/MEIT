@@ -3,6 +3,7 @@
   @include('head')
   <body class="bg-main">
     @include('nav')
+    @include('partials.flash')
     <?php
       use Illuminate\Support\Facades\DB; 
 
@@ -13,7 +14,7 @@
     
     <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
       <h2 class="mb-8">Aanmelden training</h2>
-      <form onsubmit="return checkForm()" action="{{url('aanmelden')}}" method="POST">
+      <form onsubmit="return checkForm()" action="{{ route('checkout.start') }}" method="POST">
         @csrf
         <input name="first_name" type="text" class="hidden">
         <input name="id_training" value="{{$training->id}}" class="hidden"/>

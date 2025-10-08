@@ -3,6 +3,7 @@
   @include('head')
   <body class="bg-main">
     @include('nav')
+    @include('partials.flash')
 
     <?php 
       use Illuminate\Support\Facades\Config;
@@ -17,6 +18,8 @@
         <div class="trainingen">
           @foreach($trainingen as $training)
             <?php 
+              $aanmelding = $aanmeldingen->where('id_training', '=', $training->id)->where('id_deelnemer', '=', session('id'))->first();
+            
               if($betaal_statuses[$training->id] == 2){
                 $betaald = true ;
               }else{
@@ -55,7 +58,7 @@
                   <h4 class="!text-xl">Sorry de deadline voor het betalen van het tweede termijn is verlopen</h4>
                   <button onclick="event.stopPropagation();" class="w-full uit">Betaal termijn</button>
                 @else
-                  <a class="mt-3" onclick="event.stopPropagation();" href="#"><button class="w-full">Betaal termijn</button></a>
+                  <a class="mt-3" onclick="event.stopPropagation();" href="{{url('/checkout/charge-remaining/' . $aanmelding->id)}}"><button class="w-full">Betaal termijn</button></a>
                 @endif
               @endif
             </div>

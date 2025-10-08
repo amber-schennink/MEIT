@@ -20,7 +20,7 @@ class CeremoniesController extends Controller {
     return Redirect::to('overzicht');
   }
   public function intakegesprekNieuw(Request $request){
-    $mogenlijkheid = DB::table('intake_mogenlijkheden')->where('id', '=', $request->id_mogenlijkheid)->first();
+    $mogenlijkheid = DB::table('intake_mogelijkheden')->where('id', '=', $request->id_mogenlijkheid)->first();
     $intakegesprekken = DB::table('intakegesprekken')->where('datum', '=', $request->datum)->get();
 
     // check of tijden binnen de intake mogenlijkheid passen
@@ -75,7 +75,7 @@ class CeremoniesController extends Controller {
         "begin_tijd" => $mogenlijkheid->begin_tijd,
         "eind_tijd" => $eind_tijd_mogenlijkheid,
       ];
-      DB::table('intake_mogenlijkheden')->insert($data_mogenlijkheid);
+      DB::table('intake_mogelijkheden')->insert($data_mogenlijkheid);
     }
 
     $eind_diff = $eind_tijd->diff($request_eind_tijd);
@@ -95,9 +95,9 @@ class CeremoniesController extends Controller {
         "begin_tijd" => $begin_tijd_mogenlijkheid,
         "eind_tijd" => $mogenlijkheid->eind_tijd,
       ];
-      DB::table('intake_mogenlijkheden')->insert($data_mogenlijkheid);
+      DB::table('intake_mogelijkheden')->insert($data_mogenlijkheid);
     }
-    DB::table('intake_mogenlijkheden')->delete($mogenlijkheid->id);
+    DB::table('intake_mogelijkheden')->delete($mogenlijkheid->id);
 
     //upload data
     $data_intakegesprekken = [
@@ -111,7 +111,7 @@ class CeremoniesController extends Controller {
     return Redirect::to('overzicht');
   }
   public function gesprekMogenlijkheidNieuw(Request $request){
-    $zelfde_datum = DB::table('intake_mogenlijkheden')->where('datum', '=', $request->datum)->first();
+    $zelfde_datum = DB::table('intake_mogelijkheden')->where('datum', '=', $request->datum)->first();
     $zelfde_datum_intake = DB::table('intakegesprekken')->where('datum', '=', $request->datum)->first();
     if($zelfde_datum != null || $zelfde_datum_intake != null){
       return redirect()->back()->withErrors(['msg' => 'Er is al een intakegesprek mogenlijkheid ingepland op deze dag']);
@@ -122,7 +122,7 @@ class CeremoniesController extends Controller {
       "begin_tijd" => $request->begin_tijd,
       "eind_tijd" => $request->eind_tijd,
     );
-    DB::table('intake_mogenlijkheden')->insert($data_ceremonie);
+    DB::table('intake_mogelijkheden')->insert($data_ceremonie);
     return Redirect::to('ceremonies');
   }
 }
