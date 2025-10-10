@@ -45,68 +45,16 @@
         </div>
       </div>
       <div>
-        <div class="schema">
-          <img id="schema-knop-l" onclick="scrollSchema('l')" class="-left-[5%] uit" src="{{asset('assets/arrow_left.svg')}}" />
-          <div class="tijden pointer-events-none">
-            @for($i = 0; $i <= $schema_eindig->format('H')-$schema_start->format('H'); $i++)
-              <div class="flex items-center">
-                <p class="w-12 min-w-12">{{$i + $schema_start->format('H')}}:{{$schema_start->format('i')}}</p>
-                <div class="bg-main-light h-0.5 w-full"></div>
-              </div>
-            @endfor
-          </div>
-          <div id="scroll-container">
-            @for($i = 0; $i < 10; $i++)
-              <div class="schema-block" style="grid-template-rows: 24px  <?php echo ($schema_eindig->format('H') - $schema_start->format('H')) * 50 . 'px;'; ?>">
-                <?php 
-                  $datum = new DateTime(); 
-                  $datum->modify('last sunday +1 day');
-                  $datum->modify('+'. $i . 'weeks')
-                ?>
-                @for($j = 1; $j <= 7; $j++)
-                  <?php 
-                    $data = [];
-                    $data['ceremonies'] = $ceremonies->where('datum', '=', $datum->format('Y-m-d')); 
-                    $data['intakegesprekken'] = $intakegesprekken->where('datum', '=', $datum->format('Y-m-d')); 
-                    $data['mogelijkheden'] = $intake_mogelijkheden->where('datum', '=', $datum->format('Y-m-d')); 
-                    $next_datum = new DateTime($datum->format('Y-m-d'));
-                    $next_datum->modify('+1 day');
+        <?php 
+          $data = [];
+          $data['ceremonies'] = DB::table('ceremonies')->get(); 
+          $data['intakegesprekken'] = DB::table('intakegesprekken')->get(); 
+          $data['mogelijkheden'] = DB::table('intake_mogelijkheden')->get(); 
+          $data['trainingen'] = DB::table('trainingen')->get();
 
-                    $data['trainingen'] = DB::table('trainingen')->where(
-                      [['start_moment', '>=', $datum->format('Y-m-d H:i:s')],['start_moment', '<=', $next_datum->format('Y-m-d H:i:s')]]
-                    )->orWhere(function ($query) use ($datum, $next_datum){
-                      $query->where('start_moment_2', '>=', $datum->format('Y-m-d H:i:s'))->where('start_moment_2', '<=', $next_datum->format('Y-m-d H:i:s'));
-                    })->orWhere(function ($query) use ($datum, $next_datum){
-                      $query->where('start_moment_3', '>=', $datum->format('Y-m-d H:i:s'))->where('start_moment_3', '<=', $next_datum->format('Y-m-d H:i:s'));
-                    })->orWhere(function ($query) use ($datum, $next_datum){
-                      $query->where('start_moment_4', '>=', $datum->format('Y-m-d H:i:s'))->where('start_moment_4', '<=', $next_datum->format('Y-m-d H:i:s'));
-                    })->get();
-                  ?>
-                  <h6>{{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}</h6>
-                  <div id="{{$datum->format('Y-m-d')}}">
-                    @foreach($data as $key => $col)
-                      @foreach($col as $val)
-                        <?php echo setSchemaData($key, $val, $datum, 'overzicht') ?>
-                      @endforeach
-                    @endforeach
-
-                    <div class="ghost-block hidden">
-                      <p><span class="ghost-begin-tijd">00:00</span> - <span class="ghost-eind-tijd">00:00</span></p>
-                    </div>
-                  </div>
-                  <?php $datum->modify('+1 day') ?>
-                @endfor
-              </div>
-            @endfor
-          </div>
-          <img id="schema-knop-r" onclick="scrollSchema('r')" class="-right-[5%]" src="{{asset('assets/arrow_right.svg')}}" />
-        </div>
-        <div class="mt-4 ml-[10%]">
-          <p class="before:content-[''] before:bg-intakegesprekken before:h-5 before:w-5 before:block flex gap-2">Intakegesprekken</p>
-          <p class="before:content-[''] before:bg-mogelijkheden before:h-5 before:w-5 before:block flex gap-2">Intakegesprek mogelijkheden</p>
-          <p class="before:content-[''] before:bg-ceremonies before:h-5 before:w-5 before:block flex gap-2">Ceremonies</p>
-          <p class="before:content-[''] before:bg-trainingen before:h-5 before:w-5 before:block flex gap-2">Trainingen</p>
-        </div>
+          $file = 'overzicht';
+        ?>
+        @include('partials.schema')
       </div>
     </div>
   </body>

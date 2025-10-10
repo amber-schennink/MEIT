@@ -37,38 +37,62 @@ class CheckoutController extends Controller
         $cancelUrl  = url()->previous();
 
         // --- deelnemer ophalen/aanmaken ---
-        if (session('login') && session('id')) {
-            $deelnemer   = DB::table('deelnemers')->where('id', session('id'))->first();
-            $idDeelnemer = $deelnemer->id;
-            $email       = $deelnemer->email ?? null;
-            $naam        = trim(($deelnemer->voornaam ?? '').' '.($deelnemer->tussenvoegsel ?? '').' '.($deelnemer->achternaam ?? '')) ?: 'Onbekend';
-        } else {
-            $request->validate([
-                'deelnemer_voornaam'                  => 'required|string',
-                'deelnemer_achternaam'                => 'required|string',
-                'deelnemer_email'                     => 'required|email',
-                'deelnemer_wachtwoord'                => 'required|string|min:8|same:deelnemer_wachtwoord-bevestiging',
-            ]);
+        // if (session('login') && session('id')) {
+        //     $deelnemer   = DB::table('deelnemers')->where('id', session('id'))->first();
+        //     $idDeelnemer = $deelnemer->id;
+        //     $email       = $deelnemer->email ?? null;
+        //     $naam        = trim(($deelnemer->voornaam ?? '').' '.($deelnemer->tussenvoegsel ?? '').' '.($deelnemer->achternaam ?? '')) ?: 'Onbekend';
+        // }elseif($request->deelnemer_type == 'login'){
+        //   $request->validate([
+        //       'login_email'      => 'required|email',
+        //       'login_wachtwoord' => 'required|string',
+        //   ]);
 
-            $voornaam      = $request->input('deelnemer_voornaam');
-            $tussenvoegsel = $request->input('deelnemer_tussenvoegsel');
-            $achternaam    = $request->input('deelnemer_achternaam');
-            $email         = $request->input('deelnemer_email');
-            $telefoon      = $request->input('deelnemer_telefoon');
-            $wachtwoord    = $request->input('deelnemer_wachtwoord');
+        //   $loginEmail = $request->input('login_email');
+        //   $loginPass  = $request->input('login_wachtwoord');
 
-            $idDeelnemer = DB::table('deelnemers')->insertGetId([
-                'voornaam'        => $voornaam,
-                'tussenvoegsel'   => $tussenvoegsel,
-                'achternaam'      => $achternaam,
-                'email'           => $email,
-                'telefoon_nummer' => $telefoon,
-                'wachtwoord'      => \Illuminate\Support\Facades\Hash::make($wachtwoord),
-            ]);
+        //   $deelnemer = DB::table('deelnemers')->where('email', $loginEmail)->first();
+        //   abort_unless($deelnemer && \Illuminate\Support\Facades\Hash::check($loginPass, $deelnemer->wachtwoord), 401, 'Ongeldige inloggegevens.');
 
-            session(['login' => true, 'id' => $idDeelnemer]);
-            $naam = trim("$voornaam ".($tussenvoegsel ?? '')." $achternaam");
-        }
+        //   // Sessie zetten
+        //   session(['login' => true, 'id' => $deelnemer->id]);
+
+        //   $idDeelnemer = (int) $deelnemer->id;
+        //   $email       = $deelnemer->email ?? null;
+        //   $naam        = trim(($deelnemer->voornaam ?? '').' '.($deelnemer->tussenvoegsel ?? '').' '.($deelnemer->achternaam ?? '')) ?: 'Onbekend';
+        // } else {
+        //     $request->validate([
+        //         'deelnemer_voornaam'                  => 'required|string',
+        //         'deelnemer_achternaam'                => 'required|string',
+        //         'deelnemer_email'                     => 'required|email',
+        //         'deelnemer_wachtwoord'                => 'required|string|min:8|same:deelnemer_wachtwoord-bevestiging',
+        //     ]);
+
+        //     $voornaam      = $request->input('deelnemer_voornaam');
+        //     $tussenvoegsel = $request->input('deelnemer_tussenvoegsel');
+        //     $achternaam    = $request->input('deelnemer_achternaam');
+        //     $email         = $request->input('deelnemer_email');
+        //     $telefoon      = $request->input('deelnemer_telefoon');
+        //     $wachtwoord    = $request->input('deelnemer_wachtwoord');
+
+        //     $idDeelnemer = DB::table('deelnemers')->insertGetId([
+        //         'voornaam'        => $voornaam,
+        //         'tussenvoegsel'   => $tussenvoegsel,
+        //         'achternaam'      => $achternaam,
+        //         'email'           => $email,
+        //         'telefoon_nummer' => $telefoon,
+        //         'wachtwoord'      => \Illuminate\Support\Facades\Hash::make($wachtwoord),
+        //     ]);
+
+        //     session(['login' => true, 'id' => $idDeelnemer]);
+        //     $naam = trim("$voornaam ".($tussenvoegsel ?? '')." $achternaam");
+        // }
+        
+        $idDeelnemer = $this->handleDeelnemerData($request);
+        $deelnemer = DB::table('deelnemers')
+            ->where('id', $idDeelnemer)
+            ->orderByDesc('id')
+            ->first();
 
         $prijsEuro   = (float) Config::get('info.prijs');
         $amountFull  = (int) round($prijsEuro * 100);
@@ -112,7 +136,7 @@ class CheckoutController extends Controller
                     'amount_due_remaining' => ($betaalOptie === 1 ? $amountHalf : 0),
                     'due_at'               => ($betaalOptie === 1 ? $dueAt : null),
                     'stripe_customer_id'   => $customerId,
-                    'customer_email'       => $email,
+                    'customer_email'       => $deelnemer->email,
                     'updated_at'           => now(),
                 ]);
             } else {
@@ -129,7 +153,7 @@ class CheckoutController extends Controller
                 'amount_due_remaining' => ($betaalOptie === 1 ? $amountHalf : 0),
                 'due_at'               => ($betaalOptie === 1 ? $dueAt : null),
                 'stripe_customer_id'   => $customerId,
-                'customer_email'       => $email,
+                'customer_email'       => $deelnemer->email,
                 'created_at'           => now(),
                 'updated_at'           => now(),
             ]);

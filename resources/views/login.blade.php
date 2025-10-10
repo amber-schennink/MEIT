@@ -3,12 +3,8 @@
   @include('head')
   <body class="bg-main">
     @include('nav')
+    @include('partials.flash')
     
-    @if($errors->any())
-    <div class="bg-red-600">
-      <h4>{{$errors->first()}}</h4>
-    </div>
-    @endif
     <?php
       if(isset($_GET['training'])){
         session(['training' => $_GET['training']]);

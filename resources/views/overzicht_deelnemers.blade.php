@@ -27,7 +27,7 @@
               }
             ?>
             <div onclick="location.href = `{{url('training/'.$training->id)}}`" class="cursor-pointer flex flex-col justify-between gap-2
-            <?php if(new DateTime($training->start_moment_4) < new DateTime()){echo 'opacity-75 ';} if($betaald) {echo ' !bg-main-payed';} ?>">
+            <?php if(new DateTime($training->start_moment_4) < new DateTime('00:00:00')){echo 'opacity-75 ';} if($betaald) {echo ' !bg-main-payed';} ?>">
               <div class="datums">
                 @foreach($training as $key => $val)
                   @if(str_contains($key, 'start_moment'))
@@ -54,7 +54,7 @@
                 <p>Eerste termijn van €{{$prijs / 2}},- betaald</p>
                 <p>Tweede temijn van €{{$prijs / 2}},- betalen voor <span class="font-semibold underline underline-offset-2">{{$deadline->format('j')}} {{$maanden[$deadline_maand]}}</span></p> 
                   
-                @if($datetime < new DateTime())
+                @if($datetime < new DateTime('00:00:00'))
                   <h4 class="!text-xl">Sorry de deadline voor het betalen van het tweede termijn is verlopen</h4>
                   <button onclick="event.stopPropagation();" class="w-full uit">Betaal termijn</button>
                 @else
@@ -69,7 +69,7 @@
         <h5 class="mt-5">Wachtlijst</h5>
         <div class="trainingen">
           @foreach($wachtlijst as $training)
-            <div onclick="location.href = `{{url('training/'.$training->id)}}`" class="cursor-pointer flex flex-col justify-between !bg-main-not-payed <?php if(new DateTime($training->start_moment_4) < new DateTime()){echo 'opacity-75';} ?>">
+            <div onclick="location.href = `{{url('training/'.$training->id)}}`" class="cursor-pointer flex flex-col justify-between !bg-main-not-payed <?php if(new DateTime($training->start_moment_4) < new DateTime('00:00:00')){echo 'opacity-75';} ?>">
               <div class="datums">
                 @foreach($training as $key => $val)
                   @if(str_contains($key, 'start_moment'))
@@ -148,7 +148,7 @@
                   <img src="{{asset('assets/time.svg')}}" /> 
                   <p>{{$begin_tijd->format('H:i')}} - {{$eind_tijd->format('H:i')}}</p>
                 </div>
-                @if($begin_belmoment < new DateTime() && $eind_belmoment > new DateTime())
+                @if($begin_belmoment < new DateTime('00:00:00') && $eind_belmoment > new DateTime('00:00:00'))
                   <a href="tel:06-34733235"><button class="flex justify-center items-center"><img src="{{asset('assets/telephone.svg')}}"/> Bellen </button></a>
                 @else
                   <button class="flex justify-center items-center uit"><img src="{{asset('assets/telephone.svg')}}"/> Bellen </button>

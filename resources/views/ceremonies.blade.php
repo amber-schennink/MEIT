@@ -3,6 +3,7 @@
   @include('head')
   <body class="bg-main">
     @include('nav')
+    @include('partials.flash')
     <?php
 
       use Illuminate\Support\Facades\Config;
@@ -31,12 +32,12 @@
               <?php 
                 $datum = new DateTime(); 
                 $datum->modify('last sunday +1 day');
-                $datum->modify('+'. $i . 'weeks')
+                $datum->modify('+'. $i . 'weeks');
               ?>
               @for($j = 1; $j <= 7; $j++)
                 <?php $mogelijkheden = $intake_mogelijkheden->where('datum', '=', $datum->format('Y-m-d')); ?>
                 <h6>{{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}</h6>
-                <div id="{{$datum->format('Y-m-d')}}" <?php if($datum < new DateTime()){echo 'style="opacity: 75%; pointer-events: none;"';};?>>
+                <div id="{{$datum->format('Y-m-d')}}" <?php if($datum < new DateTime('00:00:00')){echo 'style="opacity: 75%; pointer-events: none;"';};?>>
                   @foreach($mogelijkheden as $mogenlijkheid)
                     <?php 
                       $begin_tijd = new DateTime($mogenlijkheid->begin_tijd);
@@ -81,7 +82,6 @@
 
 @if($errors->any())
   <script>
-    <?php echo 'alert("'.$errors->first().'");'; ?>
     document.getElementById('intakegesprek-form-datum').value ='';
     document.getElementById('intakegesprek-form-begin-tijd').value = '';
   </script>

@@ -42,8 +42,18 @@
                 $time = $datetime->format('H:i');
               ?>
               <div class="my-3">
-                <p>{{$datetime->format('j')}} {{$maanden[$datetime->format('m') - 1]}}</p>
-                <p>{{$time}} - {{date('H:i', strtotime($time) + 60*60*3)}}</p>
+                <div class="flex my-3 items-center">
+                  <img class="h-7 mr-1" src="{{asset('assets/date.svg')}}" /> 
+                  <p>{{$datetime->format('j')}} {{$maanden[$datetime->format('m') - 1]}}</p>
+                </div>
+                <div class="flex my-3 items-center">
+                  <img class="h-7 mr-1" src="{{asset('assets/time.svg')}}" /> 
+                  <p>{{$time}} - {{date('H:i', strtotime($time) + 60*60*3)}}</p>
+                </div>
+                <div class="flex my-3 items-center">
+                  <img class="h-7 mr-1" src="{{asset('assets/location.svg')}}" /> 
+                  <p>Schiedam (Het Magische Huisje)</p>
+                </div>
               </div>
             @endif
           @endforeach
@@ -79,7 +89,7 @@
         </div>
         <br>
         <br>
-        @if($datetime < new DateTime())
+        @if($datetime < new DateTime('00:00:00'))
           <p class="mb-3">Sorry het is niet meer mogenlijke om je aan te melden voor deze training</p>
           <button class="uit" type="button">Aanmelden</button>
         @else 

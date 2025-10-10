@@ -20,7 +20,7 @@
         </div>
         <div class="trainingen">
           @foreach($trainingen as $key => $training)
-            <div id="{{$training->id}}" <?php if(new DateTime($training->start_moment_4) < new DateTime()){echo 'class="opacity-75"';} ?> >
+            <div id="{{$training->id}}" <?php if(new DateTime($training->start_moment_4) < new DateTime('00:00:00')){echo 'class="opacity-75"';} ?> >
               <div class="datums">
                 @foreach($training as $key => $val)
                   @if(str_contains($key, 'start_moment'))
@@ -74,7 +74,7 @@
                             $deadline->modify('-7 day');
                           ?>
                           <p class="text-orange-400 betaal-status">1 termijn betaald <br> (deadline {{$deadline->format('j')}} {{$maanden[$deadline->format('m') - 1]}})</p>
-                          @if($deadline < new DateTime())
+                          @if($deadline < new DateTime('00:00:00'))
                             <p class="text-red-400 betaal-status">Deadline is verstreken!</p>
                           @endif
                         @endif
