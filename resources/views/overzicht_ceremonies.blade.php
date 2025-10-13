@@ -40,14 +40,21 @@
                 <img src="{{asset('assets/email.svg')}}" /> 
                 <a class="hover:underline underline-offset-2" href="mailto: {{$deelnemer->email}}"><p>{{$deelnemer->email}}</p></a>
               </div>
-              <div>
-                @if(isset($deelnemer->telefoon_nummer))
+              @if(isset($deelnemer->telefoon_nummer))
+                <div>
                   <a class="hover:underline underline-offset-2 flex items-center" href="tel:{{$deelnemer->telefoon_nummer}}">
                     <img src="{{asset('assets/telephone.svg')}}" /> 
                     <p>{{$deelnemer->telefoon_nummer}}</p>
                   </a>
-                @endif
-              </div>
+                </div>
+              @else
+                <div class="!hidden lg:!flex cursor-default">
+                  <div class="flex opacity-0 items-center">
+                    <img src="{{asset('assets/telephone.svg')}}" /> 
+                    <p>06-12345678</p>
+                  </div>
+                </div>
+              @endif
             </div>
           @endforeach
         </div>
@@ -77,14 +84,21 @@
                     <p>{{$deelnemer->email}}</p>
                   </a>
                 </div>
-                <div>
-                  @if(isset($deelnemer->telefoon_nummer))
+                @if(isset($deelnemer->telefoon_nummer))
+                  <div>
                     <a class="hover:underline underline-offset-2 flex items-center" href="tel:{{$deelnemer->telefoon_nummer}}">
                       <img src="{{asset('assets/telephone.svg')}}" /> 
                       <p>{{$deelnemer->telefoon_nummer}}</p>
                     </a>
-                  @endif
-                </div>
+                  </div>
+                @else
+                  <div class="!hidden md:!flex cursor-default">
+                    <div class="flex opacity-0 items-center">
+                      <img src="{{asset('assets/telephone.svg')}}" /> 
+                      <p>06-12345678</p>
+                    </div>
+                  </div>
+                @endif
                 <div>
                   <img src="{{asset('assets/date.svg')}}" /> 
                   <p>{{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}</p>
@@ -147,26 +161,6 @@
   var input_eind = document.getElementById('mogenlijkheid-form-eind-tijd')
   var button = document.getElementById('mogenlijkheid-form-button')
 
-  function scrollSchema(side) {
-    var container = document.getElementById('scroll-container')
-    var knopL = document.getElementById('schema-knop-l')
-    var knopR= document.getElementById('schema-knop-r')
-    if(side == 'l'){
-      w = container.getBoundingClientRect().width;
-      container.scrollBy(-w, 0)
-      if(container.scrollLeft <= Math.ceil(w)){
-        knopL.classList.add('uit');
-      }
-      knopR.classList.remove('uit');
-    }else{
-      container.scrollBy(container.getBoundingClientRect().width, 0)
-      knopL.classList.remove('uit');
-      w = container.scrollWidth - (Math.ceil(container.getBoundingClientRect().width) * 2)
-      if(container.scrollLeft >= w){
-        knopR.classList.add('uit');
-      }
-    }
-  }
   function setDatum(datum){
     block = document.getElementById(datum)
     ghosts = document.querySelectorAll('.ghost-block:not(.hidden)')
@@ -176,6 +170,7 @@
     if(block){
       ghost_block = block.getElementsByClassName('ghost-block')[0]
       ghost_block.classList.remove('hidden')
+      scrollSchemaTo(datum)
     }
     document.getElementById('mogenlijkheid-form-datum').value = datum
   }

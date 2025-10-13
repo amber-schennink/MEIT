@@ -11,7 +11,7 @@
       $maanden = Config::get('info.maanden');
     ?>
     <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
-      <h2>Trainingen</h2>
+      <h2 class="mb-3">Trainingen MEIT. Transformatieproces</h2>
       <div class="trainingen">
         @foreach($trainingen as $key => $training)
           @if(new DateTime($training->start_moment_4) < new DateTime('00:00:00'))

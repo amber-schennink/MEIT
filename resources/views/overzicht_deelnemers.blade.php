@@ -20,7 +20,7 @@
             <?php 
               $aanmelding = $aanmeldingen->where('id_training', '=', $training->id)->where('id_deelnemer', '=', session('id'))->first();
             
-              if($betaal_statuses[$training->id] == 2){
+              if($aanmelding->betaal_status == 2){
                 $betaald = true ;
               }else{
                 $betaald = false ;
@@ -85,8 +85,11 @@
                 @endforeach
               </div>
               <p class="hover:underline underline-offset-2 mt-auto w-fit">Meer informatie -></p>
-              @if($beschikbaar[$training->id] && $beschikbaar[$training->id] != 0)
-                <p class="my-5">Er zijn nog {{$beschikbaar[$training->id]}} plek<?php if($beschikbaar[$training->id] != 1){echo 'ken';} ?> beschikbaar</p> 
+              <?php 
+                $beschikbaar = 4 - $aanmeldingen->where('id_training', '=', $training->id)->count(); 
+              ?>
+              @if($beschikbaar && $beschikbaar != 0)
+                <p class="my-5">Er <?php echo ($beschikbaar == 1) ? 'is' : 'zijn' ?> nog {{$beschikbaar}} plek<?php if($beschikbaar != 1){echo 'ken';} ?> beschikbaar</p> 
                 <p class="mb-5">Selecteer een betaaloptie om een plekje te reserveren</p>
                 <a <?php echo 'href="aanmelden/'.$training->id.'"' ?> onclick="event.stopPropagation();"><button class="w-full">Bekijk betaalopties</button></a>
               @else

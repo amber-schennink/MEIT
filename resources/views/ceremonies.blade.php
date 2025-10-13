@@ -7,6 +7,7 @@
     <?php
 
       use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 
       $schema_start = Config::get('info.schema_start');
       $schema_eindig = Config::get('info.schema_eindig');
@@ -16,49 +17,14 @@
     <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
       <h2 class="mb-3">Ceremonies</h2>
       <h3 class="ml-[10%]">Inschrijven intakegesprek</h3>
-      <div class="schema">
-        <img id="schema-knop-l" onclick="scrollSchema('l')" class="-left-[5%] uit" src="{{asset('assets/arrow_left.svg')}}" />
-        <div class="tijden pointer-events-none">
-          @for($i = 0; $i <= $schema_eindig->format('H') - $schema_start->format('H'); $i++)
-            <div class="flex items-center">
-              <p class="w-12 min-w-12">{{$i + $schema_start->format('H')}}:{{$schema_start->format('i')}}</p>
-              <div class="bg-main-light h-0.5 w-full"></div>
-            </div>
-          @endfor
-        </div>
-        <div id="scroll-container">
-          @for($i = 0; $i < 5; $i++)
-            <div class="schema-block" style="grid-template-rows: 24px <?php echo ($schema_eindig->format('H') - $schema_start->format('H')) * 50 . 'px;'; ?>">
-              <?php 
-                $datum = new DateTime(); 
-                $datum->modify('last sunday +1 day');
-                $datum->modify('+'. $i . 'weeks');
-              ?>
-              @for($j = 1; $j <= 7; $j++)
-                <?php $mogelijkheden = $intake_mogelijkheden->where('datum', '=', $datum->format('Y-m-d')); ?>
-                <h6>{{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}</h6>
-                <div id="{{$datum->format('Y-m-d')}}" <?php if($datum < new DateTime('00:00:00')){echo 'style="opacity: 75%; pointer-events: none;"';};?>>
-                  @foreach($mogelijkheden as $mogenlijkheid)
-                    <?php 
-                      $begin_tijd = new DateTime($mogenlijkheid->begin_tijd);
-                      $eind_tijd = new DateTime($mogenlijkheid->eind_tijd);
-                      $duur = $begin_tijd->diff($eind_tijd);
-                      $top = ($begin_tijd->format('H') - $schema_start->format('H')) * 50 + ($begin_tijd->format('i') / 60) * 50;
-                      $height = $duur->h * 50 + ($duur->i / 60) * 50;
-                    ?>
-                    <div class="relative cursor-pointer !bg-mogelijkheden" <?php echo 'style="top: '. $top .'px;height: '. $height .'px; "'; echo 'onclick="setBlock(`'.$mogenlijkheid->id.'`); setTijden()"'; ?>>
-                      <div id="{{$mogenlijkheid->id}}" class="ghost-block relative !bg-[#f9b51d]/75 hidden">
-                        <p><span class="ghost-begin-tijd">00:00</span> - <span class="ghost-eind-tijd">00:00</span></p>
-                      </div>
-                    </div>
-                  @endforeach
-                </div>
-                <?php $datum->modify('+1 day') ?>
-              @endfor
-            </div>
-          @endfor
-        </div>
-        <img id="schema-knop-r" onclick="scrollSchema('r')" class="-right-[5%]" src="{{asset('assets/arrow_right.svg')}}" />
+      <div>
+        <?php 
+          $data = [];
+          $data['mogelijkheden'] = DB::table('intake_mogelijkheden')->get(); 
+
+          $file = 'ceremonies';
+        ?>
+        @include('partials.schema')
       </div>
       <form action="{{url('intakegesprek')}}" method="POST">
         @csrf
@@ -79,6 +45,12 @@
 
   </body>
 </html>
+
+<style>
+  div:has(>.before\:bg-mogelijkheden) {
+    display: none;
+  }
+</style>
 
 @if($errors->any())
   <script>

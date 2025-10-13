@@ -5,8 +5,12 @@
     @include('nav')
     <?php
       use Illuminate\Support\Facades\Config;
+      use Illuminate\Support\Facades\DB;
+
       $maanden = Config::get('info.maanden');
       $prijs = Config::get('info.prijs');
+      $schema_start = Config::get('info.schema_start');
+      $schema_eindig = Config::get('info.schema_eindig');
 
       if(!session('login') || session('admin') != true){
         redirect(url('/'));
@@ -26,28 +30,74 @@
         <input id="id_intakegesprek" name="id_intakegesprek" value="{{$intakegesprek->id}}" class="hidden"/>
         <input id="id_deelnemer" name="id_deelnemer" value="{{$deelnemer->id}}" class="hidden"/>
         <h3>Info deelnemer</h3>
-        <div class="my-8 font-semibold flex flex-col">
+        <div class="my-8 flex flex-col">
           <p>Naam</p>
-          <p>{{$deelnemer->voornaam}} {{$deelnemer->tussenvoegsel}} {{$deelnemer->achternaam}}</p>
+          <p class="font-semibold">{{$deelnemer->voornaam}} {{$deelnemer->tussenvoegsel}} {{$deelnemer->achternaam}}</p>
           <p class="mt-4">E-mail</p>
-          <p>{{$deelnemer->email}}</p>
+          <p class="font-semibold">{{$deelnemer->email}}</p>
         </div>
 
-        <input name="datum" type="date" required/>
+        <input onchange="setGhost(this.value)" name="datum" type="date" required/>
         
         <br>
         <br>
         <button type="submit">Opslaan</button>
       </form>
+      <div class="my-10">
+        <?php 
+          $data = [];
+          $data['ceremonies'] = DB::table('ceremonies')->get(); 
+          $data['intakegesprekken'] = DB::table('intakegesprekken')->get(); 
+          $data['mogelijkheden'] = DB::table('intake_mogelijkheden')->get(); 
+          $data['trainingen'] = DB::table('trainingen')->get();
+
+          $file = 'ceremonie_form';
+        ?>
+        @include('partials.schema')
+      </div>
     </div>
 
   </body>
 </html>
-<script>
-  function removeBorder(){
-    
+<style>
+  .\!bg-intakegesprekken, .before\:bg-intakegesprekken::before, 
+  .\!bg-mogelijkheden, .before\:bg-mogelijkheden::before, 
+  .\!bg-ceremonies, .before\:bg-ceremonies::before, 
+  .\!bg-trainingen, .before\:bg-trainingen::before{
+    opacity: 70%;
   }
-  function checkForm(){
+  .ghost-block{
+    background-color: var(--color-ceremonies) !important;
+  }
+</style>
+<script>
+  var schema_start = '<?php echo str_pad($schema_start->format('H:i'), 5, '0', STR_PAD_LEFT); ?>';
+  var [uur_start, min_start] = schema_start.split(':');
+  var schema_eindig = '<?php echo str_pad($schema_eindig->format('H:i'), 5, '0', STR_PAD_LEFT); ?>';
+  var [uur_eindig, min_eindig] = schema_eindig.split(':');
+
+  function setGhost(datum){
+    block = document.getElementById(datum)
+    ghosts = document.querySelectorAll('.ghost-block:not(.hidden)')
+    ghosts.forEach(ghost => {
+      ghost.classList.add('hidden')
+    });
+    if(block){
+      ghost_block = block.getElementsByClassName('ghost-block')[0]
+      ghost_block.classList.remove('hidden')
+      scrollSchemaTo(datum)
+      
+      duur_uur = uur_eindig - 11
+      duur_min = min_eindig - 0
+      if(duur_min < 0){
+        duur_min = 60 + duur_min
+        duur_uur--
+      }
+      ghost_block.style.height = duur_uur * 50 + (duur_min / 60) * 50 + 'px'
+      
     
+      m_top = (11 - uur_start) * 50 + ((0 - min_start) / 60) * 50;
+      ghost_block.style.marginTop = m_top + "px";
+    }
   }
 </script>

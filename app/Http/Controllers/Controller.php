@@ -97,7 +97,6 @@ abstract class Controller
               $ok = true;
               DB::table('admins')->where('id', $admin->id)->update([
                 'wachtwoord' => Hash::make($plain),
-                'updated_at' => now(),
               ]);
             }
           }

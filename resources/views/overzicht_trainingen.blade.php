@@ -117,7 +117,11 @@
                 @endforeach
               @endif
               <div class="mt-auto">
-                <a href="training_form/{{$training->id}}"><button class="w-full mt-10">Aanpassen</button></a>
+                @if(new DateTime($training->start_moment_4) < new DateTime('00:00:00'))
+                  <button class="w-full mt-10 uit">Aanpassen</button>
+                @else
+                  <a href="training_form/{{$training->id}}"><button class="w-full mt-10">Aanpassen</button></a>
+                @endif
                 <a onclick="showPopUp('{{$training->id}}')"><button class="w-full !bg-red-600/90 hover:!bg-red-700/90 mt-3">Verwijderen</button></a>
               </div>
             </div>

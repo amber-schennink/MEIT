@@ -23,11 +23,18 @@
         }
       }
 
+      $kop_teksten = [
+        'Je energiebron', 
+        'Je kernwond (Astrologie)',
+        'Je levensmissie (Maya-kalender)',
+        'Integratie'
+      ];
+
       $teksten = [
-        'Je energiebron - hoe je je energie sterker en stabieler houdt in het dagelijks leven.', 
-        'Je kernwond (Astrologie) - inzicht in terugkerende patronen en emoties.',
-        'Je levensmissie (Maya-kalender) - ontdekken welke richting jou vervulling geeft.',
-        'Integratie - alles samenbrengen en kijken hoe je dit toepast in je leven.'
+        'Hoe je je energie sterker en stabieler houdt in het dagelijks leven.', 
+        'Inzicht in terugkerende patronen en emoties.',
+        'Ontdekken welke richting jou vervulling geeft.',
+        'Alles samenbrengen en kijken hoe je dit toepast in je leven.'
       ]
     ?>
 
@@ -43,11 +50,22 @@
               $time = $datetime->format('H:i');
             ?>
             
-            <div>
+            <div class="my-3 border-4 border-main-light py-6 px-8 rounded-xl">
               <h3>Week {{$i}}</h3>
-              <p>{{$datetime->format('j')}} {{$maanden[$maand]}}</p>
-              <p>{{$time}} - {{date('H:i', strtotime($time) + 60*60*3)}}</p>
-              <p>{{$teksten[$i - 1]}}</p>
+              <div class="flex my-3 items-center">
+                <img class="h-7 mr-1" src="{{asset('assets/date.svg')}}" /> 
+                <p>{{$datetime->format('j')}} {{$maanden[$datetime->format('m') - 1]}}</p>
+              </div>
+              <div class="flex my-3 items-center">
+                <img class="h-7 mr-1" src="{{asset('assets/time.svg')}}" /> 
+                <p>{{$time}} - {{date('H:i', strtotime($time) + 60*60*3)}}</p>
+              </div>
+              <div class="flex my-3 items-center">
+                <img class="h-7 mr-1" src="{{asset('assets/location.svg')}}" /> 
+                <p>Schiedam (Het Magische Huisje)</p>
+              </div>
+              <h6 class="text-xl font-semibold">{{$kop_teksten[$i - 1]}}</h6>
+              <p class="text-lg font-semibold">{{$teksten[$i - 1]}}</p>
             </div>
             @php($i++)
             @endif

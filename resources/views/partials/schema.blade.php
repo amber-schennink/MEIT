@@ -9,7 +9,7 @@
     @endfor
   </div>
   <div id="scroll-container">
-    @for($i = 0; $i < 5; $i++)
+    @for($i = 0; $i < 10; $i++)
       <div class="schema-block" style="grid-template-rows: 24px  <?php echo ($schema_eindig->format('H') - $schema_start->format('H')) * 50 . 'px;'; ?>">
         <?php 
           $datum = new DateTime(); 
@@ -77,7 +77,11 @@
               <div class="ghost-block ghost-4 hidden !h-[150px]">
                 <p><span class="ghost-begin-tijd">00:00</span> - <span class="ghost-eind-tijd">00:00</span></p>
               </div>
-            @else
+            @elseif($file == 'ceremonie_form')
+              <div class="ghost-block hidden">
+                <p>11:00 tot deelnemer naar huis gaat</p>
+              </div>
+            @elseif($file != 'ceremonies')
               <div class="ghost-block hidden">
                 <p><span class="ghost-begin-tijd">00:00</span> - <span class="ghost-eind-tijd">00:00</span></p>
               </div>
@@ -112,17 +116,43 @@
     if(side == 'l'){
       w = container.getBoundingClientRect().width;
       container.scrollBy(-w, 0)
-      if(container.scrollLeft <= Math.ceil(w)){
+    }else{
+      container.scrollBy(container.getBoundingClientRect().width, 0)
+    }
+    checkArrows(side)
+  }
+  function scrollSchemaTo(datum){
+    if(!(datum instanceof Date)){
+      datum = new Date(datum)
+    }
+    datum.setDate(datum.getDate() + ((datum.getDay() == 0) ? -6 : 1 - datum.getDay()));
+    id = datum.getFullYear() + '-' + String(datum.getMonth() + 1).padStart(2,"0") + '-' + String(datum.getDate()).padStart(2,"0");
+    if(document.getElementById(id)){
+      schema = document.getElementById('scroll-container')
+      schema.scrollLeft = document.getElementById(id).offsetLeft - 80
+      
+      if(schema.scrollLeft > document.getElementById(id).offsetLeft - 80){
+        checkArrows('l')
+      }else if(schema.scrollLeft < document.getElementById(id).offsetLeft - 80){
+        checkArrows('r')
+      }
+    }
+  }
+  function checkArrows(side){
+    var container = document.getElementById('scroll-container')
+    var knopL = document.getElementById('schema-knop-l')
+    var knopR= document.getElementById('schema-knop-r')
+    
+    if(side == 'l'){
+      if(container.scrollLeft <= Math.ceil(container.getBoundingClientRect().width)){
         knopL.classList.add('uit');
       }
       knopR.classList.remove('uit');
     }else{
-      container.scrollBy(container.getBoundingClientRect().width, 0)
-      knopL.classList.remove('uit');
-      w = container.scrollWidth - (Math.ceil(container.getBoundingClientRect().width) * 2)
-      if(container.scrollLeft >= w){
+      if(container.scrollLeft >= (container.scrollWidth - (Math.ceil(container.getBoundingClientRect().width) * 2))){
         knopR.classList.add('uit');
       }
+      knopL.classList.remove('uit');
     }
   }
 </script>

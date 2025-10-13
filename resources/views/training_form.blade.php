@@ -107,20 +107,17 @@
     var [uur_start, min_start] = schema_start.split(':');
   var schema_eindig = '<?php echo str_pad($schema_eindig->format('H:i'), 5, '0', STR_PAD_LEFT); ?>'; 
 
+  var edit = <?php if($edit){echo 'true';}else{echo 'false';}; ?>;
+
+  if(edit){
+    for (let i = 1; i <= 4; i++) {
+      setGhost(i)
+    }
+  }
+
   datum = new Date();
   datum.setDate(parseInt(datum.getDate()) + 7);
   scrollSchemaTo(datum)
-
-  function scrollSchemaTo(datum){
-    if(!(datum instanceof Date)){
-      datum = new Date(datum)
-    }
-    datum.setDate(datum.getDate() + ((datum.getDay() == 0) ? 0 : 7 - datum.getDay()));
-    id = datum.getFullYear() + '-' + (datum.getMonth() + 1) + '-' + datum.getDate();
-    if(document.getElementById(id)){
-      document.getElementById(id).scrollIntoView();
-    }
-  }
 
   function setGhost(id){
     datum = document.getElementById('dag_' + id).value;
@@ -134,9 +131,11 @@
     if(block){
       ghost_block = block.getElementsByClassName('ghost-block ghost-' + id)[0]
       ghost_block.classList.remove('hidden')
+      scrollSchemaTo(datum)
 
       if(tijd){
         var [uur_begin, min_begin] = tijd.split(':');
+        tijd = uur_begin + ':' + min_begin
         eindtijd = (parseInt(uur_begin) + 3) + ':'  + min_begin
         
         if(eindtijd > schema_eindig){
@@ -182,7 +181,6 @@
       setTimeout(function() { error.classList.add('opacity-0'); }, 5000);
       return false;
     }
-    var edit = <?php if($edit){echo 'true';}else{echo 'false';}; ?>;
     if(!edit){
       var date = new Date();
       date.setDate(parseInt(date.getDate()) + 7);

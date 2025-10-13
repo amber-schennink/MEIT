@@ -2,7 +2,7 @@
   use Illuminate\Support\Facades\Config;
 
   if (!function_exists('setSchemaData')) {
-    function setSchemaData($key, $val, $datum){
+    function setSchemaData($key, $val, $datum, $file){
       $schema_start = Config::get('info.schema_start');
       $schema_eindig = Config::get('info.schema_eindig');
       if($key == 'trainingen'){
@@ -25,15 +25,23 @@
       $duur = $begin_tijd->diff($eind_tijd);
       $top = ($begin_tijd->format('H') - $schema_start->format('H')) * 50 + ($begin_tijd->format('i') / 60) * 50;
       $height = $duur->h * 50 + ($duur->i / 60) * 50;
-      $return = '<div class="!bg-'. $key .'" style="top: '. $top .'px;height: '. $height .'px; ">
-        <p>' . $begin_tijd->format('H:i'); 
-        if($key == 'ceremonies'){
-          $return .= ' tot deelnemer naar huis gaat'; 
-        }else{
-          $return .=' - '.$eind_tijd->format('H:i'); 
-        }
-        $return .='</p>
-      </div>';
+      if($file == 'ceremonies'){
+        $return = '<div class="relative cursor-pointer !bg-mogelijkheden" style="top: '. $top .'px;height: '. $height .'px;" onclick="setBlock(`'.$val->id.'`); setTijden()">
+          <div id="'.$val->id.'" class="ghost-block relative !bg-[#f9b51d]/75 hidden">
+            <p><span class="ghost-begin-tijd">00:00</span> - <span class="ghost-eind-tijd">00:00</span></p>
+          </div>
+        </div>';
+      }else{
+        $return = '<div class="!bg-'. $key .'" style="top: '. $top .'px;height: '. $height .'px; ">
+          <p>' . $begin_tijd->format('H:i'); 
+          if($key == 'ceremonies'){
+            $return .= ' tot deelnemer naar huis gaat'; 
+          }else{
+            $return .=' - '.$eind_tijd->format('H:i'); 
+          }
+          $return .='</p>
+        </div>';
+      }
       return $return;
     }
   }
