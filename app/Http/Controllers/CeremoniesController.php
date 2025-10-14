@@ -88,7 +88,7 @@ class CeremoniesController extends Controller {
         $mogenlijkheid_uur--;
       }
       $mogenlijkheid_uur = str_pad($mogenlijkheid_uur - $eind_diff->h + 1, 2, '0', STR_PAD_LEFT);
-      $begin_tijd_mogenlijkheid = $mogenlijkheid_uur . ':' . $mogenlijkheid_min;
+      $begin_tijd_mogenlijkheid = str_pad($mogenlijkheid_uur - 1, 2, '0', STR_PAD_LEFT) . ':' . $mogenlijkheid_min;
 
       $data_mogenlijkheid = [
         "datum" => $mogenlijkheid->datum,
