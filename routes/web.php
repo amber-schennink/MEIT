@@ -28,7 +28,7 @@ Route::get('/trainingen', function () {
     ]);
 
   }else{
-    $trainingen = DB::table('trainingen')->orderBy('start_moment')->get(); 
+    $trainingen = DB::table('trainingen')->orderByDesc('start_moment')->get(); 
     return view('trainingen', ['trainingen' => $trainingen]);
   }
 });
@@ -111,8 +111,8 @@ Route::get('/overzicht', function () {
     $trainingen = DB::table('trainingen')->whereIn('id', $aanmeldingen_deelnemer)->orderBy('id','desc')->get();
     $wachtlijst = DB::table('trainingen')->whereIn('id', $aanmeldingen_wachtlijst)->orderBy('id','desc')->get();
     
-    $ceremonies = DB::table('ceremonies')->where('id_deelnemer', '=', session('id'))->get();
-    $intakegesprekken = DB::table('intakegesprekken')->where('id_deelnemer', '=', session('id'))->get();
+    $ceremonies = DB::table('ceremonies')->where('id_deelnemer', '=', session('id'))->orderBy('datum')->get();
+    $intakegesprekken = DB::table('intakegesprekken')->where('id_deelnemer', '=', session('id'))->orderBy('datum')->orderBy('begin_tijd')->get();
 
     return view('overzicht_deelnemers', [
       'trainingen' => $trainingen, 'aanmeldingen' => $aanmeldingen, 'deelnemer' => $deelnemer, 'wachtlijst' => $wachtlijst, 

@@ -1,5 +1,5 @@
 <div class="schema">
-  <img id="schema-knop-l" onclick="scrollSchema('l')" class="-left-[5%] uit" src="{{asset('assets/arrow_left.svg')}}" />
+  <img id="schema-knop-l" onclick="scrollSchema('l')" class="-left-[5%]" src="{{asset('assets/arrow_left.svg')}}" />
   <div class="tijden pointer-events-none">
     @for($i = 0; $i <= $schema_eindig->format('H') - $schema_start->format('H'); $i++)
       <div class="flex items-center">
@@ -78,7 +78,7 @@
                 <p><span class="ghost-begin-tijd">00:00</span> - <span class="ghost-eind-tijd">00:00</span></p>
               </div>
             @elseif($file == 'ceremonie_form')
-              <div class="ghost-block hidden">
+              <div class="ghost-block hidden !bg-ceremonies !opacity-100 ">
                 <p>11:00 tot deelnemer naar huis gaat</p>
               </div>
             @elseif($file != 'ceremonies')

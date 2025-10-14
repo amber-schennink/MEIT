@@ -31,6 +31,7 @@ abstract class Controller
           "tussenvoegsel" => $request->deelnemer_tussenvoegsel,
           "achternaam" => $request->deelnemer_achternaam,
           "email" => $request->deelnemer_email,
+          "telefoon_nummer" => $request->deelnemer_telefoon,
           "wachtwoord" => $request->deelnemer_wachtwoord
         );
         DB::table('deelnemers')->insert($data_deelnemer);

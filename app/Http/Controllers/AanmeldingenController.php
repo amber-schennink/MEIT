@@ -21,16 +21,18 @@ class AanmeldingenController extends Controller {
     if($request->id_deelnemer){
       $id_deelnemer = $request->id_deelnemer;
     }else{
-      $data_deelnemer = array(
-        "voornaam" => $request->voornaam,
-        "tussenvoegsel" => $request->tussenvoegsel,
-        "achternaam" => $request->achternaam,
-        "email" => $request->email,
-        "wachtwoord" => $request->wachtwoord
-      );
-      DB::table('deelnemers')->insert($data_deelnemer);
-      $id_deelnemer = DB::getPdo()->lastInsertId();
-      session(['login' => true, 'id' => $id_deelnemer, 'admin' => false]);
+      // $data_deelnemer = array(
+      //   "voornaam" => $request->voornaam,
+      //   "tussenvoegsel" => $request->tussenvoegsel,
+      //   "achternaam" => $request->achternaam,
+      //   "email" => $request->email,
+      //   "telefoon_nummer" => $request->telefoon,
+      //   "wachtwoord" => $request->wachtwoord
+      // );
+      // DB::table('deelnemers')->insert($data_deelnemer);
+      // $id_deelnemer = DB::getPdo()->lastInsertId();
+      // session(['login' => true, 'id' => $id_deelnemer, 'admin' => false]);
+      $id_deelnemer = $this->handleDeelnemerData($request);
     }
     
 
