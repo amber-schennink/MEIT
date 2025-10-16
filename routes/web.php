@@ -158,4 +158,4 @@ Route::get('/logout', function () {
   return view('logout');
 });
 
-Route::post('/login', 'App\Http\Controllers\loginController@login');
+Route::post('/login', 'App\Http\Controllers\LoginController@login');
