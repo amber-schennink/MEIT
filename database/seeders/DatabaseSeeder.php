@@ -13,11 +13,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $this->call([
+            AdminsSeeder::class,
+            DeelnemersSeeder::class,
+            TrainingenSeeder::class,
+            AanmeldingenSeeder::class,
+            CeremoniesSeeder::class,
+            IntakeMogelijkhedenSeeder::class,
+            IntakegesprekkenSeeder::class,
         ]);
+
+        \DB::statement('SET FOREIGN_KEY_CHECKS=1;');
     }
 }
