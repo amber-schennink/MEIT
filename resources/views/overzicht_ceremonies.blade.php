@@ -33,8 +33,10 @@
                 <p>11:00</p>
               </div>
               <div class="flex items-center">
-                <img src="{{asset('assets/user.svg')}}" /> 
-                <p>{{$deelnemer->voornaam}} {{$deelnemer->tussenvoegsel}} {{$deelnemer->achternaam}}</p>
+                <a class="hover:underline underline-offset-2 flex items-center" href="{{url('deelnemers/' . $deelnemer->id)}}">
+                  <img src="{{asset('assets/user.svg')}}" /> 
+                  <p>{{$deelnemer->voornaam}} {{$deelnemer->tussenvoegsel}} {{$deelnemer->achternaam}}</p>
+                </a>
               </div>
               <div>
                 <img src="{{asset('assets/email.svg')}}" /> 
@@ -75,8 +77,10 @@
               ?>
               <div>
                 <div>
-                  <img src="{{asset('assets/user.svg')}}" /> 
-                  <p>{{$deelnemer->voornaam}} {{$deelnemer->tussenvoegsel}} {{$deelnemer->achternaam}}</p>
+                  <a class="hover:underline underline-offset-2 flex items-center" href="{{url('deelnemers/' . $deelnemer->id)}}">
+                    <img src="{{asset('assets/user.svg')}}" /> 
+                    <p>{{$deelnemer->voornaam}} {{$deelnemer->tussenvoegsel}} {{$deelnemer->achternaam}}</p>
+                  </a>
                 </div>
                 <div>
                   <a class="hover:underline underline-offset-2 flex items-center" href="mailto:{{$deelnemer->email}}">
@@ -126,11 +130,11 @@
             $file = 'overzicht_ceremonies';
           ?>
           @include('partials.schema')
-          <form action="{{url('gesprek_mogelijkheden')}}" method="POST" class="m-auto w-fit">
+          <form action="{{url('gesprek_mogelijkheden')}}" method="POST" class="m-auto w-fit flex flex-col md:block mt-5 md:mt-auto">
             @csrf
-            <input onchange="setDatum(this.value)" id="mogenlijkheid-form-datum" name="datum" type="date" required/>
-            <input class="ml-4 mr-2" onchange="setTijden(this.value, document.getElementById('mogenlijkheid-form-eind-tijd').value)" id="mogenlijkheid-form-begin-tijd" name="begin_tijd" type="time" required />
-            <input class="mr-4 ml-2" onchange="setTijden(document.getElementById('mogenlijkheid-form-begin-tijd').value, this.value)" id="mogenlijkheid-form-eind-tijd" name="eind_tijd" type="time" required />
+            <input class="mt-3 md:mt-0" onchange="setDatum(this.value)" id="mogenlijkheid-form-datum" name="datum" type="date" required/>
+            <input class="md:ml-4 md:mr-2 mt-3 md:mt-0" onchange="setTijden(this.value, document.getElementById('mogenlijkheid-form-eind-tijd').value)" id="mogenlijkheid-form-begin-tijd" name="begin_tijd" type="time" required />
+            <input class="md:mr-4 md:ml-2 mt-3 md:mt-0" onchange="setTijden(document.getElementById('mogenlijkheid-form-begin-tijd').value, this.value)" id="mogenlijkheid-form-eind-tijd" name="eind_tijd" type="time" required />
             <button id="mogenlijkheid-form-button" class="mb-3 mt-6 ml-auto" type="submit">Voeg intake mogenlijkheid toe</button>
           </form>
         </div>

@@ -29,7 +29,7 @@ html {
 }
 
 button {
-  @apply cursor-pointer min-w-52 h-12 px-2.5 py-0.5 rounded bg-second hover:bg-second-dark text-white font-lora font-[100] text-lg
+  @apply cursor-pointer min-w-52 min-h-12 px-2.5 py-0.5 rounded bg-second hover:bg-second-dark text-white font-lora font-[100] text-lg
 }
 button.alt {
   @apply bg-second/75 hover:bg-second-dark/75
@@ -100,22 +100,26 @@ input[type=text], input[type=email], input[type=tel], input[type=password], inpu
 .trainingen .blokken {
   @apply my-3 bg-main p-3 rounded-xl break-words
 }
-.trainingen .blokken > div {
+.trainingen .blokken > div, div:has(>a>.deelnemer-icons) {
   @apply flex items-center mb-1
 }
-.trainingen .blokken > div img {
+.trainingen .blokken > div img, .deelnemer-icons  {
   @apply h-7 mr-1
 }
+.trainingen .blokken > div p{
+  @apply break-all;
+}
+
 
 .betaal-status {
   @apply m-auto w-fit font-semibold text-center
 }
 
 .training-overzicht {
-  @apply bg-main-light rounded p-3 grid grid-cols-2 gap-5 md:flex justify-around my-8 
+  @apply bg-main-light rounded p-3 grid sm:grid-cols-2 gap-5 lg:flex justify-around my-8 
 }
 .training-overzicht>div {
-  @apply bg-main rounded p-5 w-full md:w-1/5
+  @apply bg-main rounded p-5 w-full lg:w-1/5
 }
 
 .ceremonie-container {
@@ -151,7 +155,7 @@ input[type=text], input[type=email], input[type=tel], input[type=password], inpu
   @apply flex overflow-x-scroll ml-12 scroll-smooth snap-x snap-mandatory
 }
 .schema-block {
-  @apply bg-main-light rounded-xl px-8 py-6 grid grid-cols-7 grid-flow-col justify-items-center gap-1 snap-center snap-always min-w-full;
+  @apply bg-main-light rounded-xl px-8 py-6 grid grid-cols-[repeat(7,minmax(75px,1fr))] overflow-x-scroll md:overflow-x-visible grid-flow-col justify-items-center gap-1 snap-center snap-always min-w-full;
 }
 .schema-block>div {
   @apply bg-second-darker h-full w-full relative rounded overflow-hidden
@@ -189,8 +193,53 @@ input[type=text], input[type=email], input[type=tel], input[type=password], inpu
   @apply fixed flex top-0 left-0 h-screen w-screen bg-gray-600/30
 }
 #pop-up > div {
-  @apply m-auto bg-main px-8 py-6 rounded-xl border-4 border-main-light 
+  @apply m-auto bg-main px-8 py-6 rounded-xl border-4 border-main-light max-w-screen
 }
 #pop-up > div > div {
-  @apply flex justify-between mt-10
+  @apply flex justify-between mt-10 flex-col md:flex-row
 }
+#pop-up > div > div button{
+  @apply w-full mt-3 md:mt-auto md:w-fit
+}
+
+.checkbox-label span{
+  @apply w-6 h-6 bg-main-light rounded relative hover:cursor-pointer
+}
+.checkbox-label input:checked ~ span:after{
+  display: block;
+}
+.checkbox-label span:after {
+  content: '';
+  position: absolute;
+  display: none;
+  left: 9px;
+  top: 5px;
+  width: 7px;
+  height: 12px;
+  border: solid black;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+nav{
+  @apply w-[85%] lg:w-[70%] mx-auto flex gap-5
+}
+@media (width < 48rem){
+  nav {
+    @apply z-30 w-screen h-0 flex-col items-center bg-main fixed top-0 left-0 justify-center overflow-hidden transition-[height] ease-in-out duration-500
+  }
+  .hamburger-active nav{
+    @apply h-screen
+  }
+}
+
+.hamburger > div {
+  @apply w-[30px] h-[3px] bg-white my-1.5;
+  transition: 0.4s;
+}
+
+.hamburger-active .hamburger .bar1 {transform: translate(0, 9px) rotate(-45deg);}
+.hamburger-active .hamburger .bar2 {opacity: 0;}
+.hamburger-active .hamburger .bar3 {transform: translate(0, -9px) rotate(45deg);}

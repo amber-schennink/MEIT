@@ -85,6 +85,7 @@ Route::get('/checkout/charge-remaining/{aanmelding}', [CheckoutController::class
 
 Route::get('/afmelden/{id_training}', 'App\Http\Controllers\AanmeldingenController@afmelden');
 
+
 Route::get('/overzicht', function () {
   if(!session('login') || !session('id')){
     return redirect(url('/login'));
@@ -121,6 +122,42 @@ Route::get('/overzicht', function () {
   }
 });
 Route::get('/overzicht_export', 'App\Http\Controllers\AanmeldingenController@export');
+Route::get('/deelnemers', function () {
+  if(!session('login') || !session('id') || session('admin') !== true){
+    return redirect(url('/login'));
+  }
+  $deelnemers = DB::table('deelnemers')->orderBy('id','desc')->get();
+  $aanmeldingen = DB::table('aanmeldingen')->where('betaal_status', '!=', '0')->get();
+  $wachtlijst = DB::table('aanmeldingen')->where('betaal_status', '=', '0')->get();
+  $ceremonies = DB::table('ceremonies')->get();
+  $intakegesprekken = DB::table('intakegesprekken')->get();
+
+  return view('deelnemers', [
+      'deelnemers' => $deelnemers, 'aanmeldingen' => $aanmeldingen, 'wachtlijst' => $wachtlijst,
+      'ceremonies' => $ceremonies, 'intakegesprekken' => $intakegesprekken,
+    ]);
+});
+Route::get('/deelnemers/{id}', function ($id) {
+  if(!session('login') || !session('id') || session('admin') !== true){
+    return redirect(url('/login'));
+  }
+  $deelnemer = DB::table('deelnemers')->where('id', '=', $id)->first();
+  $aanmeldingen = DB::table('aanmeldingen')->where('betaal_status', '!=', '0')->get();
+
+  $aanmeldingen_deelnemer = DB::table('aanmeldingen')->where([['id_deelnemer', '=', $id], ['betaal_status', '!=', '0']])->pluck('id_training');
+  $aanmeldingen_wachtlijst = DB::table('aanmeldingen')->where([['id_deelnemer', '=', $id], ['betaal_status', '=', '0']])->pluck('id_training');
+  
+  $trainingen = DB::table('trainingen')->whereIn('id', $aanmeldingen_deelnemer)->orderBy('id','desc')->get();
+  $wachtlijst = DB::table('trainingen')->whereIn('id', $aanmeldingen_wachtlijst)->orderBy('id','desc')->get();
+
+  $ceremonies = DB::table('ceremonies')->where('id_deelnemer', '=', $id)->orderBy('datum')->get();
+  $intakegesprekken = DB::table('intakegesprekken')->where('id_deelnemer', '=', $id)->orderBy('datum')->orderBy('begin_tijd')->get();
+
+  return view('overzicht_deelnemers', [
+      'id' => $id, 'admin' => true, 'trainingen' => $trainingen, 'aanmeldingen' => $aanmeldingen, 'deelnemer' => $deelnemer, 'wachtlijst' => $wachtlijst, 
+      'ceremonies' => $ceremonies, 'intakegesprekken' => $intakegesprekken
+    ]);
+});
 
 Route::get('/ceremonies/{id_intakegesprek}', function ($id_intakegesprek) {
   $intakegesprek = DB::table('intakegesprekken')->where('id', '=', $id_intakegesprek)->first();

@@ -32,15 +32,23 @@
           </div>
         </div>';
       }else{
-        $return = '<div class="!bg-'. $key .'" style="top: '. $top .'px;height: '. $height .'px; ">
-          <p>' . $begin_tijd->format('H:i'); 
-          if($key == 'ceremonies'){
-            $return .= ' tot deelnemer naar huis gaat'; 
-          }else{
-            $return .=' - '.$eind_tijd->format('H:i'); 
+        $return = '<div class="!bg-'. $key .'" style="top: '. $top .'px;height: '. $height .'px; ">';
+          if($file == 'overzicht' && isset($val->id_deelnemer)){
+            $return .= '<a href="deelnemers/'.$val->id_deelnemer.'" class="h-full block">';
+          }elseif($file == 'overzicht' && $key == 'trainingen'){
+            $return .= '<a href="trainingen" class="h-full block">';
           }
-          $return .='</p>
-        </div>';
+            $return .= '<p>' . $begin_tijd->format('H:i'); 
+            if($key == 'ceremonies'){
+              $return .= ' tot deelnemer naar huis gaat'; 
+            }else{
+              $return .=' - '.$eind_tijd->format('H:i'); 
+            }
+            $return .='</p>';
+          if($file == 'overzicht' && $key != 'mogelijkheden'){
+            $return .='</a>';
+          }
+        $return .='</div>';
       }
       return $return;
     }

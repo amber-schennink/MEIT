@@ -28,13 +28,13 @@ use Illuminate\Support\Facades\DB;
       </div>
       <form action="{{url('intakegesprek')}}" method="POST">
         @csrf
-        <div class="m-auto w-fit">
+        <div class="m-auto w-fit flex flex-col md:block mt-5 md:mt-auto">
           @if(session('login') && session('id'))
             <input name="id_deelnemer" class="hidden" value="{{session('id')}}" readonly required/>
           @endif
           <input id="intakegesprek-form-id-mogenlijkheid" name="id_mogenlijkheid" class="hidden" readonly required/>
           <input onchange="setDatum(this.value)" id="intakegesprek-form-datum" name="datum" type="date" required/>
-          <input class="ml-4 mr-2" onchange="setTijden(this.value)" id="intakegesprek-form-begin-tijd" name="begin_tijd" type="time" required />
+          <input class="ml-4 mr-2 mt-3 md:mt-0" onchange="setTijden(this.value)" id="intakegesprek-form-begin-tijd" name="begin_tijd" type="time" required />
           <button id="intakegesprek-form-button" class="mb-3 mt-6 ml-auto" type="submit">Inschrijven</button>
         </div>
         @if(!session('login') || !session('id'))

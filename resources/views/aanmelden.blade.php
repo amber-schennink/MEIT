@@ -13,7 +13,7 @@
     ?>
     
     <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
-      <h2 class="mb-8">Aanmelden training</h2>
+      <h2 class="mb-8">Aanmelden traject</h2>
       <form onsubmit="return checkForm()" action="{{ route('checkout.start') }}" method="POST">
         @csrf
         <input name="first_name" type="text" class="hidden">
@@ -33,7 +33,7 @@
         @else
           @include('form_info_deelnemer')
         @endif
-        <h3>Info training</h3>
+        <h3>Info traject</h3>
         <div class="training-overzicht">
           @foreach($training as $key => $val)
             @if(str_contains($key, 'start_moment'))
@@ -90,7 +90,7 @@
         <br>
         <br>
         @if($datetime < new DateTime('00:00:00'))
-          <p class="mb-3">Sorry het is niet meer mogenlijke om je aan te melden voor deze training</p>
+          <p class="mb-3">Sorry het is niet meer mogenlijke om je aan te melden voor dit traject</p>
           <button class="uit" type="button">Aanmelden</button>
         @else 
           <button type="submit">Aanmelden</button>

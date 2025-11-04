@@ -10,7 +10,7 @@
         session(['training' => $_GET['training']]);
       }
     ?>
-    <form action="{{url('login')}}" method="POST" class="m-auto w-fit flex flex-col gap-4 my-8 font-semibold">
+    <form action="{{url('login')}}" method="POST" class="m-auto w-fit flex flex-col gap-4 my-8 font-semibold px-4">
       @csrf
       @include('form_info_deelnemer')
       <script>switchToLogin()</script>

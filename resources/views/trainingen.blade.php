@@ -11,7 +11,7 @@
       $maanden = Config::get('info.maanden');
     ?>
     <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
-      <h2 class="mb-3">Trainingen MEIT. Transformatieproces</h2>
+      <h2 class="mb-3 wrap-break-word">Traject MEIT. Transformatieproces</h2>
       <div class="trainingen">
         @foreach($trainingen as $key => $training)
           @if(new DateTime($training->start_moment_4) < new DateTime('00:00:00'))
@@ -49,7 +49,7 @@
             @if($beschikbaar > 0)
               <p class="my-5">Er <?php echo ($beschikbaar == 1) ? 'is' : 'zijn' ?> nog {{$beschikbaar}} plek<?php if($beschikbaar != 1){echo 'ken';} ?> beschikbaar</p>
             @else
-              <p class="my-5">Sorry er zijn geen plekken meer beschikbaar voor deze training</p>
+              <p class="my-5">Sorry er zijn geen plekken meer beschikbaar voor dit traject</p>
             @endif
             <div>
               <p class="mb-2"><a class="hover:underline underline-offset-2" <?php echo 'href="training/'.$training->id.'"' ?> >meer info -></a></p>
@@ -77,7 +77,7 @@
                     $btnUit = true;
                   }
                 }elseif(new DateTime($training->start_moment) < new DateTime('00:00:00')){
-                  $extraTekst = 'Sorry het is niet meer mogenlijke om je aan te melden voor deze training';
+                  $extraTekst = 'Sorry het is niet meer mogenlijke om je aan te melden voor dit traject';
                   $btnUit = true;
                 }elseif($beschikbaar == 0){
                   $btnTekst = 'Opgeven wachtlijst';

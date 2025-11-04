@@ -17,6 +17,20 @@
         <input class="w-full mt-1" name="deelnemer_achternaam" type="text" required/>
       </label>
     </div>
+    <div class="flex flex-col md:flex-row gap-4 mt-1">
+      <label class="flex-1">
+        <p>Geboorte datum</p>
+        <input class="w-full mt-1" name="geboorte_datum" type="date"/>
+      </label>
+      <label class="flex-1">
+        <p>Geboorte tijd</p>
+        <input class="w-full mt-1" name="geboorte_tijd" type="time"/>
+      </label>
+      <label class="flex-1">
+        <p>Geboorte plaats</p>
+        <input class="w-full mt-1" name="geboorte_plaats" type="text"/>
+      </label>
+    </div>
     <label>
       <p>E-mail*</p>
       <input class="mt-1 w-full" name="deelnemer_email" type="email" required/>
@@ -35,6 +49,11 @@
         <input class="w-full mt-1" id="wwb" name="deelnemer_wachtwoord-bevestiging" type="password" required/>
       </label>
     </div>
+    <label class="flex gap-2 checkbox-label">
+      <input class="w-6 h-6 opacity-0 absolute" type="checkbox" />
+      <span></span>
+      <p>Ik heb de <a target="_blank" href="https://www.meit.nl/privacyverklaring" class="underline underline-offset-2">Privacyverklaring</a> gelezen en begrepen.</p>
+    </label>
   </div>
   <div id="deelnemer_login" class="hidden flex flex-col md:flex-row gap-4 my-8 font-semibold">
     <label class="flex-1">
@@ -72,8 +91,9 @@
       form = document.getElementById('deelnemer_form')
       form.classList.remove('hidden')
       inputs = [... form.getElementsByTagName('input')]
+      $notRequired = ['deelnemer_tussenvoegsel', 'deelnemer_telefoon', 'geboorte_datum', 'geboorte_tijd', 'geboorte_plaats']
       inputs.forEach(input => {
-        if(input.name != 'deelnemer_tussenvoegsel' && input.name != 'deelnemer_telefoon'){
+        if(!$notRequired.includes(input.name)){
           input.required = true;
         }
       });

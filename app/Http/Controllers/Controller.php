@@ -30,6 +30,9 @@ abstract class Controller
           "voornaam" => $request->deelnemer_voornaam,
           "tussenvoegsel" => $request->deelnemer_tussenvoegsel,
           "achternaam" => $request->deelnemer_achternaam,
+          "geboorte_datum" => $request->geboorte_datum,
+          "geboorte_tijd" => $request->geboorte_tijd,
+          "geboorte_plaats" => $request->geboorte_plaats,
           "email" => $request->deelnemer_email,
           "telefoon_nummer" => $request->deelnemer_telefoon,
           "wachtwoord" => $request->deelnemer_wachtwoord

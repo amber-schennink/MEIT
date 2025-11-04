@@ -12,10 +12,10 @@
     <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
       <div id="trainingen">
         <div class="flex flex-col md:flex-row justify-between items-center mb-3">
-          <h2>Trainingen</h2>
-          <div>
+          <h2>Trajecten</h2>
+          <div class="flex flex-col md:block">
             <a href="overzicht_export"><button>Exporteer data deelnemers</button></a>
-            <a href="training_form"><button class="ml-5">Nieuwe training</button></a>
+            <a href="training_form"><button class="ml-5 mt-3 md:mt-0">Nieuw traject</button></a>
           </div>
         </div>
         <div class="trainingen">
@@ -49,8 +49,10 @@
                       ?>
                       <div class="blokken">
                         <div>
-                          <img src="{{asset('assets/user.svg')}}" /> 
-                          <p>{{$deelnemer->voornaam}} {{$deelnemer->tussenvoegsel}} {{$deelnemer->achternaam}}</p>
+                          <a class="hover:underline underline-offset-2 flex items-center" href="{{url('deelnemers/' . $deelnemer->id)}}">
+                            <img src="{{asset('assets/user.svg')}}" /> 
+                            <p>{{$deelnemer->voornaam}} {{$deelnemer->tussenvoegsel}} {{$deelnemer->achternaam}}</p>
+                          </a>
                         </div>
                         <div>
                           <a class="hover:underline underline-offset-2 flex items-center" href="mailto: {{$deelnemer->email}}">
@@ -87,7 +89,7 @@
                   @endforeach
                 </div>
               @else
-              <h6>Er zijn nog geen aanmeldingen gedaan voor deze training</h6>
+              <h6>Er zijn nog geen aanmeldingen gedaan voor dit traject</h6>
               @endif
               @if($wachtlijst)
                 <h6>Wachtlijst:</h6>
@@ -95,8 +97,10 @@
                   <?php $deelnemer = $deelnemers->filter(fn($val) => $val->id == $aanmelding->id_deelnemer)->first() ?>
                   <div class="blokken">
                     <div>
-                      <img src="{{asset('assets/user.svg')}}" /> 
-                      <p>{{$deelnemer->voornaam}} {{$deelnemer->tussenvoegsel}} {{$deelnemer->achternaam}}</p>
+                      <a class="hover:underline underline-offset-2 flex items-center" href="{{url('deelnemers/' . $deelnemer->id)}}">
+                        <img src="{{asset('assets/user.svg')}}" /> 
+                        <p>{{$deelnemer->voornaam}} {{$deelnemer->tussenvoegsel}} {{$deelnemer->achternaam}}</p>
+                      </a>
                     </div>
                     <div>
                       <a class="hover:underline underline-offset-2 flex items-center" href="mailto: {{$deelnemer->email}}">
@@ -130,7 +134,7 @@
       </div>
       <div id="pop-up" onclick="this.classList.add('!hidden')" class="!hidden">
         <div>
-          <h4>Weet je zeker dat je deze training wilt verwijderen?</h4>
+          <h4>Weet je zeker dat je dit traject wilt verwijderen?</h4>
           <p>Alle aanmeldingen zullen ook worden verwijderd</p>
           <div>
             <a id="afmelden" onclick="event.stopPropagation();"><button>Verwijderen</button></a>

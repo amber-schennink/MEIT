@@ -50,7 +50,7 @@
 
             }
           ?>
-          <h6>{{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}</h6>
+          <h6 class="whitespace-nowrap">{{$datum->format('j')}} <span class="hidden lg:inline">{{$maanden[$datum->format('m') - 1]}}</span> <span class="lg:hidden">{{substr($maanden[$datum->format('m') - 1], 0, 3)}}</span></h6>
 
           @if($file == 'overzicht_ceremonies' &&
             (!array_key_exists('mogelijkheden', $dag_data) || $dag_data['mogelijkheden']->isEmpty()) && 
@@ -105,7 +105,7 @@
     <p class="before:content-[''] before:bg-ceremonies before:h-5 before:w-5 before:block flex gap-2">Ceremonies</p>
   @endif
   @if(array_key_exists('trainingen', $data))
-    <p class="before:content-[''] before:bg-trainingen before:h-5 before:w-5 before:block flex gap-2">Trainingen</p>
+    <p class="before:content-[''] before:bg-trainingen before:h-5 before:w-5 before:block flex gap-2">Trajecten</p>
   @endif
 </div>
 <script>
@@ -155,4 +155,5 @@
       knopL.classList.remove('uit');
     }
   }
+  checkArrows('l')
 </script>

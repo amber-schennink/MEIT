@@ -34,10 +34,10 @@
         <h4></h4>
       </div>
       @if($edit)
-        <h2 class="mb-8">Training aanpassen</h2>
+        <h2 class="mb-8">Traject aanpassen</h2>
         <form onsubmit="return checkForm()" action="{{url('training/'.$training->id)}}" method="POST">
       @else
-        <h2 class="mb-8">Nieuwe training</h2>
+        <h2 class="mb-8">Nieuw traject</h2>
         <form onsubmit="return checkForm()" action="{{url('training')}}" method="POST">
       @endif
         @csrf

@@ -39,7 +39,7 @@
     ?>
 
     <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
-      <h2>Training</h2>
+      <h2>Traject</h2>
       <div class="flex flex-col gap-4 my-5">
         @php($i = 1)
         @foreach($training as $key => $moment)
@@ -74,10 +74,10 @@
       <div class="mt-10">
           
         @if($beschikbaar > 0)
-          <p>Er zijn nog {{$beschikbaar}} plaatsen beschikbaar voor deze training</p>
+          <p>Er zijn nog {{$beschikbaar}} plaatsen beschikbaar voor dit traject</p>
         @else
-          <p>Sorry het is niet meer mogenlijk om je aan te melden voor deze training.</p> 
-          <p>Bekijk mijn <a class="underline underline-offset-2" href="../trainingen">andere trainingen</a> of geef je op voor de wachtlijst (als er een plekje vrij komt neem ik contact met je op)</p>
+          <p>Sorry het is niet meer mogenlijk om je aan te melden voor dit traject.</p> 
+          <p>Bekijk mijn <a class="underline underline-offset-2" href="../trainingen">andere trajecten</a> of geef je op voor de wachtlijst (als er een plekje vrij komt neem ik contact met je op)</p>
         @endif
         @if(session('login') && session('id') && session('admin') == false && $aanmeldingen->contains('id_deelnemer', session('id')))
           <?php $betaal_status = $aanmeldingen->where('id_deelnemer', '=',  session('id'))->first()->betaal_status; ?>

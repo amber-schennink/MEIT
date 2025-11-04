@@ -141,7 +141,7 @@ class CheckoutController extends Controller
                 ]);
             } else {
                 // Al (deels) betaald → voorkom dubbele inschrijving
-                return redirect($nextUrl)->with('msg', 'Je bent al aangemeld voor deze training.');
+                return redirect($nextUrl)->with('msg', 'Je bent al aangemeld voor dit traject.');
             }
         } else {
             // Nog geen aanmelding → nieuw record
