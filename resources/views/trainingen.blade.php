@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   @include('head')
   <body class="bg-main">
-    @include('nav')
+    @include('partials.nav')
 
     <?php
       use Illuminate\Support\Facades\DB;
@@ -13,7 +13,7 @@
       $deadline = new DateTime('00:00:00');
       $deadline->modify('+7 days');
     ?>
-    <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
+    <div class="container">
       <h2 class="mb-3 wrap-break-word">Traject MEIT. Transformatieproces</h2>
       <div class="trainingen">
         @foreach($trainingen as $key => $training)
@@ -64,6 +64,7 @@
       </div>
     </div>
 
+    @include('partials.footer')
   </body>
 </html>
 <style>

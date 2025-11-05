@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   @include('head')
   <body class="bg-main">
-    @include('nav')
+    @include('partials.nav')
     @include('partials.flash')
     
     <?php
@@ -17,5 +17,6 @@
       <button id="login_button" class="mt-5" type="submit">Log in</button>
     </form>
 
+    @include('partials.footer')
   </body>
 </html>

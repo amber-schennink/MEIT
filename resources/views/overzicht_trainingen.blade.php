@@ -2,14 +2,14 @@
 <html class="scroll-smooth" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   @include('head')
   <body class="bg-main">
-    @include('nav')
+    @include('partials.nav')
 
     <?php 
       use Illuminate\Support\Facades\Config;
       $maanden = Config::get('info.maanden');
     ?>
     
-    <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
+    <div class="container">
       <div id="trainingen">
         <div class="flex flex-col md:flex-row justify-between items-center mb-3">
           <h2>Trajecten</h2>
@@ -143,6 +143,8 @@
         </div>
       </div>
     </div>
+    
+    @include('partials.footer')
   </body>
 </html>
 

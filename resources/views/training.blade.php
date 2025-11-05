@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   @include('head')
   <body class="bg-main">
-    @include('nav')
+    @include('partials.nav')
 
     <?php
 
@@ -38,7 +38,7 @@
       ]
     ?>
 
-    <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
+    <div class="container">
       <h2>Traject</h2>
       <div class="flex flex-col gap-4 my-5">
         @php($i = 1)
@@ -84,5 +84,7 @@
         </div>
       </div>
     </div>
+    
+    @include('partials.footer')
   </body>
 </html>

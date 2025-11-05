@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   @include('head')
   <body class="bg-main">
-    @include('nav')
+    @include('partials.nav')
     @include('partials.flash')
 
     <?php 
@@ -11,7 +11,7 @@
       $prijs = Config::get('info.prijs');
     ?>
     
-    <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
+    <div class="container">
       @if(isset($admin) && $admin === true)
         <h2>{{$deelnemer->voornaam}} {{$deelnemer->tussenvoegsel}} {{$deelnemer->achternaam}}</h2>
         <div>
@@ -211,7 +211,6 @@
                   <img src="{{asset('assets/time.svg')}}" /> 
                   <p>{{$begin_tijd->format('H:i')}} - {{$eind_tijd->format('H:i')}}</p>
                 </div>
-                <?php echo '<script>console.log(`'.json_encode($deelnemer->telefoon_nummer).'`)</script>'; ?>
                 @if(isset($admin) && $admin === true)
                   @if($deelnemer->telefoon_nummer)
                     <a href="tel:{{$deelnemer->telefoon_nummer}}"><button class="flex justify-center items-center"><img src="{{asset('assets/telephone.svg')}}"/> Bellen </button></a>
@@ -251,6 +250,7 @@
       </div>
     </div>
 
+    @include('partials.footer')
   </body>
 </html>
 <script>

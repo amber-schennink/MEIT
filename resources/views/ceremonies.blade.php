@@ -2,19 +2,19 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   @include('head')
   <body class="bg-main">
-    @include('nav')
+    @include('partials.nav')
     @include('partials.flash')
     <?php
 
       use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
+      use Illuminate\Support\Facades\DB;
 
       $schema_start = Config::get('info.schema_start');
       $schema_eindig = Config::get('info.schema_eindig');
       $maanden = Config::get('info.maanden');
     ?>
     
-    <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
+    <div class="container">
       <h2 class="mb-3">Ceremonies</h2>
       <h3 class="ml-[10%]">Inschrijven intakegesprek</h3>
       <div>
@@ -43,6 +43,7 @@ use Illuminate\Support\Facades\DB;
       </form>
     </div>
 
+    @include('partials.footer')
   </body>
 </html>
 

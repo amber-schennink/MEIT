@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   @include('head')
-  <body class="bg-main">
-    @include('nav')
+  <body>
+    @include('partials.nav')
     
-    <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
+    <div class="container">
       <div class="flex flex-col gap-5 justify-center items-center">
         <a class="w-fit" href="{{url('trainingen')}}"><button>Trajecten</button></a>
         <a class="w-fit" href="{{url('ceremonies')}}"><button>Ceremonies</button></a>
@@ -16,5 +16,6 @@
       </div>
     </div>
 
+    @include('partials.footer')
   </body>
 </html>

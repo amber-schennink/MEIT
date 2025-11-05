@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   @include('head')
   <body class="bg-main">
-    @include('nav')
+    @include('partials.nav')
 
     <?php
 
@@ -21,7 +21,7 @@
       $intakegesprekken_afgelopen_week = $intakegesprekken->where('created_at', '>=', $datum->format('Y-m-d'))->count();
     ?>
     
-    <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
+    <div class="container">
       <div>
         <div class="flex flex-col md:flex-row justify-between items-center mb-3">
           <h2>Overzicht</h2>
@@ -57,5 +57,7 @@
         @include('partials.schema')
       </div>
     </div>
+    
+    @include('partials.footer')
   </body>
 </html>

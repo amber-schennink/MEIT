@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   @include('head')
   <body class="bg-main">
-    @include('nav')
+    @include('partials.nav')
     @include('partials.flash')
 
     <?php 
@@ -14,7 +14,7 @@
       $maanden = Config::get('info.maanden');
     ?>
     
-    <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
+    <div class="container">
       <div id="ceremonies">
         <h2 class="mb-3">Ceremonies</h2>
         <div class="ceremonie-container">
@@ -140,6 +140,8 @@
         </div>
       </div>
     </div>
+    
+    @include('partials.footer')
   </body>
 </html>
 <style>

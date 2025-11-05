@@ -27,6 +27,12 @@
 html {
   @apply text-white 
 }
+body{
+  @apply bg-main min-h-screen flex flex-col
+}
+body .container {
+  @apply max-w-[68rem] w-full mx-auto my-10 px-4 py-8
+}
 
 button {
   @apply cursor-pointer min-w-52 min-h-12 px-2.5 py-0.5 rounded bg-second hover:bg-second-dark text-white font-lora font-[100] text-lg
@@ -233,6 +239,12 @@ nav{
   .hamburger-active nav{
     @apply h-screen
   }
+}
+.footer-icons a {
+  @apply border border-white rounded-full w-9 h-9 flex cursor-pointer
+}
+.footer-icons a img{
+  @apply h-4 w-4 m-auto
 }
 
 .hamburger > div {

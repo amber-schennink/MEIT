@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   @include('head')
   <body class="bg-main">
-    @include('nav')
+    @include('partials.nav')
     <?php
       use Illuminate\Support\Facades\Config;
       use Illuminate\Support\Facades\DB;
@@ -29,7 +29,7 @@
       }
     ?>
     
-    <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
+    <div class="container">
       <div id="error" class="fixed top-5 left-0 right-0 w-fit m-auto bg-red-600 rounded-xl p-4 transition duration-500 opacity-0">
         <h4></h4>
       </div>
@@ -89,6 +89,7 @@
 
     </div>
 
+    @include('partials.footer')
   </body>
 </html>
 <style>

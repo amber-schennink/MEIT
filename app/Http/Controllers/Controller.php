@@ -35,7 +35,7 @@ abstract class Controller
           "geboorte_plaats" => $request->geboorte_plaats,
           "email" => $request->deelnemer_email,
           "telefoon_nummer" => $request->deelnemer_telefoon,
-          "wachtwoord" => $request->deelnemer_wachtwoord
+          "wachtwoord" => Hash::make($request->deelnemer_wachtwoord)
         );
         DB::table('deelnemers')->insert($data_deelnemer);
         $id_deelnemer = DB::getPdo()->lastInsertId();

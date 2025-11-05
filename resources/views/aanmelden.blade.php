@@ -2,7 +2,7 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   @include('head')
   <body class="bg-main">
-    @include('nav')
+    @include('partials.nav')
     @include('partials.flash')
     <?php
       use Illuminate\Support\Facades\DB; 
@@ -12,7 +12,7 @@
       $prijs = Config::get('info.prijs');
     ?>
     
-    <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
+    <div class="container">
       <h2 class="mb-8">Aanmelden traject</h2>
       <form onsubmit="return checkForm()" action="{{ route('checkout.start') }}" method="POST">
         @csrf
@@ -133,6 +133,7 @@
       </form>
     </div>
 
+    @include('partials.footer')
   </body>
 </html>
 <script>
