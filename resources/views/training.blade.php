@@ -15,7 +15,7 @@
 
       $aanmeldingen = DB::table('aanmeldingen')
         ->where('id_training', '=', $training->id)
-        ->select('id_deelnemer', 'betaal_status')->get();
+        ->get();
       $beschikbaar = 4;
       foreach ($aanmeldingen as $key => $val) {
         if($val->betaal_status != 0){
@@ -72,32 +72,16 @@
         @endforeach
       </div>
       <div class="mt-10">
-          
         @if($beschikbaar > 0)
           <p>Er zijn nog {{$beschikbaar}} plaatsen beschikbaar voor dit traject</p>
         @else
           <p>Sorry het is niet meer mogenlijk om je aan te melden voor dit traject.</p> 
           <p>Bekijk mijn <a class="underline underline-offset-2" href="../trainingen">andere trajecten</a> of geef je op voor de wachtlijst (als er een plekje vrij komt neem ik contact met je op)</p>
         @endif
-        @if(session('login') && session('id') && session('admin') == false && $aanmeldingen->contains('id_deelnemer', session('id')))
-          <?php $betaal_status = $aanmeldingen->where('id_deelnemer', '=',  session('id'))->first()->betaal_status; ?>
-          @if($betaal_status == 0)
-            @if($beschikbaar > 0)
-              <p class="text-xs">(Rond betaling af om je plek te garanderen)</p>
-              <a <?php echo 'href="../aanmelden/'.$training->id.'"' ?>><button class="alt">Op wachtlijst</button></a>
-            @else
-              <button class="alt-3">Op wachtlijst</button>
-            @endif
-          @elseif($betaal_status != 0)
-            <button class="alt-2">Aangemeld</button>
-          @endif
-        @else
-          @if($beschikbaar > 0)
-            <a <?php echo 'href="../aanmelden/'.$training->id.'"' ?>><button class="mt-3">Aanmelden</button></a>
-          @else
-            <button <?php echo 'href="../aanmelden/'.$training->id.'"' ?> class="mt-3 alt">Opgeven wachtlijst</button>
-          @endif
-        @endif
+
+        <div class="w-fit mt-3">
+          @include('partials.trainingen_button')
+        </div>
       </div>
     </div>
   </body>

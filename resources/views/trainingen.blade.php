@@ -9,6 +9,9 @@
 
       use Illuminate\Support\Facades\Config;
       $maanden = Config::get('info.maanden');
+      
+      $deadline = new DateTime('00:00:00');
+      $deadline->modify('+7 days');
     ?>
     <div class="max-w-[68rem] mx-auto my-10 px-4 py-8">
       <h2 class="mb-3 wrap-break-word">Traject MEIT. Transformatieproces</h2>
@@ -27,7 +30,7 @@
               }
             }
           ?>
-          @if(new DateTime($training->start_moment) < new DateTime('00:00:00'))
+          @if(new DateTime($training->start_moment) < $deadline)
           <div class="flex flex-col justify-between opacity-70">
           @else
           <div class="flex flex-col justify-between">
@@ -54,45 +57,7 @@
             <div>
               <p class="mb-2"><a class="hover:underline underline-offset-2" <?php echo 'href="training/'.$training->id.'"' ?> >meer info -></a></p>
 
-              <?php
-                $btnTekst = 'Aanmelden';
-                $extraTekst = '';
-                $betaald = false;
-                $btnUit = false;
-                $termijn = false;
-                $deelnemer = null;
-                if(session('id')){
-                  $deelnemer = $aanmeldingen->where('id_deelnemer', '=',  session('id'))->first();
-                }
-                if($deelnemer){
-                  if($deelnemer->betaal_status == 0){
-                    $btnTekst = 'Op wachtlijst';
-                    if($beschikbaar > 0){
-                      $extraTekst = '(Rond betaling af om je plek te garanderen)';
-                    }
-                  }elseif($deelnemer->betaal_status == 1){
-                    $termijn = true;
-                  }else{
-                    $btnTekst = 'Aangemeld';
-                    $btnUit = true;
-                  }
-                }elseif(new DateTime($training->start_moment) < new DateTime('00:00:00')){
-                  $extraTekst = 'Sorry het is niet meer mogenlijke om je aan te melden voor dit traject';
-                  $btnUit = true;
-                }elseif($beschikbaar == 0){
-                  $btnTekst = 'Opgeven wachtlijst';
-                }
-              ?>
-              @if($extraTekst)
-                <p class="mb-3">{{$extraTekst}}</p>
-              @endif
-              @if($btnUit)
-                <button class="uit w-full" type="button">{{$btnTekst}}</button>
-              @elseif($termijn)
-                <a href="{{url('/checkout/charge-remaining/' . $deelnemer->id)}}"><button class="w-full">Betaal termijn</button></a>
-              @else 
-                <a <?php echo 'href="../aanmelden/'.$training->id.'"' ?>><button class="w-full">{{$btnTekst}}</button></a>
-              @endif
+              @include('partials.trainingen_button')
             </div>
           </div>
         @endforeach
@@ -101,3 +66,8 @@
 
   </body>
 </html>
+<style>
+  .trainingen button {
+    width: 100%;
+  }
+</style>

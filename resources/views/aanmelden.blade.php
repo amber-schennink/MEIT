@@ -89,11 +89,46 @@
         </div>
         <br>
         <br>
-        @if($datetime < new DateTime('00:00:00'))
-          <p class="mb-3">Sorry het is niet meer mogenlijke om je aan te melden voor dit traject</p>
-          <button class="uit" type="button">Aanmelden</button>
+        <?php 
+          $aanmeldingen = DB::table('aanmeldingen')
+            ->where('id_training', '=', $training->id)->get();
+          
+          $btnTekst = 'Aanmelden';
+          $extraTekst = '';
+          $betaald = false;
+          $btnUit = false;
+          $termijn = false;
+          $deelnemer = null;
+          if(!isset($deadline)){
+            $deadline = new DateTime('00:00:00');
+            $deadline->modify('+7 days');
+          }
+          if(session('id')){
+            $deelnemer = $aanmeldingen->where('id_deelnemer', '=',  session('id'))->first();
+          }
+          if($deelnemer){
+            if($deelnemer->betaal_status == 1){
+              $termijn = true;
+            }elseif($deelnemer->betaal_status == 2){
+              $btnTekst = 'Aangemeld';
+              $btnUit = true;
+            }
+          }elseif(new DateTime($training->start_moment) < $deadline){
+            $extraTekst = 'Sorry het is niet meer mogenlijke om je aan te melden voor dit traject';
+            $btnUit = true;
+          }elseif($beschikbaar == 0){
+            $btnTekst = 'Opgeven wachtlijst';
+          }
+        ?>
+        @if($extraTekst)
+          <p class="mb-3">{{$extraTekst}}</p>
+        @endif
+        @if($btnUit)
+          <button class="uit" type="button">{{$btnTekst}}</button>
+        @elseif($termijn)
+          <a href="{{url('/checkout/charge-remaining/' . $deelnemer->id)}}"><button type="button">Betaal termijn</button></a>
         @else 
-          <button type="submit">Aanmelden</button>
+          <button type="submit">{{$btnTekst}}</button>
         @endif
       </form>
     </div>
