@@ -2,14 +2,15 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   @include('head')
   <body class="bg-main">
-    @include('partials.nav')
-    @include('partials.flash')
-
     <?php 
       use Illuminate\Support\Facades\Config;
       $maanden = Config::get('info.maanden');
       $prijs = Config::get('info.prijs');
+      $file_type = 'overzicht';
     ?>
+    @include('partials.nav')
+    @include('partials.flash')
+
     
     <div class="container">
       @if(isset($admin) && $admin === true)

@@ -88,6 +88,11 @@
           </div>
         </div>
         <br>
+        <label class="flex gap-2 checkbox-label">
+          <input class="w-6 h-6 opacity-0 absolute" type="checkbox" required/>
+          <span></span>
+          <p>Ik heb de <a target="_blank" href="{{asset('assets/Algemene voorwaarden MEIT. Traject .pdf')}}" class="underline underline-offset-2">Algemene voorwaarden</a> gelezen en begrepen.</p>
+        </label>
         <br>
         <?php 
           $aanmeldingen = DB::table('aanmeldingen')

@@ -50,7 +50,7 @@
       </label>
     </div>
     <label class="flex gap-2 checkbox-label">
-      <input class="w-6 h-6 opacity-0 absolute" type="checkbox" />
+      <input class="w-6 h-6 opacity-0 absolute" type="checkbox" required/>
       <span></span>
       <p>Ik heb de <a target="_blank" href="https://www.meit.nl/privacyverklaring" class="underline underline-offset-2">Privacyverklaring</a> gelezen en begrepen.</p>
     </label>

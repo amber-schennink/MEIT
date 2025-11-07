@@ -2,6 +2,9 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   @include('head')
   <body class="bg-main">
+    <?php 
+      $file_type = 'overzicht';
+    ?>
     @include('partials.nav')
 
     <?php

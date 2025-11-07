@@ -1,4 +1,8 @@
-<div class="relative h-[400px] p-10 bg-[url('../../public/assets/meittraject.png')] bg-cover" style="background-position: 50% 20%;">
+@if(isset($file_type) && $file_type == 'overzicht')
+<div class="relative h-[400px] text-black p-10 bg-[url('../../public/assets/meit_foto_lach.jpg')] bg-cover" style="background-position: 50% 50%;">
+@else
+<div class="relative h-[400px] text-black p-10 bg-[url('../../public/assets/meit_foto_boek.jpg')] bg-cover" style="background-position: 50% 40%;">
+@endif
   <div class="hamburger relative z-40 md:hidden ml-auto w-fit" onclick="this.parentElement.classList.toggle('hamburger-active')">
     <div class="bar1"></div>
     <div class="bar2"></div>
