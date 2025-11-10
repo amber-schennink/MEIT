@@ -13,9 +13,9 @@
       <div id="trainingen">
         <div class="flex flex-col md:flex-row justify-between items-center mb-3">
           <h2>Trajecten</h2>
-          <div class="flex flex-col md:block">
+          <div class="flex flex-col items-center md:block">
             <a href="overzicht_export"><button>Exporteer data deelnemers</button></a>
-            <a href="training_form"><button class="ml-5 mt-3 md:mt-0">Nieuw traject</button></a>
+            <a href="training_form"><button class="md:ml-5 mt-3 md:mt-0">Nieuw traject</button></a>
           </div>
         </div>
         <div class="trainingen">
