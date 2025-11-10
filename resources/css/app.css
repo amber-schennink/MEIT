@@ -35,7 +35,7 @@ body .container {
 }
 
 button {
-  @apply cursor-pointer min-w-52 min-h-12 px-2.5 py-0.5 rounded bg-second hover:bg-second-dark text-white font-lora font-[100] text-lg
+  @apply uppercase cursor-pointer min-w-52 min-h-12 px-2.5 py-0.5 rounded bg-second hover:bg-second-dark text-white font-lora font-[100] text-lg
 }
 button.alt {
   @apply bg-second/75 hover:bg-second-dark/75
@@ -248,7 +248,7 @@ nav{
 }
 
 .hamburger > div {
-  @apply w-[30px] h-[3px] bg-white my-1.5;
+  @apply w-[30px] h-[3px] bg-black my-1.5;
   transition: 0.4s;
 }
 

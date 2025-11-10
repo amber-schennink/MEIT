@@ -67,16 +67,19 @@
                 <h4 class="text-xl ml-auto mt-auto !mb-0 font-bold w-fit">€{{$prijs}},-</h4>
                 <input type="radio" name="betaal_optie" value="2" checked/>
               </label>
+              <!-- 
+              optie 2 termijnen
+              
               <label class="bg-main-light border-main-light">
                 <h4>Betalen in 2 termijnen</h4>
                 <?php 
-                  $datetime = new DateTime($training->start_moment);
-                  $datetime->modify('-7 day');
+                  // $datetime = new DateTime($training->start_moment);
+                  // $datetime->modify('-7 day');
                 ?>
                 <p>Betaal nu €{{$prijs / 2}},- en €{{$prijs / 2}},- voor <span class="font-semibold">{{$datetime->format('j')}} {{$maanden[$datetime->format('m') - 1]}}</span></p>
                 <h4 class="text-xl ml-auto mt-auto !mb-0 font-bold w-fit">2 x €{{$prijs / 2}},-</h4>
                 <input type="radio" name="betaal_optie" value="1"/>
-              </label>
+              </label> -->
             @endif
             @if(!$wachtlijst)
               <label class="bg-main-not-payed border-main-not-payed">
@@ -91,7 +94,7 @@
         <label class="flex gap-2 checkbox-label">
           <input class="w-6 h-6 opacity-0 absolute" type="checkbox" required/>
           <span></span>
-          <p>Ik heb de <a target="_blank" href="{{asset('assets/Algemene voorwaarden MEIT. Traject .pdf')}}" class="underline underline-offset-2">Algemene voorwaarden</a> gelezen en begrepen.</p>
+          <p>Ik heb de <a target="_blank" href="{{url('/algemene_voorwaarden_traject')}}" class="underline underline-offset-2">Algemene voorwaarden</a> gelezen en begrepen.</p>
         </label>
         <br>
         <?php 

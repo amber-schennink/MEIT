@@ -14,7 +14,7 @@
       $deadline->modify('+7 days');
     ?>
     <div class="container">
-      <h2 class="mb-3 wrap-break-word">Traject MEIT. Transformatieproces</h2>
+      <h2 class="mb-3 wrap-break-word">MEIT. Traject</h2>
       <div class="trainingen">
         @foreach($trainingen as $key => $training)
           @if(new DateTime($training->start_moment_4) < new DateTime('00:00:00'))
@@ -62,6 +62,11 @@
           </div>
         @endforeach
       </div>
+      @if($trainingen->isEmpty())
+        <p>Er zijn momenteel geen trajecten beschikbaar.</p>
+        <p>Hou de socials van MEIT. in de gaten voor de laatste updates en nieuwe data ✨</p>
+        <p>Al ingeschreven voor een traject? <a class="hover:underline underline-offset-2 text-second" href="{{url('login')}}">Log in</a> om de trajecten te bekijken</p>
+      @endif
     </div>
 
     @include('partials.footer')

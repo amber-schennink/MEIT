@@ -57,6 +57,10 @@ Route::post('/training/{id}', 'App\Http\Controllers\TrainingenController@trainin
 
 Route::get('/training_verwijderen/{id}', 'App\Http\Controllers\TrainingenController@trainingVerwijderen');
 
+Route::get('/algemene_voorwaarden_traject', function () {
+  return view('algemene_voorwaarden_traject');
+});
+
 Route::get('/aanmelden/{id}', function ($id) {
   $wachtlijst = false;
   if(session('login') && session('id')){

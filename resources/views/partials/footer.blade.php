@@ -8,9 +8,9 @@
       <a href="https://www.tiktok.com/@meit.reizen" target="_blank"><img src="{{asset('assets/tiktok.svg')}}"/></a>
       <a href="https://linktr.ee/MEIT.Links" target="_blank"><img src="{{asset('assets/linktree.svg')}}"/></a>
     </div>
-    <div>
-      <a target="_blank" href="{{asset('assets/Algemene voorwaarden MEIT. Traject .pdf')}}" class="hover:underline underline-offset-2 mr-2">Algemene voorwaarden</a>
-      <a target="_blank" href="https://www.meit.nl/privacyverklaring" class="hover:underline underline-offset-2 ml-2">Privacyverklaring</a>
+    <div class="flex flex-col items-center">
+      <a target="_blank" href="{{url('/algemene_voorwaarden_traject')}}" class="hover:underline underline-offset-2">Algemene voorwaarden</a>
+      <a target="_blank" href="https://www.meit.nl/privacyverklaring" class="hover:underline underline-offset-2">Privacyverklaring</a>
     </div>
   </div>
   <div class="w-full h-0.5 bg-white"></div>
