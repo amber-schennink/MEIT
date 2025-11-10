@@ -232,6 +232,9 @@ input[type=text], input[type=email], input[type=tel], input[type=password], inpu
 nav{
   @apply w-[85%] lg:w-[70%] mx-auto flex gap-5
 }
+nav a:has(p) {
+  @apply  bg-second/0 hover:bg-second hover:text-white transition-colors duration-300 p-2 uppercase
+}
 @media (width < 48rem){
   nav {
     @apply z-30 w-screen h-0 flex-col items-center bg-main fixed top-0 left-0 justify-center overflow-hidden transition-[height] ease-in-out duration-500
