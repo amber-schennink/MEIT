@@ -21,14 +21,16 @@
         <br>
         <p>Het MEIT. Traject is een kleinschalige persoonlijke reis waarin je leert begrijpen wat er in je leeft, hoe je met je energie omgaat en wat jou écht richting geeft.</p>
         <br>
-        <p>We komen samen in een warme huiskamersetting bij mij Magische Huisje in Schiedam, met een kleine groep van maximaal 4 deelnemers.</p>
+        <p>We komen samen in een warme huiskamersetting bij mijn Magische Huisje in Schiedam, met een kleine groep van maximaal 4 deelnemers.</p>
         <br>
         <p>Belangrijk om te weten:</p>
-        <p>Je plek is pas definitief na betaling</p>
-        <p>De pilotprijs bedraagt €222,- Vanaf 2026 zijn de kosten €444,-</p>
-        <p>Annuleren kan kosteloos tot 7 dagen vóór de startdatum</p>
-        <p>Na betaling ontvang je binnen 48 uur een bevestiging met alle praktische details.</p>
-        <p>Voel je dat dit het juist moment is om jezelf beter te leren begrijpen? Dan heet ik je met alle liefde welkom in het MEIT. Traject!</p>
+        <div>
+          <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/> Je plek is pas definitief na betaling</p>
+          <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/>De pilotprijs bedraagt €222,- Vanaf 2026 zijn de kosten €444,-</p>
+          <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/>Annuleren kan kosteloos tot 7 dagen vóór de startdatum</p>
+          <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/>Na betaling ontvang je binnen 48 uur een bevestiging met alle praktische details.</p>
+          <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/>Voel je dat dit het juist moment is om jezelf beter te leren begrijpen? Dan heet ik je met alle liefde welkom in het MEIT. Traject!</p>
+        </div>
         <br>
         <p>Twijfel je nog een beetje?</p>
         <p>Stuur gerust een mailtje naar <a href="mailto:welkom@meit.nl" class="hover:underline underline-offset-2 text-second">welkom@meit.nl</a>. Ik denk graag met je mee ♡</p>

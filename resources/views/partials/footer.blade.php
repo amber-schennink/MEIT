@@ -1,14 +1,14 @@
 <footer class="bg-main-light mt-auto">
   <div class="max-w-[68rem] m-auto flex flex-col sm:flex-row gap-5 justify-between items-center p-8">
-    <a class="w-1/3" href="{{url('/')}}"><img class="w-[60px]" src="{{asset('assets/meit_logo.png')}}" /></a>
-    <div class="w-1/3 flex gap-3 footer-icons items-center justify-center">
+    <a class="md:w-1/3" href="{{url('/')}}"><img class="w-[60px]" src="{{asset('assets/meit_logo.png')}}" /></a>
+    <div class="md:w-1/3 flex gap-3 footer-icons items-center justify-center">
       <a href="https://www.facebook.com/jacelyn.blok" target="_blank"><img src="{{asset('assets/facebook.svg')}}"/></a>
       <a href="https://www.linkedin.com/in/jacelyn-blok/" target="_blank"><img src="{{asset('assets/linkedin.svg')}}"/></a>
       <a href="https://www.instagram.com/meit.reizen/" target="_blank"><img src="{{asset('assets/insta.svg')}}"/></a>
       <a href="https://www.tiktok.com/@meit.reizen" target="_blank"><img src="{{asset('assets/tiktok.svg')}}"/></a>
-      <a href="https://linktr.ee/MEIT.Links" target="_blank"><img src="{{asset('assets/linktree.svg')}}"/></a>
+      <a href="https://linktr.ee/MEIT.Links" target="_blank"><img src="{{asset('assets/headphones.svg')}}"/></a>
     </div>
-    <div class="w-1/3">
+    <div class="md:w-1/3">
       <div class="w-fit ml-auto flex flex-col items-center">
         <a target="_blank" href="{{url('/algemene_voorwaarden_traject')}}" class="hover:underline underline-offset-2 font-lora">Algemene voorwaarden</a>
         <a target="_blank" href="https://www.meit.nl/privacyverklaring" class="hover:underline underline-offset-2 font-lora">Privacyverklaring</a>
