@@ -62,6 +62,13 @@
         <h2>Hallo {{$deelnemer->voornaam}}</h2>
       @endif
       <h3 id="trainingen" class="mt-5">Traject<?php if($trainingen->count() != 1){echo 'en';}?></h3>
+      @if(!isset($admin) || $admin !== true)
+        <div class="mb-5">
+          <p>Hieronder vind je de data van alle bijeenkomstdagen van het traject waarvoor je je plek hebt gereserveerd.</p> 
+          <p>Klik op meer info om te zien wat het thema van die dag is en hoe laat we samenkomen. </p> 
+          <p>Ik kijk er naar uit om je te ontmoeten en samen deze reis te maken ♡</p>
+        </div>
+      @endif
         @if($trainingen->count() != 0) 
           <div class="trainingen">
             @foreach($trainingen as $training)
