@@ -202,7 +202,6 @@ class CheckoutController extends Controller
             $session = $this->stripe->checkout->sessions->create([
                 'mode'     => 'payment',
                 'customer' => $customerId,
-                'payment_method_types' => ['ideal', 'card', 'klarna', 'bancontact'],
                 'payment_intent_data' => [
                     'setup_future_usage' => 'off_session',
                     'metadata' => [
@@ -238,7 +237,6 @@ class CheckoutController extends Controller
         $session = $this->stripe->checkout->sessions->create([
             'mode'     => 'payment',
             'customer' => $customerId,
-            'payment_method_types' => ['ideal', 'card', 'klarna', 'bancontact'],
             'payment_intent_data' => [
                 'setup_future_usage' => 'off_session',
                 'metadata' => [
