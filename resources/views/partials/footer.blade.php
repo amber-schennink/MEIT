@@ -10,13 +10,13 @@
     </div>
     <div class="w-1/3">
       <div class="w-fit ml-auto flex flex-col items-center">
-        <a target="_blank" href="{{url('/algemene_voorwaarden_traject')}}" class="hover:underline underline-offset-2">Algemene voorwaarden</a>
-        <a target="_blank" href="https://www.meit.nl/privacyverklaring" class="hover:underline underline-offset-2">Privacyverklaring</a>
+        <a target="_blank" href="{{url('/algemene_voorwaarden_traject')}}" class="hover:underline underline-offset-2 font-lora">Algemene voorwaarden</a>
+        <a target="_blank" href="https://www.meit.nl/privacyverklaring" class="hover:underline underline-offset-2 font-lora">Privacyverklaring</a>
       </div>
     </div>
   </div>
   <div class="w-full h-0.5 bg-white"></div>
   <div class="p-2 m-auto w-fit">
-    <h6 class="text-[18px]"><span class="font-bold">©</span> 2025 MEIT | <a href="https://eazyonline.nl/" target="_blank">Design by <img class="inline h-[22px]" src="{{asset('assets/eazyonline_logo.png')}}" /></a></h6>
+    <h6 class="text-[18px] font-lora"><span class="font-bold">©</span> 2025 MEIT | <a href="https://eazyonline.nl/" target="_blank">Design by <img class="inline h-[22px]" src="{{asset('assets/eazyonline_logo.png')}}" /></a></h6>
   </div>
 </footer>

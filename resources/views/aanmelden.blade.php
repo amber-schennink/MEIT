@@ -13,7 +13,26 @@
     ?>
     
     <div class="container">
-      <h2 class="mb-8">Aanmelden traject</h2>
+      <h2>Aanmelden traject</h2>
+      <div class="mb-8">
+        <p>Wat goed dat je hier bent!</p>
+        <br>
+        <p>Zoals je hieronder kunt zien, vind je de data van de vier bijeenkomstdagen van het Traject. Kijk even goed in je agenda of je op alle dagen aanwezig kunt zijn, want dit traject vraagt om jouw volledige aanwezigheid en aandacht.</p>
+        <br>
+        <p>Het MEIT. Traject is een kleinschalige persoonlijke reis waarin je leert begrijpen wat er in je leeft, hoe je met je energie omgaat en wat jou écht richting geeft.</p>
+        <br>
+        <p>We komen samen in een warme huiskamersetting bij mij Magische Huisje in Schiedam, met een kleine groep van maximaal 4 deelnemers.</p>
+        <br>
+        <p>Belangrijk om te weten:</p>
+        <p>Je plek is pas definitief na betaling</p>
+        <p>De pilotprijs bedraagt €222,- Vanaf 2026 zijn de kosten €444,-</p>
+        <p>Annuleren kan kosteloos tot 7 dagen vóór de startdatum</p>
+        <p>Na betaling ontvang je binnen 48 uur een bevestiging met alle praktische details.</p>
+        <p>Voel je dat dit het juist moment is om jezelf beter te leren begrijpen? Dan heet ik je met alle liefde welkom in het MEIT. Traject!</p>
+        <br>
+        <p>Twijfel je nog een beetje?</p>
+        <p>Stuur gerust een mailtje naar <a href="mailto:Jacelyn@meit.nl" class="hover:underline underline-offset-2 text-second">Jacelyn@meit.nl</a>. Ik denk graag met je mee ♡</p>
+      </div>
       <form onsubmit="return checkForm()" action="{{ route('checkout.start') }}" method="POST">
         @csrf
         <input name="first_name" type="text" class="hidden">
@@ -81,7 +100,7 @@
                 <input type="radio" name="betaal_optie" value="1"/>
               </label> -->
             @endif
-            @if(!$wachtlijst)
+            @if(!$wachtlijst && $beschikbaar == 0)
               <label class="bg-main-not-payed border-main-not-payed">
                 <h4>Op wachtlijst zetten</h4>
                 <p>Je bent niet gegarandeerd van een plek tot er een betaling is gedaan!</p>
