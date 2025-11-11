@@ -190,6 +190,11 @@ class CheckoutController extends Controller
             }
         }
 
+        $checkoutDescription = "Welkom bij de Pilot van het MEIT-traject! Met deze betaling bevestig je jouw deelname. "
+            ."Jouw plek is hiermee officieel gereserveerd. Na betaling ontvang je binnen 48 uur een mail met alle details.";
+
+        $checkoutImageUrl = secure_asset('assets/logo.png');
+
         // ───────────── ECHTE STRIPE CHECKOUT ─────────────
 
         // Volledige betaling
@@ -209,7 +214,11 @@ class CheckoutController extends Controller
                     'price_data' => [
                         'currency'    => 'eur',
                         'unit_amount' => $amountFull,
-                        'product_data'=> ['name' => 'Training #'.$training->id.' - volledige betaling'],
+                        'product_data'=> [
+                            'name'        => 'MEIT. Traject (Pilot)',          // titel links
+                            'description' => $checkoutDescription,             // tekst onder de prijs
+                            'images'      => [$checkoutImageUrl],              // grote afbeelding (phoenix)
+                        ],
                     ],
                 ]],
                 'success_url' => $successUrl,
@@ -240,7 +249,11 @@ class CheckoutController extends Controller
                 'price_data' => [
                     'currency'    => 'eur',
                     'unit_amount' => $amountHalf,
-                    'product_data'=> ['name' => 'Training #'.$training->id.' - 1/2 aanbetaling'],
+                    'product_data'=> [
+                        'name'        => 'MEIT. Traject (Pilot) – aanbetaling',
+                        'description' => $checkoutDescription,
+                        'images'      => [$checkoutImageUrl],
+                    ],
                 ],
             ]],
             'success_url' => $successUrl,
