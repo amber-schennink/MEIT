@@ -31,7 +31,7 @@
         <p>Voel je dat dit het juist moment is om jezelf beter te leren begrijpen? Dan heet ik je met alle liefde welkom in het MEIT. Traject!</p>
         <br>
         <p>Twijfel je nog een beetje?</p>
-        <p>Stuur gerust een mailtje naar <a href="mailto:Jacelyn@meit.nl" class="hover:underline underline-offset-2 text-second">Jacelyn@meit.nl</a>. Ik denk graag met je mee ♡</p>
+        <p>Stuur gerust een mailtje naar <a href="mailto:welkom@meit.nl" class="hover:underline underline-offset-2 text-second">welkom@meit.nl</a>. Ik denk graag met je mee ♡</p>
       </div>
       <form onsubmit="return checkForm()" action="{{ route('checkout.start') }}" method="POST">
         @csrf
