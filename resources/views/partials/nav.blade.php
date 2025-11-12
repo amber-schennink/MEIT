@@ -1,5 +1,7 @@
 @if(isset($file_type) && $file_type == 'overzicht')
 <div class="relative h-[400px] text-black p-10 bg-[url('../../public/assets/meit_foto_lach.jpg')] bg-cover" style="background-position: 50% 50%;">
+@elseif(isset($file_type) && $file_type == 'ceremonie')
+<div class="relative h-[400px] text-black p-10 bg-[url('../../public/assets/meit_foto_stoel.jpg')] bg-cover" style="background-position: 50% 15%;">
 @else
 <div class="relative h-[400px] text-black p-10 bg-[url('../../public/assets/meit_foto_boek.jpg')] bg-cover" style="background-position: 50% 40%;">
 @endif

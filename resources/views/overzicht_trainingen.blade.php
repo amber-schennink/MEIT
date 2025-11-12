@@ -35,6 +35,12 @@
                   @endif
                 @endforeach
               </div>
+              @php
+                $beginTijd = new DateTime($training->start_moment);
+                $eindTijd = new DateTime($training->start_moment);
+                $eindTijd->modify('+3 hours');
+              @endphp
+              <h6 class="text-main">{{$beginTijd->format('H:i')}} - {{$eindTijd->format('H:i')}}</h6>
               <?php 
                 $aanmeldingen_training = $aanmeldingen->filter(fn($val) => $val->id_training == $training->id);
                 $wachtlijst = [];

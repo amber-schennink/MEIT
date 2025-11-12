@@ -14,23 +14,21 @@
     
     <div class="container">
       <h2>Aanmelden traject</h2>
+      <br>
       <div class="mb-8">
         <p>Wat goed dat je hier bent!</p>
         <br>
-        <p>Zoals je hieronder kunt zien, vind je de data van de vier bijeenkomstdagen van het Traject. Kijk even goed in je agenda of je op alle dagen aanwezig kunt zijn, want dit traject vraagt om jouw volledige aanwezigheid en aandacht.</p>
-        <br>
-        <p>Het MEIT. Traject is een kleinschalige persoonlijke reis waarin je leert begrijpen wat er in je leeft, hoe je met je energie omgaat en wat jou écht richting geeft.</p>
-        <br>
-        <p>We komen samen in een warme huiskamersetting bij mijn Magische Huisje in Schiedam, met een kleine groep van maximaal 4 deelnemers.</p>
+        <p>Hieronder vind je de vier data van jouw Traject. Kijk even goed in je agenda of je op alle dagen aanwezig kunt zijn, want dit traject vraagt om jouw volledige aanwezigheid en aandacht.</p>
         <br>
         <p>Belangrijk om te weten:</p>
         <div>
-          <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/> Je plek is pas definitief na betaling</p>
-          <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/>De pilotprijs bedraagt €222,- Vanaf 2026 zijn de kosten €444,-</p>
-          <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/>Annuleren kan kosteloos tot 7 dagen vóór de startdatum</p>
+          <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/>Je plek is pas definitief na betaling</p>
+          <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/>Pilotprijs 2025: €222,- (incl. btw) Vanaf 2026 zijn de kosten €444,-</p>
+          <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/>Annuleren kan kosteloos t/m 7 dagen vóór de startdatum</p>
           <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/>Na betaling ontvang je binnen 48 uur een bevestiging met alle praktische details.</p>
-          <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/>Voel je dat dit het juist moment is om jezelf beter te leren begrijpen? Dan heet ik je met alle liefde welkom in het MEIT. Traject!</p>
         </div>
+        <br>
+        <p>Voel je dat dit het juist moment is om jezelf beter te leren begrijpen? Dan heet ik je met alle <span class="text-second">liefde</span> welkom in het MEIT. Traject!</p>
         <br>
         <p>Twijfel je nog een beetje?</p>
         <p>Stuur gerust een mailtje naar <a href="mailto:welkom@meit.nl" class="hover:underline underline-offset-2 text-second">welkom@meit.nl</a>. Ik denk graag met je mee ♡</p>
@@ -54,7 +52,7 @@
         @else
           @include('form_info_deelnemer')
         @endif
-        <h3>Info traject</h3>
+        <h3>Praktische info</h3>
         <div class="training-overzicht">
           @foreach($training as $key => $val)
             @if(str_contains($key, 'start_moment'))
@@ -80,11 +78,11 @@
           @endforeach
         </div>
         <div>
-          <h3>Kies je betaal optie</h3>
+          <h3>Klaar om te starten?</h3>
           <div class="betaal-opties">
             @if($beschikbaar > 0)
               <label class="bg-main-payed border-main-payed flex flex-col">
-                <h4>Volledige betaling</h4>
+                <h4>Eenmalige betaling</h4>
                 <h4 class="text-xl ml-auto mt-auto !mb-0 font-bold w-fit">€{{$prijs}},-</h4>
                 <input type="radio" name="betaal_optie" value="2" checked/>
               </label>
@@ -110,6 +108,9 @@
               </label>
             @endif
           </div>
+          @if($beschikbaar > 0)
+            <p class="text-sm -mt-5">Je deelname is definitief na betaling.</p>
+          @endif
         </div>
         <br>
         <label class="flex gap-2 checkbox-label">
@@ -122,7 +123,7 @@
           $aanmeldingen = DB::table('aanmeldingen')
             ->where('id_training', '=', $training->id)->get();
           
-          $btnTekst = 'Aanmelden';
+          $btnTekst = 'Reserveer mijn plek';
           $extraTekst = '';
           $betaald = false;
           $btnUit = false;

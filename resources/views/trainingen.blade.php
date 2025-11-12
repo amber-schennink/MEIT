@@ -32,7 +32,7 @@
             }
           ?>
           @if(new DateTime($training->start_moment) < $deadline)
-          <div class="flex flex-col justify-between opacity-70">
+          <div class="flex flex-col justify-between opacity-70 order-1">
           @else
           <div class="flex flex-col justify-between">
           @endif
@@ -50,6 +50,12 @@
                 @endif
               @endforeach
             </div>
+            @php
+              $beginTijd = new DateTime($training->start_moment);
+              $eindTijd = new DateTime($training->start_moment);
+              $eindTijd->modify('+3 hours');
+            @endphp
+            <p>{{$beginTijd->format('H:i')}} - {{$eindTijd->format('H:i')}}</p>
             @if($beschikbaar > 0)
               <p class="my-5">Er <?php echo ($beschikbaar == 1) ? 'is' : 'zijn' ?> nog {{$beschikbaar}} plek<?php if($beschikbaar != 1){echo 'ken';} ?> beschikbaar</p>
             @else

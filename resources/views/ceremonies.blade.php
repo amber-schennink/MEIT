@@ -2,8 +2,6 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   @include('head')
   <body class="bg-main">
-    @include('partials.nav')
-    @include('partials.flash')
     <?php
 
       use Illuminate\Support\Facades\Config;
@@ -12,7 +10,11 @@
       $schema_start = Config::get('info.schema_start');
       $schema_eindig = Config::get('info.schema_eindig');
       $maanden = Config::get('info.maanden');
+
+      $file_type = 'ceremonie';
     ?>
+    @include('partials.nav')
+    @include('partials.flash')
     
     <div class="container">
       <h2 class="mb-3">Ceremonies</h2>

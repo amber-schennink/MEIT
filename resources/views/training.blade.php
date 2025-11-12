@@ -25,21 +25,28 @@
 
       $kop_teksten = [
         'Je energiebron', 
-        'Je kernwond (Astrologie)',
-        'Je levensmissie (Maya-kalender)',
+        'Patronen en Emoties',
+        'Richting en vervulling',
         'Integratie'
       ];
 
       $teksten = [
-        'Hoe je je energie sterker en stabieler houdt in het dagelijks leven.', 
-        'Inzicht in terugkerende patronen en emoties.',
-        'Ontdekken welke richting jou vervulling geeft.',
-        'Alles samenbrengen en kijken hoe je dit toepast in je leven.'
+        'Leer hoe je beter met je eigen energie omgaat en wat je nodig hebt om stabiel en opgeladen te blijven in het dagelijks leven. We werken met bewustwording, ademhaling en praktische oefeningen voor thuis.', 
+        'Krijg inzicht in terugkerende emoties of situaties en ontdek waar ze vandaan komen. Je leert begrijpen wat je tegenhoudt en hoe je oude patronen kunt doorbreken.',
+        'Ontdek wat jou voldoening geeft, waar jouw natuurlijke energie van gaat stromen en welke richting daarbij past. We kijken samen naar jouw persoonlijke blauwdruk en hoe je die kunt volgen.',
+        'We brengen alles samen en vertalen jouw inzichten naar kleine, haalbare stappen voor je dagelijks leven. Je vertrekt met meer rust, richting en vertrouwen in wie je bent.'
       ]
     ?>
 
     <div class="container">
-      <h2>Traject</h2>
+      <h2>MEIT. traject</h2>
+      <p>Het MEIT. Traject is een persoonlijke reis van 4 weken waarin je leert jezelf beter te begrijpen, meer rust te vinden en helderheid te krijgen over <span class="text-second">wie je bent</span> en wat je nodig hebt.</p>
+      <p>Elke bijeenkomst duurt 3 uur en vindt plaats in een kleine groep in een gezellige setting bij mijn magische huisje in Schiedam. </p>
+      <br>
+      <h3>Persoonlijk Profiel</h3>
+      <p>Voorafgaand aan het traject ontvang je jouw persoonlijke MEIT. Profiel. In dit profiel vind je informatie over jouw energie, patronen en wat jou echt voldoening geeft. We gebruiken dit profiel als leidraad tijdens alle 4 bijeenkomsten zodat alles wat je leert direct toepasbaar is op jouw eigen leven.</p>
+      <br>
+      <h3>Wat we per week doen: </h3>
       <div class="flex flex-col gap-4 my-5">
         @php($i = 1)
         @foreach($training as $key => $moment)
@@ -51,21 +58,23 @@
             ?>
             
             <div class="my-3 border-4 border-main-light py-6 px-8 rounded-xl">
-              <h3>Week {{$i}}</h3>
-              <div class="flex my-3 items-center">
-                <img class="h-7 mr-1" src="{{asset('assets/date.svg')}}" /> 
-                <p>{{$datetime->format('j')}} {{$maanden[$datetime->format('m') - 1]}}</p>
+              <h4 class="font-semibold">Week {{$i}}: {{$kop_teksten[$i - 1]}}</h4>
+              <p class="text-lg mt-2">{{$teksten[$i - 1]}}</p>
+              <br>
+              <div class="md:flex justify-evenly">
+                <div class="flex my-3 items-center">
+                  <img class="h-7 mr-1" src="{{asset('assets/date.svg')}}" /> 
+                  <p>{{$datetime->format('j')}} {{$maanden[$datetime->format('m') - 1]}}</p>
+                </div>
+                <div class="flex my-3 items-center">
+                  <img class="h-7 mr-1" src="{{asset('assets/time.svg')}}" /> 
+                  <p>{{$time}} - {{date('H:i', strtotime($time) + 60*60*3)}}</p>
+                </div>
+                <div class="flex my-3 items-center">
+                  <img class="h-7 mr-1" src="{{asset('assets/location.svg')}}" /> 
+                  <p>Schiedam (Het Magische Huisje)</p>
+                </div>
               </div>
-              <div class="flex my-3 items-center">
-                <img class="h-7 mr-1" src="{{asset('assets/time.svg')}}" /> 
-                <p>{{$time}} - {{date('H:i', strtotime($time) + 60*60*3)}}</p>
-              </div>
-              <div class="flex my-3 items-center">
-                <img class="h-7 mr-1" src="{{asset('assets/location.svg')}}" /> 
-                <p>Schiedam (Het Magische Huisje)</p>
-              </div>
-              <h6 class="text-xl font-semibold">{{$kop_teksten[$i - 1]}}</h6>
-              <p class="text-lg font-semibold">{{$teksten[$i - 1]}}</p>
             </div>
             @php($i++)
             @endif

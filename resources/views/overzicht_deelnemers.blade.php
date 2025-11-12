@@ -59,7 +59,7 @@
           </div>
         @endif
       @else
-        <h2>Hallo {{$deelnemer->voornaam}}</h2>
+        <h2>Welkom {{$deelnemer->voornaam}}</h2>
       @endif
       <h3 id="trainingen" class="mt-5">Traject<?php if($trainingen->count() != 1){echo 'en';}?></h3>
       @if(!isset($admin) || $admin !== true)
@@ -100,6 +100,12 @@
                     @endif
                   @endforeach
                 </div>
+                @php
+                  $beginTijd = new DateTime($training->start_moment);
+                  $eindTijd = new DateTime($training->start_moment);
+                  $eindTijd->modify('+3 hours');
+                @endphp
+                <p>{{$beginTijd->format('H:i')}} - {{$eindTijd->format('H:i')}}</p>
                 <p class="hover:underline underline-offset-2 mt-auto w-fit">Meer informatie -></p>
                 @if($betaald)
                   <p class="font-bold text-2xl ml-auto">Betaald</p>
@@ -126,7 +132,7 @@
           </div>
         @elseif($wachtlijst->isEmpty())
           @if(!isset($admin) || $admin !== true)
-            <a href="{{url('trainingen')}}"><button class="mt-3">Meld je aan voor een traject!</button></a>
+            <a href="{{url('trainingen')}}"><button class="mt-3">Meld je hier aan voor het MEIT. Traject</button></a>
           @else 
             <p>Deze deelnemer heeft zich hiervoor nog niet aangemeld</p>
           @endif
@@ -150,6 +156,12 @@
                   @endif
                 @endforeach
               </div>
+              @php
+                $beginTijd = new DateTime($training->start_moment);
+                $eindTijd = new DateTime($training->start_moment);
+                $eindTijd->modify('+3 hours');
+              @endphp
+              <p>{{$beginTijd->format('H:i')}} - {{$eindTijd->format('H:i')}}</p>
               <p class="hover:underline underline-offset-2 mt-auto w-fit">Meer informatie -></p>
               @if(!isset($admin) || $admin !== true)
                 <?php 
@@ -240,7 +252,7 @@
       @if($ceremonies->isEmpty() && $intakegesprekken->isEmpty())
         <h3 class="mb-3 mt-20">Ceremonies</h3>
         @if(!isset($admin) || $admin !== true)
-          <a href="{{url('ceremonies')}}"><button>Meld je aan voor een telefonisch intakegesprek!</button></a>
+          <a href="{{url('ceremonies')}}"><button>Boek een intakegesprek</button></a>
         @else 
           <p>Deze deelnemer heeft zich hiervoor nog niet aangemeld</p>
         @endif

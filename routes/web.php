@@ -28,7 +28,7 @@ Route::get('/trainingen', function () {
     ]);
 
   }else{
-    $trainingen = DB::table('trainingen')->orderByDesc('start_moment')->get(); 
+    $trainingen = DB::table('trainingen')->orderBy('start_moment')->get(); 
     return view('trainingen', ['trainingen' => $trainingen]);
   }
 });
