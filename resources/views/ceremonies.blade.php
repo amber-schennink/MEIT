@@ -20,12 +20,12 @@
       <h2 class="mb-3">Ceremonies</h2>
 
       <!-- on hold info -->
-      <!-- <p>De Plantmedicijn Ceremonies zijn voor 2025 volledig volgeboekt. Vanaf maart 2026 gaat de agenda weer open.</p> 
+      <p>De Plantmedicijn Ceremonies zijn voor 2025 volledig volgeboekt. Vanaf maart 2026 gaat de agenda weer open.</p> 
       <p>Hou de socials van MEIT. in de gaten voor de laatste updates en nieuwe data ✨</p>
     </div>
-    @include('partials.footer') -->
+    @include('partials.footer')
     <?php 
-      //die();
+      die();
     ?>
     <!-- on hold info -->
 
