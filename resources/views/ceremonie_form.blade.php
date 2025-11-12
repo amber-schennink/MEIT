@@ -2,7 +2,6 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
   @include('partials.head')
   <body class="bg-main">
-    @include('partials.nav')
     <?php
       use Illuminate\Support\Facades\Config;
       use Illuminate\Support\Facades\DB;
@@ -16,7 +15,9 @@
         redirect(url('/'));
         die();
       }
+      $file_type = 'ceremonie'
     ?>
+    @include('partials.nav')
     
     <div class="container">
       <div id="error" class="fixed top-5 left-0 right-0 w-fit m-auto bg-red-600 rounded-xl p-4 transition duration-500 opacity-0">
