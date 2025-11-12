@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-  @include('head')
+  @include('partials.head')
   <body class="bg-main">
     <?php 
       use Illuminate\Support\Facades\Config;
@@ -170,13 +170,15 @@
   var button = document.getElementById('mogenlijkheid-form-button')
 
   function setDatum(datum){
-    block = document.getElementById(datum)
+    blocks = document.getElementsByClassName(datum)
     ghosts = document.querySelectorAll('.ghost-block:not(.hidden)')
     ghosts.forEach(ghost => {
       ghost.classList.add('hidden')
     });
-    if(block){
-      ghost_block = block.getElementsByClassName('ghost-block')[0]
+    if(blocks.length > 0){
+      ghost_block = blocks[0].getElementsByClassName('ghost-block')[0]
+      ghost_block.classList.remove('hidden')
+      ghost_block = blocks[1].getElementsByClassName('ghost-block')[0]
       ghost_block.classList.remove('hidden')
       scrollSchemaTo(datum)
     }

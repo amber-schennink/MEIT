@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-  @include('head')
+  @include('partials.head')
   <body class="bg-main">
     @include('partials.nav')
     <?php
@@ -124,35 +124,37 @@
     datum = document.getElementById('dag_' + id).value;
     tijd = document.getElementById('begin_tijd_' + id).value;
 
-    block = document.getElementById(datum)
+    blocks = document.getElementsByClassName(datum)
     ghosts = document.querySelectorAll('.ghost-block:not(.hidden).ghost-' + id)
     ghosts.forEach(ghost => {
       ghost.classList.add('hidden')
     });
-    if(block){
-      ghost_block = block.getElementsByClassName('ghost-block ghost-' + id)[0]
-      ghost_block.classList.remove('hidden')
-      scrollSchemaTo(datum)
+    for (let i = 0; i < 2; i++) {
+      if(blocks[i]){
+        ghost_block = blocks[i].getElementsByClassName('ghost-block ghost-' + id)[0]
+        ghost_block.classList.remove('hidden')
+        scrollSchemaTo(datum)
 
-      if(tijd){
-        var [uur_begin, min_begin] = tijd.split(':');
-        tijd = uur_begin + ':' + min_begin
-        eindtijd = (parseInt(uur_begin) + 3) + ':'  + min_begin
+        if(tijd){
+          var [uur_begin, min_begin] = tijd.split(':');
+          tijd = uur_begin + ':' + min_begin
+          eindtijd = (parseInt(uur_begin) + 3) + ':'  + min_begin
+          
+          if(eindtijd > schema_eindig){
+            ghost_block.getElementsByClassName('ghost-begin-tijd')[0].innerHTML = '00:00'
+            ghost_block.getElementsByClassName('ghost-eind-tijd')[0].innerHTML = '00:00'
+            ghost_block.style.marginTop = "0px";
+            return
+          }
+
+          ghost_block.getElementsByClassName('ghost-begin-tijd')[0].innerHTML = tijd
+          ghost_block.getElementsByClassName('ghost-eind-tijd')[0].innerHTML = eindtijd
         
-        if(eindtijd > schema_eindig){
-          ghost_block.getElementsByClassName('ghost-begin-tijd')[0].innerHTML = '00:00'
-          ghost_block.getElementsByClassName('ghost-eind-tijd')[0].innerHTML = '00:00'
-          ghost_block.style.marginTop = "0px";
-          return
+          m_top = (uur_begin - uur_start) * 50 + ((min_begin - min_start) / 60) * 50;
+          ghost_block.style.marginTop = m_top + "px";
         }
-
-        ghost_block.getElementsByClassName('ghost-begin-tijd')[0].innerHTML = tijd
-        ghost_block.getElementsByClassName('ghost-eind-tijd')[0].innerHTML = eindtijd
       
-        m_top = (uur_begin - uur_start) * 50 + ((min_begin - min_start) / 60) * 50;
-        ghost_block.style.marginTop = m_top + "px";
       }
-    
     }
   }
 

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-  @include('head')
+  @include('partials.head')
   <body class="bg-main">
     @include('partials.nav')
     @include('partials.flash')
@@ -50,7 +50,7 @@
             <p>{{$deelnemer->email}}</p>
           </div>
         @else
-          @include('form_info_deelnemer')
+          @include('partials.form_info_deelnemer')
         @endif
         <h3>Praktische info</h3>
         <div class="training-overzicht">

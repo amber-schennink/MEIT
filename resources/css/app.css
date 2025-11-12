@@ -81,7 +81,7 @@ input[type=text], input[type=email], input[type=tel], input[type=password], inpu
   @apply px-4 py-2 rounded text-black outline-main
 }
 
-.overflow-x-scroll::-webkit-scrollbar, #scroll-container::-webkit-scrollbar {
+.overflow-x-scroll::-webkit-scrollbar, .scroll-container::-webkit-scrollbar {
   display: none;
 }
 
@@ -145,7 +145,10 @@ input[type=text], input[type=email], input[type=tel], input[type=password], inpu
 }
 
 .schema {
-  @apply relative w-[90%] m-auto
+  @apply relative w-[90%] m-auto hidden md:block
+}
+.schema:has(.schema-block-mb){
+  @apply block md:hidden
 }
 .schema img {
   @apply absolute w-[5%] top-0 bottom-0 h-fit m-auto cursor-pointer
@@ -157,11 +160,14 @@ input[type=text], input[type=email], input[type=tel], input[type=password], inpu
   @apply absolute w-full flex flex-col gap-[26px] top-10 z-20
 }
 
-#scroll-container {
+.scroll-container {
   @apply flex overflow-x-scroll ml-12 scroll-smooth snap-x snap-mandatory
 }
 .schema-block {
   @apply bg-main-light rounded-xl px-8 py-6 grid grid-cols-[repeat(7,minmax(75px,1fr))] overflow-x-scroll md:overflow-x-visible grid-flow-col justify-items-center gap-1 snap-center snap-always min-w-full;
+}
+.schema-block-mb {
+  @apply grid-cols-1
 }
 .schema-block>div {
   @apply bg-second-darker h-full w-full relative rounded overflow-hidden
@@ -237,7 +243,7 @@ nav a:has(p) {
 }
 @media (width < 48rem){
   nav {
-    @apply z-30 w-screen h-0 flex-col items-center bg-main fixed top-0 left-0 justify-center overflow-hidden transition-[height] ease-in-out duration-500
+    @apply z-40 w-screen h-0 flex-col items-center bg-main fixed top-0 left-0 justify-center overflow-hidden transition-[height] ease-in-out duration-500
   }
   .hamburger-active nav{
     @apply h-screen

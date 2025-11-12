@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-  @include('head')
+  @include('partials.head')
   <body class="bg-main">
     @include('partials.nav')
     <?php
@@ -78,27 +78,29 @@
   var [uur_eindig, min_eindig] = schema_eindig.split(':');
 
   function setGhost(datum){
-    block = document.getElementById(datum)
+    blocks = document.getElementsByClassName(datum)
     ghosts = document.querySelectorAll('.ghost-block:not(.hidden)')
     ghosts.forEach(ghost => {
       ghost.classList.add('hidden')
     });
-    if(block){
-      ghost_block = block.getElementsByClassName('ghost-block')[0]
-      ghost_block.classList.remove('hidden')
-      scrollSchemaTo(datum)
+    for (let i = 0; i < 2; i++) {
+      if(blocks[i]){
+        ghost_block = blocks[i].getElementsByClassName('ghost-block')[0]
+        ghost_block.classList.remove('hidden')
+        scrollSchemaTo(datum)
+        
+        duur_uur = uur_eindig - 11
+        duur_min = min_eindig - 0
+        if(duur_min < 0){
+          duur_min = 60 + duur_min
+          duur_uur--
+        }
+        ghost_block.style.height = duur_uur * 50 + (duur_min / 60) * 50 + 'px'
+        
       
-      duur_uur = uur_eindig - 11
-      duur_min = min_eindig - 0
-      if(duur_min < 0){
-        duur_min = 60 + duur_min
-        duur_uur--
+        m_top = (11 - uur_start) * 50 + ((0 - min_start) / 60) * 50;
+        ghost_block.style.marginTop = m_top + "px";
       }
-      ghost_block.style.height = duur_uur * 50 + (duur_min / 60) * 50 + 'px'
-      
-    
-      m_top = (11 - uur_start) * 50 + ((0 - min_start) / 60) * 50;
-      ghost_block.style.marginTop = m_top + "px";
     }
   }
 </script>

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-  @include('head')
+  @include('partials.head')
   <body class="bg-main">
     <?php 
       $file_type = 'overzicht';

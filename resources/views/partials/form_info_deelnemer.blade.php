@@ -33,7 +33,7 @@
     </div>
     <label>
       <p>E-mail*</p>
-      <input class="mt-1 w-full" name="deelnemer_email" type="email" required/>
+      <input id="username" class="mt-1 w-full" name="deelnemer_email" type="email" required/>
     </label>
     <label>
       <p>Telefoonnummer</p>

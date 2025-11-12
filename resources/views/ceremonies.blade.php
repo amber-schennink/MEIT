@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-  @include('head')
+  @include('partials.head')
   <body class="bg-main">
     <?php
 
@@ -20,12 +20,12 @@
       <h2 class="mb-3">Ceremonies</h2>
 
       <!-- on hold info -->
-      <p>De Plantmedicijn Ceremonies zijn voor 2025 volledig volgeboekt. Vanaf maart 2026 gaat de agenda weer open.</p> 
+      <!-- <p>De Plantmedicijn Ceremonies zijn voor 2025 volledig volgeboekt. Vanaf maart 2026 gaat de agenda weer open.</p> 
       <p>Hou de socials van MEIT. in de gaten voor de laatste updates en nieuwe data ✨</p>
     </div>
-    @include('partials.footer')
+    @include('partials.footer') -->
     <?php 
-      die();
+      //die();
     ?>
     <!-- on hold info -->
 
@@ -52,7 +52,7 @@
           <button id="intakegesprek-form-button" class="mb-3 mt-6 ml-auto" type="submit">Inschrijven</button>
         </div>
         @if(!session('login') || !session('id'))
-          @include('form_info_deelnemer')
+          @include('partials.form_info_deelnemer')
         @endif
       </form>
     </div>
@@ -75,26 +75,6 @@
 @endif
 
 <script>
-  function scrollSchema(side) {
-    var container = document.getElementById('scroll-container')
-    var knopL = document.getElementById('schema-knop-l')
-    var knopR= document.getElementById('schema-knop-r')
-    if(side == 'l'){
-      w = container.getBoundingClientRect().width;
-      container.scrollBy(-w, 0)
-      if(container.scrollLeft <= Math.ceil(w)){
-        knopL.classList.add('uit');
-      }
-      knopR.classList.remove('uit');
-    }else{
-      container.scrollBy(container.getBoundingClientRect().width, 0)
-      knopL.classList.remove('uit');
-      w = container.scrollWidth - (Math.ceil(container.getBoundingClientRect().width) * 2)
-      if(container.scrollLeft >= w){
-        knopR.classList.add('uit');
-      }
-    }
-  }
   const intake_mogelijkheden = <?php echo json_encode($intake_mogelijkheden); ?>;
   function setBlock(mogenlijkheid_id){
     block_data = intake_mogelijkheden.find(obj => {
@@ -107,15 +87,16 @@
       ghost.classList.add('hidden')
     });
 
-    ghost_block = document.getElementById(mogenlijkheid_id);
-    ghost_block.classList.remove('hidden')
+    ghost_blocks = document.getElementsByClassName('ghost-' + mogenlijkheid_id);
+    ghost_blocks[0].classList.remove('hidden')
+    ghost_blocks[1].classList.remove('hidden')
     document.getElementById('intakegesprek-form-id-mogenlijkheid').value = mogenlijkheid_id;
     
     document.getElementById('intakegesprek-form-datum').value = block_data['datum']
 
   }
   function setDatum(datum){
-    ghost_block = document.getElementById(datum).getElementsByClassName('ghost-block')[0]
+    blocks = document.getElementsByClassName(datum)
     document.getElementById('intakegesprek-form-id-mogenlijkheid').value = '';
     ghosts = document.querySelectorAll('.ghost-block:not(.hidden)')
     button = document.getElementById('intakegesprek-form-button')
@@ -126,30 +107,40 @@
       ghost.style.marginTop = "0px";
       ghost.classList.add('hidden')
     });
-
-    if(ghost_block){
-      ghost_block.classList.remove('hidden')
-      document.getElementById('intakegesprek-form-id-mogenlijkheid').value = ghost_block.id;
+    scrollSchemaTo(datum)
+    if(blocks.length > 0){
+      for (let i = 0; i < 2; i++) {
+        ghost_block = blocks[i].getElementsByClassName('ghost-block')[0]
+        
+        if(ghost_block){
+          ghost_block.classList.remove('hidden')
+          document.getElementById('intakegesprek-form-id-mogenlijkheid').value = ghost_block.id;
+        }else{
+          button.classList.add('uit')
+        }
+      }
     }else{
       button.classList.add('uit')
     }
+    
     
     document.getElementById('intakegesprek-form-datum').value = datum
     setTijden()
   }
 
   function setTijden(begintijd){
-    ghost = document.querySelectorAll('.ghost-block:not(.hidden)')[0]
-    if(!ghost){
+    ghosts = document.querySelectorAll('.ghost-block:not(.hidden)')
+    if(ghosts.length < 1){
       return
     }
+    id = ghosts[0].classList[0].replace('ghost-','');
     block_data = intake_mogelijkheden.find(obj => {
-      return obj.id == ghost.id
+      return obj.id == id
     })
     other_blocks_data = intake_mogelijkheden.filter(obj => {
-      return obj.datum == block_data.datum && obj.id != ghost.id
+      return obj.datum == block_data.datum && obj.id != id
     })
-    document.getElementById('intakegesprek-form-id-mogenlijkheid').value = ghost.id
+    document.getElementById('intakegesprek-form-id-mogenlijkheid').value = id
     input_begin = document.getElementById('intakegesprek-form-begin-tijd')
     input_begin.style.border = "none"
     button = document.getElementById('intakegesprek-form-button')
@@ -185,20 +176,24 @@
       }else{
         input_begin.style.border = "red solid 2px"
         button.classList.add('uit')
-        if(ghost.getElementsByClassName('ghost-begin-tijd')[0].innerHTML != "00:00"){
-          ghost.getElementsByClassName('ghost-begin-tijd')[0].innerHTML = "00:00";
-          ghost.getElementsByClassName('ghost-eind-tijd')[0].innerHTML = "00:00";
-          ghost.style.marginTop = "0px";
+        for (let i = 0; i < 2; i++) {
+          if(ghosts[i].getElementsByClassName('ghost-begin-tijd')[0].innerHTML != "00:00"){
+            ghosts[i].getElementsByClassName('ghost-begin-tijd')[0].innerHTML = "00:00";
+            ghosts[i].getElementsByClassName('ghost-eind-tijd')[0].innerHTML = "00:00";
+            ghosts[i].style.marginTop = "0px";
+          }
         }
       }
     }else{
       m_top = (uur_begin - block_start_split[0]) * 50 + ((min_begin - block_start_split[1]) / 60) * 50;
       eindtijd = (parseInt(uur_begin) + 1) + ":" + min_begin
       eindtijd = eindtijd.padStart(5,"0")
-      ghost.getElementsByClassName('ghost-begin-tijd')[0].innerHTML = begintijd;
-      ghost.getElementsByClassName('ghost-eind-tijd')[0].innerHTML = eindtijd;
       document.getElementById('intakegesprek-form-begin-tijd').value = begintijd;
-      ghost.style.marginTop = m_top  + "px";
+      for (let i = 0; i < 2; i++) {
+        ghosts[i].getElementsByClassName('ghost-begin-tijd')[0].innerHTML = begintijd;
+        ghosts[i].getElementsByClassName('ghost-eind-tijd')[0].innerHTML = eindtijd;
+        ghosts[i].style.marginTop = m_top  + "px";
+      }
     }
 
   }

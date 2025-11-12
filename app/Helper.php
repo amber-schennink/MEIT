@@ -27,7 +27,7 @@
       $height = $duur->h * 50 + ($duur->i / 60) * 50;
       if($file == 'ceremonies'){
         $return = '<div class="relative cursor-pointer !bg-mogelijkheden" style="top: '. $top .'px;height: '. $height .'px;" onclick="setBlock(`'.$val->id.'`); setTijden()">
-          <div id="'.$val->id.'" class="ghost-block relative !bg-[#f9b51d]/75 hidden">
+          <div class="ghost-'.$val->id.' ghost-block relative !bg-[#f9b51d]/75 hidden">
             <p><span class="ghost-begin-tijd">00:00</span> - <span class="ghost-eind-tijd">00:00</span></p>
           </div>
         </div>';
