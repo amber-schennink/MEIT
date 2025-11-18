@@ -23,7 +23,7 @@
         <p>Belangrijk om te weten:</p>
         <div>
           <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/>Je plek is pas definitief na betaling</p>
-          <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/>Pilotprijs 2025: €222,- (incl. btw) Vanaf 2026 zijn de kosten €444,-</p>
+          <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/>Pilotprijs: €222,- <br> Omdat dit traject nu voor het eerst van start gaat is dit een tijdelijke prijs. <br> Na de eerste paar trajecten wordt de vaste prijs €444,-</p>
           <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/>Annuleren kan kosteloos t/m 7 dagen vóór de startdatum</p>
           <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/>Na betaling ontvang je binnen 48 uur een bevestiging met alle praktische details.</p>
         </div>
