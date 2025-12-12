@@ -28,6 +28,7 @@ class CheckoutController extends Controller
         $trainingId = (int) $request->input('id_training');
         $training   = DB::table('trainingen')->where('id', $trainingId)->first();
         abort_unless($training, 404);
+        $backUrl = $request->input('back', url('/aanmelden/'.$training->id));
 
         // Volgende pagina (optioneel hidden input 'next' in je form)
         $nextUrl = $request->input('next', url('/overzicht'));
@@ -158,6 +159,15 @@ class CheckoutController extends Controller
                 'updated_at'           => now(),
             ]);
         }
+
+        session([
+          'pending_aanmelding_id' => $aanmeldingId,
+          'pending_deelnemer_id'  => $idDeelnemer,
+        ]);
+        //$cancelUrl  = route('checkout.cancel') . '?aanmelding_id=' . $aanmeldingId . '&next=' . urlencode($nextUrl);
+        //$cancelUrl = route('checkout.cancel') . '?next=' . urlencode($nextUrl);
+        $cancelUrl = route('checkout.cancel') . '?back=' . urlencode($backUrl);
+
 
         // 0) Wachtlijst
         if ($betaalOptie === 0) {
@@ -307,10 +317,48 @@ class CheckoutController extends Controller
         return redirect($next)->with('msg', $nieuweStatus === 2 ? 'Betaling voltooid.' : 'Aanbetaling ontvangen.');
     }
 
-    public function cancel()
+    // public function cancel()
+    // {
+    //     $back = url()->previous() ?: url('/trainingen');
+    //     return redirect($back)->with('error', 'Betaling geannuleerd.');
+    // }
+    public function cancel(Request $request)
     {
-        $back = url()->previous() ?: url('/trainingen');
-        return redirect($back)->with('error', 'Betaling geannuleerd.');
+      //$next = $request->query('next', url('/trainingen'));
+      $back = $request->query('back', url('/aanmelden'));
+
+      $aanmeldingId = (int) session('pending_aanmelding_id');
+      $deelnemerId  = (int) session('pending_deelnemer_id');
+
+      // 1) aanmelding verwijderen als die nog "pending" is
+      if ($aanmeldingId) {
+        $a = DB::table('aanmeldingen')->where('id', $aanmeldingId)->first();
+
+        if ($a && (int) $a->betaal_status === 0) {
+          DB::table('aanmeldingen')->where('id', $aanmeldingId)->delete();
+        }
+      }
+
+      // 2) deelnemer verwijderen, maar alleen als hij verder nergens aan gekoppeld is
+      if ($deelnemerId) {
+        $heeftNogAanmeldingen = DB::table('aanmeldingen')
+          ->where('id_deelnemer', $deelnemerId)
+          ->exists();
+
+        if (!$heeftNogAanmeldingen) {
+          DB::table('deelnemers')->where('id', $deelnemerId)->delete();
+        }
+      }
+
+      // Uitloggen + sessie opschonen
+      session()->forget([
+        'login',
+        'id',
+        'pending_aanmelding_id',
+        'pending_deelnemer_id',
+      ]);
+
+      return redirect($back)->with('error', 'Betaling geannuleerd.');
     }
 
     public function chargeRemaining($aanmeldingId){
