@@ -74,10 +74,10 @@ th, td {
   @apply text-white text-center
 }
 
-input {
+input, select {
   @apply bg-main-light 
 }
-input[type=text], input[type=email], input[type=tel], input[type=password], input[type=date], input[type=time] {
+input[type=text], input[type=email], input[type=tel], input[type=password], input[type=date], input[type=time], select {
   @apply px-4 py-2 rounded text-black outline-main
 }
 
@@ -201,16 +201,16 @@ input[type=text], input[type=email], input[type=tel], input[type=password], inpu
   @apply hidden
 }
 
-#pop-up {
+#pop-up, .pop-up {
   @apply fixed flex top-0 left-0 h-screen w-screen bg-gray-600/30
 }
-#pop-up > div {
+#pop-up > div, .pop-up > div{
   @apply m-auto bg-main px-8 py-6 rounded-xl border-4 border-main-light max-w-screen
 }
-#pop-up > div > div {
+#pop-up > div > div, .pop-up > div > div {
   @apply flex justify-between mt-10 flex-col md:flex-row
 }
-#pop-up > div > div button{
+#pop-up > div > div button, .pop-up > div > div button{
   @apply w-full mt-3 md:mt-auto md:w-fit
 }
 

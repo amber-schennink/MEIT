@@ -87,8 +87,13 @@ Route::get('/checkout/cancel',  [CheckoutController::class, 'cancel'])->name('ch
 // Alleen nodig voor 2-termijnen (de 2e helft later afschrijven, off_session):
 Route::get('/checkout/charge-remaining/{aanmelding}', [CheckoutController::class, 'chargeRemaining'])->name('checkout.charge_remaining');
 
+Route::post('/aanmeldingDeelnemerAanpassen/{id}', 'App\Http\Controllers\AanmeldingenController@aanpassenDeelnemerAanmelding');
+
+Route::get('/afmeldenDeelnemer/{id_aanmelding}', 'App\Http\Controllers\AanmeldingenController@deelnemerAfmelden');
+
 Route::get('/afmelden/{id_training}', 'App\Http\Controllers\AanmeldingenController@afmelden');
 
+Route::get('/deelnemer_verwijderen/{id}', 'App\Http\Controllers\LoginController@deelnemerVerwijderen');
 
 Route::get('/overzicht', function () {
   if(!session('login') || !session('id')){

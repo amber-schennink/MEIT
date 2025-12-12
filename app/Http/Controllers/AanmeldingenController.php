@@ -56,6 +56,27 @@ class AanmeldingenController extends Controller {
 
     return Redirect::to('overzicht');
   }
+  public function aanpassenDeelnemerAanmelding($id, Request $request){
+    if(!session('login') && session('admin') !== true){
+      die();
+    }
+    DB::table('aanmeldingen')->where([
+      ['id', '=', $id]
+    ])->update([
+      'betaal_status' => $request->betaal_status,
+      'id_training' => $request->id_training
+    ]);
+    return Redirect::to('trainingen');
+  }
+  public function deelnemerAfmelden($id_aanmelding){
+    if(!session('login') && session('admin') !== true){
+      die();
+    }
+    DB::table('aanmeldingen')->where([
+      ['id', '=', $id_aanmelding]
+    ])->delete();
+    return Redirect::to('trainingen');
+  }
   public function afmelden($id_training){
     if(!session('login') && !session('id')){
       die();

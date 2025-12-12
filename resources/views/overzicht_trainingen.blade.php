@@ -86,6 +86,15 @@
                             <p class="text-red-400 betaal-status">Deadline is verstreken!</p>
                           @endif
                         @endif
+                        <div class="flex justify-between">
+                          <a class="w-1/2 pr-1" onclick="showPopUpDeelnemerAanpassen('{{$aanmelding->id}}', '{{$deelnemer->voornaam}} {{$deelnemer->tussenvoegsel}} {{$deelnemer->achternaam}}', '{{$aanmelding->betaal_status}}', '{{$training->id}}'); event.stopPropagation();">
+                            <button class="w-full !min-w-0 !bg-second/90 hover:!bg-second-dark/90 mt-3 !text-sm">Aanpassen</button>
+                          </a>
+                          <?php $datum = new DateTime($training->start_moment) ?>
+                          <a class="w-1/2 pl-1" onclick="showPopUpDeelnemerVerwijderen(`{{$aanmelding->id}}`, `{{$deelnemer->voornaam}} {{$deelnemer->tussenvoegsel}} {{$deelnemer->achternaam}}`, `{{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}} {{$datum->format('Y')}}`); event.stopPropagation();">
+                            <button class="w-full !min-w-0 !bg-red-600/90 hover:!bg-red-700/90 mt-3 !text-sm">Verwijderen</button>
+                          </a>
+                        </div>
                       </div>
                     @else
                       <?php 
@@ -123,6 +132,15 @@
                       </div>
                     @endif
                     <p class="text-red-400  betaal-status">Niet betaald</p>
+                    <div class="flex justify-between">
+                      <a class="w-1/2 pr-1" onclick="showPopUpDeelnemerAanpassen('{{$aanmelding->id}}', '{{$deelnemer->voornaam}} {{$deelnemer->tussenvoegsel}} {{$deelnemer->achternaam}}', '0', '{{$training->id}}'); event.stopPropagation();">
+                        <button class="w-full !min-w-0 !bg-second/90 hover:!bg-second-dark/90 mt-3 !text-sm">Aanpassen</button>
+                      </a>
+                      <?php $datum = new DateTime($training->start_moment) ?>
+                      <a class="w-1/2 pl-1" onclick="showPopUpDeelnemerVerwijderen(`{{$aanmelding->id}}`, `{{$deelnemer->voornaam}} {{$deelnemer->tussenvoegsel}} {{$deelnemer->achternaam}}`, `{{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}} {{$datum->format('Y')}}`); event.stopPropagation();">
+                        <button class="w-full !min-w-0 !bg-red-600/90 hover:!bg-red-700/90 mt-3 !text-sm">Verwijderen</button>
+                      </a>
+                    </div>
                   </div>
                 @endforeach
               @endif
@@ -148,6 +166,42 @@
           </div>
         </div>
       </div>
+      <div id="pop-up-deelnemer-aanpassen" onclick="this.classList.add('!hidden')" class="!hidden pop-up">
+        <div onclick="event.stopPropagation();">
+          <h4>Naam</h4>
+          <form method="POST" class="mt-4">
+            @csrf
+            <input class="id_aanmelding hidden" name="id_aanmelding" readonly required/>
+            <p class="mb-1">Betaal Status</p>
+            <select class="betaal_status" name="betaal_status">
+              <option value="2">Betaald</option>
+              <option value="1">1 termijn betaald</option>
+              <option value="0">Niet Betaald</option>
+            </select>
+            <p class="mt-4 mb-1">Traject (start datum)</p>
+            <select class="training" name="id_training">
+              <?php foreach ($trainingen as $k => $t) {
+                $datum = new DateTime($t->start_moment);
+                echo '<option value="'. $t->id .'">'. $datum->format('j') .' '. $maanden[$datum->format('m') - 1] .' '. $datum->format('Y') .'</option>';
+              } ?>
+            </select>
+            <div class="mt-5">
+              <a id="deelnemer-aanpassen" class="mr-4"><button>Aanpassen</button></a>
+              <button onclick="document.getElementById('pop-up-deelnemer-aanpassen').classList.add('!hidden')" type="button" class="!cursor-pointer alt-2" class="ml-4">Niet aanpassen</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div id="pop-up-deelnemer-verwijderen" onclick="this.classList.add('!hidden')" class="!hidden pop-up">
+        <div>
+          <h4>Weet je zeker dat je deze aanmelding wilt verwijderen?</h4>
+          <p>Naam Startdatum</p>
+          <div>
+            <a id="deelnemer-verwijderen" onclick="event.stopPropagation();"><button>Verwijderen</button></a>
+            <button class="!cursor-pointer alt-2">Niet verwijderen</button>
+          </div>
+        </div>
+      </div>
     </div>
     
     @include('partials.footer')
@@ -161,5 +215,25 @@
     afmelden = document.getElementById('afmelden');
 
     afmelden.href = "training_verwijderen/" + id;
+  }
+  function showPopUpDeelnemerAanpassen(id, naam, betaal_status, id_training) {
+    pop_up = document.getElementById('pop-up-deelnemer-aanpassen');
+    pop_up.getElementsByTagName('h4')[0].innerText = naam
+    pop_up.getElementsByClassName('id_aanmelding')[0].value = id
+    pop_up.getElementsByClassName('betaal_status')[0].value = betaal_status
+    pop_up.getElementsByClassName('training')[0].value = id_training
+    pop_up.getElementsByTagName('form')[0].action = 'aanmeldingDeelnemerAanpassen/' + id
+    pop_up.classList.remove('!hidden');
+    afmelden = document.getElementById('deelnemer-aanpassen');
+
+    afmelden.href = "training_verwijderen/" + id;
+  }
+  function showPopUpDeelnemerVerwijderen(id, naam, datum) {
+    pop_up = document.getElementById('pop-up-deelnemer-verwijderen');
+    pop_up.getElementsByTagName('p')[0].innerText = naam + ", " + datum
+    pop_up.classList.remove('!hidden');
+    afmelden = document.getElementById('deelnemer-verwijderen');
+
+    afmelden.href = "afmeldenDeelnemer/" + id;
   }
 </script>

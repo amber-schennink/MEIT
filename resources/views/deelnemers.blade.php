@@ -84,12 +84,33 @@
                   <p>{{$intakegesprekken->where('id_deelnemer', '=', $deelnemer->id)->count()}}</p>
                 </div>
               </div>
+              <a onclick="showPopUp('{{$deelnemer->id}}', '{{$deelnemer->voornaam}} {{$deelnemer->tussenvoegsel}} {{$deelnemer->achternaam}}'); event.stopPropagation();"><button class="w-full !bg-red-600/90 hover:!bg-red-700/90 mt-3">Verwijderen</button></a>
             </div>
           @endforeach
         </div>
       </div>
     </div>
+    <div id="pop-up" onclick="this.classList.add('!hidden')" class="!hidden">
+        <div>
+          <h4 id="pop-up-naam">Naam</h4>
+          <p>Weet je zeker dat je deze deelnemer wil verwijderen?</p>
+          <div>
+            <a id="afmelden" onclick="event.stopPropagation();" class="mr-4"><button>Verwijderen</button></a>
+            <button class="!cursor-pointer alt-2 ml-4">Niet verwijderen</button>
+          </div>
+        </div>
+      </div>
     
     @include('partials.footer')
   </body>
 </html>
+<script>
+  function showPopUp(id, naam) {
+    pop_up = document.getElementById('pop-up');
+    document.getElementById('pop-up-naam').innerHTML = naam;
+    pop_up.classList.remove('!hidden');
+    afmelden = document.getElementById('afmelden');
+
+    afmelden.href = "deelnemer_verwijderen/" + id;
+  }
+</script>
