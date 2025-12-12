@@ -8,6 +8,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Stripe\StripeClient;
 use DateTime;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\AanmeldingNotificationMail;
+
+
 
 class CheckoutController extends Controller
 {
@@ -171,34 +175,43 @@ class CheckoutController extends Controller
 
         // 0) Wachtlijst
         if ($betaalOptie === 0) {
+          $aanmeldingObj = DB::table('aanmeldingen')->where('id', $aanmeldingId)->first();
+          $this->notifyAanmelding('wachtlijst', $training, $deelnemer, $aanmeldingObj);
           return redirect($nextUrl)->with('msg', 'Je staat op de wachtlijst.');
         }
 
         // ✅ FAKE payment pad (geen Stripe calls)
         if ($skipPayment) {
-            if ($betaalOptie === 2) {
-                // Simuleer volledige betaling
-                DB::table('aanmeldingen')->where('id', $aanmeldingId)->update([
-                    'betaal_status'        => 2,
-                    'amount_paid'          => DB::raw('amount_paid + '.$amountFull),
-                    'amount_due_remaining' => 0,
-                    'updated_at'           => now(),
-                ]);
-                return redirect($nextUrl)->with('msg', 'Betaling voltooid (fake).');
-            }
+          if ($betaalOptie === 2) {
+            DB::table('aanmeldingen')->where('id', $aanmeldingId)->update([
+              'betaal_status'        => 2,
+              'amount_paid'          => DB::raw('amount_paid + '.$amountFull),
+              'amount_due_remaining' => 0,
+              'updated_at'           => now(),
+            ]);
 
-            if ($betaalOptie === 1) {
-                // Simuleer 1/2 aanbetaling
-                DB::table('aanmeldingen')->where('id', $aanmeldingId)->update([
-                    'betaal_status'        => 1,
-                    'amount_paid'          => DB::raw('amount_paid + '.$amountHalf),
-                    'amount_due_remaining' => $amountHalf,
-                    'due_at'               => $dueAt,
-                    'updated_at'           => now(),
-                ]);
-                return redirect($nextUrl)->with('msg', 'Aanbetaling ontvangen (fake).');
-            }
-        }
+            $aanmeldingObj = DB::table('aanmeldingen')->where('id', $aanmeldingId)->first();
+            $this->notifyAanmelding('betaling', $training, $deelnemer, $aanmeldingObj);
+
+            return redirect($nextUrl)->with('msg', 'Betaling voltooid (fake).');
+          }
+
+          if ($betaalOptie === 1) {
+            DB::table('aanmeldingen')->where('id', $aanmeldingId)->update([
+              'betaal_status'        => 1,
+              'amount_paid'          => DB::raw('amount_paid + '.$amountHalf),
+              'amount_due_remaining' => $amountHalf,
+              'due_at'               => $dueAt,
+              'updated_at'           => now(),
+            ]);
+
+            $aanmeldingObj = DB::table('aanmeldingen')->where('id', $aanmeldingId)->first();
+            $this->notifyAanmelding('betaling', $training, $deelnemer, $aanmeldingObj);
+
+            return redirect($nextUrl)->with('msg', 'Aanbetaling ontvangen (fake).');
+          }
+      }
+
 
         $checkoutDescription = "Welkom bij de Pilot van het MEIT-traject! Met deze betaling bevestig je jouw deelname. "
             ."Jouw plek is hiermee officieel gereserveerd. Na betaling ontvang je binnen 48 uur een mail met alle details.";
@@ -314,6 +327,13 @@ class CheckoutController extends Controller
             'updated_at'               => now(),
         ]);
 
+        $deelnemer = DB::table('deelnemers')->where('id', $aanmelding->id_deelnemer)->first();
+
+        $this->notifyAanmelding('betaling', (object)[
+            'id' => $aanmelding->id_training,
+            'titel' => 'Training' // als je titel wil: haal training record op
+        ], $deelnemer, $aanmelding);
+        
         return redirect($next)->with('msg', $nieuweStatus === 2 ? 'Betaling voltooid.' : 'Aanbetaling ontvangen.');
     }
 
@@ -433,4 +453,18 @@ class CheckoutController extends Controller
         ]);
         return $c->id;
     }
+    private function notifyAanmelding(string $type, object $training, object $deelnemer, object $aanmelding): void
+    {
+      $to = env('AANMELDING_NOTIFY_EMAIL');
+
+      if (!$to) return;
+
+      Mail::to($to)->send(new AanmeldingNotificationMail(
+        training: $training,
+        deelnemer: $deelnemer,
+        aanmelding: $aanmelding,
+        type: $type
+      ));
+    }
+
 }
