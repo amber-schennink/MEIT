@@ -13,9 +13,10 @@ abstract class Controller
         $request->validate([
           'deelnemer_voornaam'                  => 'required|string',
           'deelnemer_achternaam'                => 'required|string',
-          'deelnemer_email'                     => 'required|email',
+          'deelnemer_email'                     => 'required|email|unique:deelnemers,email',
           'deelnemer_wachtwoord'                => 'required|string|min:8|same:deelnemer_wachtwoord-bevestiging',
         ], [
+          'deelnemer_email.unique'        => 'Dit e-mailadres is al in gebruik, probeer in te loggen.',
           'deelnemer_wachtwoord.min'      => 'Het wachtwoord moet minstens :min tekens bevatten.',
           'deelnemer_wachtwoord.required' => 'Vul je wachtwoord in.',
           'deelnemer_wachtwoord.same'     => 'De wachtwoorden komen niet overeen.',
