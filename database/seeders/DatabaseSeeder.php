@@ -15,12 +15,12 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             AdminsSeeder::class,
-            // DeelnemersSeeder::class,
-            // TrainingenSeeder::class,
-            // AanmeldingenSeeder::class,
-            // CeremoniesSeeder::class,
-            // IntakeMogelijkhedenSeeder::class,
-            // IntakegesprekkenSeeder::class,
+            DeelnemersSeeder::class,
+            TrainingenSeeder::class,
+            AanmeldingenSeeder::class,
+            CeremoniesSeeder::class,
+            IntakeMogelijkhedenSeeder::class,
+            IntakegesprekkenSeeder::class,
         ]);
 
         \DB::statement('SET FOREIGN_KEY_CHECKS=1;');

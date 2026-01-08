@@ -112,7 +112,7 @@
                 @else
                   <?php 
                     $deadline = new DateTime($training->start_moment);
-                    $deadline = $deadline->modify('-7 day');
+                    $deadline = $deadline->modify('-5 day');
                     $deadline_maand = $deadline->format('m') - 1;
                   ?>
                   <p>Eerste termijn van €{{$prijs / 2}},- betaald</p>

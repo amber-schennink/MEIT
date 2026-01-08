@@ -23,8 +23,8 @@
         <p>Belangrijk om te weten:</p>
         <div>
           <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/>Je plek is pas definitief na betaling</p>
-          <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/>Pilotprijs: €222,- <br> Omdat dit traject nu voor het eerst van start gaat is dit een tijdelijke prijs. <br> Na de eerste paar trajecten wordt de vaste prijs €444,-</p>
-          <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/>Annuleren kan kosteloos t/m 7 dagen vóór de startdatum</p>
+          <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/>Pilotprijs: €333,- <br> Omdat dit traject nu voor het eerst van start gaat is dit een tijdelijke prijs. <br> Na de eerste paar trajecten wordt de vaste prijs €444,-</p>
+          <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/>Annuleren kan kosteloos t/m 5 dagen vóór de startdatum</p>
           <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/>Na betaling ontvang je binnen 48 uur een bevestiging met alle praktische details.</p>
         </div>
         <br>
@@ -131,7 +131,7 @@
           $deelnemer = null;
           if(!isset($deadline)){
             $deadline = new DateTime('00:00:00');
-            $deadline->modify('+7 days');
+            $deadline->modify('+5 days');
           }
           if(session('id')){
             $deelnemer = $aanmeldingen->where('id_deelnemer', '=',  session('id'))->first();

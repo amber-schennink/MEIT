@@ -11,7 +11,7 @@
       $maanden = Config::get('info.maanden');
       
       $deadline = new DateTime('00:00:00');
-      $deadline->modify('+7 days');
+      $deadline->modify('+5 days');
     ?>
     <div class="container">
       <h2 class="mb-3 wrap-break-word">MEIT. Traject</h2>
@@ -62,7 +62,7 @@
               <p class="my-5">Sorry er zijn geen plekken meer beschikbaar voor dit traject</p>
             @endif
             <div>
-              <p class="mb-2 underline underline-offset-2 lg:no-underline"><a class="hover:underline underline-offset-2" <?php echo 'href="training/'.$training->id.'"' ?> >meer info -></a></p>
+              <p class="mb-2"><a class="underline underline-offset-2 hover:text-second transition-colors" <?php echo 'href="training/'.$training->id.'"' ?> >meer info -></a></p>
 
               @include('partials.trainingen_button')
             </div>

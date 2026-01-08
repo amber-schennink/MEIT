@@ -19,16 +19,19 @@
     </div>
     <div class="flex flex-col md:flex-row gap-4 mt-1">
       <label class="flex-1">
-        <p>Geboorte datum</p>
-        <input class="w-full mt-1" name="geboorte_datum" type="date"/>
+        <p>Geboorte datum*</p>
+        <input class="w-full mt-1" name="geboorte_datum" type="date" required/>
+        <span class="text-xs text-white/70">Verplicht voor het maken van je MEIT. profiel</span>
       </label>
       <label class="flex-1">
-        <p>Geboorte tijd</p>
-        <input class="w-full mt-1" name="geboorte_tijd" type="time"/>
+        <p>Geboorte tijd*</p>
+        <input class="w-full mt-1" name="geboorte_tijd" type="time" required/>
+        <span class="text-xs text-white/70">Verplicht voor het maken van je MEIT. profiel</span>
       </label>
       <label class="flex-1">
-        <p>Geboorte plaats</p>
-        <input class="w-full mt-1" name="geboorte_plaats" type="text"/>
+        <p>Geboorte plaats*</p>
+        <input class="w-full mt-1" name="geboorte_plaats" type="text" required/>
+        <span class="text-xs text-white/70">Verplicht voor het maken van je MEIT. profiel</span>
       </label>
     </div>
     <label>
@@ -36,8 +39,8 @@
       <input id="username" class="mt-1 w-full" name="deelnemer_email" type="email" required/>
     </label>
     <label>
-      <p>Telefoonnummer</p>
-      <input class="mt-1 w-full" name="deelnemer_telefoon" type="tel"/>
+      <p>Telefoonnummer*</p>
+      <input class="mt-1 w-full" name="deelnemer_telefoon" type="tel" required/>
     </label>
     <div class="flex flex-col md:flex-row gap-4">
       <label class="flex-1 relative">
@@ -97,7 +100,7 @@
       form = document.getElementById('deelnemer_form')
       form.classList.remove('hidden')
       inputs = [... form.getElementsByTagName('input')]
-      $notRequired = ['deelnemer_tussenvoegsel', 'deelnemer_telefoon', 'geboorte_datum', 'geboorte_tijd', 'geboorte_plaats']
+      $notRequired = ['deelnemer_tussenvoegsel']
       inputs.forEach(input => {
         if(!$notRequired.includes(input.name)){
           input.required = true;

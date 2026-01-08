@@ -118,7 +118,7 @@ class AanmeldingenController extends Controller {
           }
           $start = new DateTime($training->start_moment);
           $maand = $start->format('m') - 1;
-          $deadline = $start->modify('-7 day');
+          $deadline = $start->modify('-5 day');
           $deadline_maand = $deadline->format('m') - 1;
           $line = ['Training ' . $start->format('j') . ' ' . $maanden[$maand]];
           if($aanmelding->betaal_status == 2){

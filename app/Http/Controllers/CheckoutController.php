@@ -7,15 +7,25 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Stripe\StripeClient;
+use App\Mail\NieuweAanmelding;
+use App\Mail\BevestigingAanmelding;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use DateTime;
 
 class CheckoutController extends Controller
 {
-    protected StripeClient $stripe;
+    protected ?StripeClient $stripe = null;
 
     public function __construct()
     {
-        $this->stripe = new StripeClient(config('services.stripe.secret'));
+        // Alleen Stripe client aanmaken als we niet in fake mode zijn EN er een key is
+        $skipPayment = filter_var(env('PAYMENT_FAKE', false), FILTER_VALIDATE_BOOLEAN);
+        $stripeSecret = config('services.stripe.secret');
+        
+        if (!$skipPayment && !empty($stripeSecret)) {
+            $this->stripe = new StripeClient($stripeSecret);
+        }
     }
 
     public function start(Request $request)
@@ -100,11 +110,11 @@ class CheckoutController extends Controller
         $amountHalf  = (int) round(($prijsEuro / 2) * 100);
         $betaalOptie = (int) $request->input('betaal_optie');
 
-        // Due date (7 dagen voor start)
+        // Due date (5 dagen voor start)
         $dueAt = null;
         if (!empty($training->start_moment)) {
             $dt = new DateTime($training->start_moment);
-            $dt->modify('-7 day');
+            $dt->modify('-5 day');
             $dueAt = $dt->format('Y-m-d 00:00:00');
         }
 
@@ -184,7 +194,6 @@ class CheckoutController extends Controller
                     'amount_due_remaining' => 0,
                     'updated_at'           => now(),
                 ]);
-                return redirect($nextUrl)->with('msg', 'Betaling voltooid (fake).');
             }
 
             if ($betaalOptie === 1) {
@@ -196,8 +205,32 @@ class CheckoutController extends Controller
                     'due_at'               => $dueAt,
                     'updated_at'           => now(),
                 ]);
-                return redirect($nextUrl)->with('msg', 'Aanbetaling ontvangen (fake).');
             }
+
+            // Verstuur emails ook bij fake payment
+            $deelnemer = DB::table('deelnemers')->where('id', $idDeelnemer)->first();
+            $training = DB::table('trainingen')->where('id', $trainingId)->first();
+            $updatedAanmelding = DB::table('aanmeldingen')->where('id', $aanmeldingId)->first();
+
+            try {
+                // Email naar admin bij nieuwe aanmelding
+                $adminEmail = Config::get('info.admin_email');
+                if ($adminEmail) {
+                    Mail::to($adminEmail)->send(new NieuweAanmelding($deelnemer, $training, $updatedAanmelding));
+                    Log::info('Admin email verstuurd naar: ' . $adminEmail);
+                }
+
+                // Bevestigingsmail naar deelnemer
+                if ($deelnemer && $deelnemer->email) {
+                    Mail::to($deelnemer->email)->send(new BevestigingAanmelding($deelnemer, $training));
+                    Log::info('Bevestigingsmail verstuurd naar: ' . $deelnemer->email);
+                }
+            } catch (\Exception $e) {
+                Log::error('Email versturen mislukt: ' . $e->getMessage());
+            }
+
+            $msg = ($betaalOptie === 2) ? 'Betaling voltooid (fake).' : 'Aanbetaling ontvangen (fake).';
+            return redirect($nextUrl)->with('msg', $msg);
         }
 
         $checkoutDescription = "Welkom bij de Pilot van het MEIT-traject! Met deze betaling bevestig je jouw deelname. "
@@ -313,6 +346,28 @@ class CheckoutController extends Controller
             'stripe_payment_method_id' => $paymentMethodId,
             'updated_at'               => now(),
         ]);
+
+        // Haal deelnemer en training op voor de emails
+        $deelnemer = DB::table('deelnemers')->where('id', $aanmelding->id_deelnemer)->first();
+        $training = DB::table('trainingen')->where('id', $aanmelding->id_training)->first();
+        $updatedAanmelding = DB::table('aanmeldingen')->where('id', $aanmelding->id)->first();
+
+        // Verstuur emails
+        try {
+            // Email naar admin bij nieuwe aanmelding
+            $adminEmail = Config::get('info.admin_email');
+            if ($adminEmail) {
+                Mail::to($adminEmail)->send(new NieuweAanmelding($deelnemer, $training, $updatedAanmelding));
+            }
+
+            // Bevestigingsmail naar deelnemer
+            if ($deelnemer && $deelnemer->email) {
+                Mail::to($deelnemer->email)->send(new BevestigingAanmelding($deelnemer, $training));
+            }
+        } catch (\Exception $e) {
+            // Log de fout maar laat de redirect doorgaan
+            Log::error('Email versturen mislukt: ' . $e->getMessage());
+        }
 
         return redirect($next)->with('msg', $nieuweStatus === 2 ? 'Betaling voltooid.' : 'Aanbetaling ontvangen.');
     }

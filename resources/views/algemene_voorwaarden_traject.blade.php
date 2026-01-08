@@ -77,10 +77,10 @@
       <p>Annulering van deelname aan het <span class="font-bold">MEIT. Traject</span> dient altijd <span class="font-bold">schriftelijk via e-mail</span> te gebeuren. De datum van ontvangst van de e-mail geldt als annulatiedatum.</p>
       <br>
       <p>4.2</p>
-      <p>Bij annulering <span class="font-bold">meer dan 7 dagen vóór de startdatum</span> van het traject ontvangt de deelnemer <span class="font-bold">100% restitutie</span> van het betaalde bedrag.</p>
+      <p>Bij annulering <span class="font-bold">meer dan 5 dagen vóór de startdatum</span> van het traject ontvangt de deelnemer <span class="font-bold">100% restitutie</span> van het betaalde bedrag.</p>
       <br>
       <p>4.3</p>
-      <p>Bij annulering <span class="font-bold">binnen 7 dagen vóór aanvang</span> van het traject is restitutie <span class="font-bold">niet mogelijk</span>. De deelnemer behoudt in dat geval het recht om <span class="font-bold">éénmalig</span> de startdatum te verplaatsen naar een later traject (indien er plek is).</p>
+      <p>Bij annulering <span class="font-bold">binnen 5 dagen vóór aanvang</span> van het traject is restitutie <span class="font-bold">niet mogelijk</span>. De deelnemer behoudt in dat geval het recht om <span class="font-bold">éénmalig</span> de startdatum te verplaatsen naar een later traject (indien er plek is).</p>
       <br>
       <p>4.4</p>
       <p>Indien een deelnemer zonder afmelding niet verschijnt of tijdens het traject één of meerdere bijeenkomsten mist wegens ziekte, persoonlijke omstandigheden of andere redenen, vindt <span class="font-bold">geen restitutie</span> plaats. De gemiste bijeenkomst(en) kunnen niet worden ingehaald, tenzij dit uitdrukkelijk door <span class="font-bold">MEIT.</span> wordt aangeboden.</p>

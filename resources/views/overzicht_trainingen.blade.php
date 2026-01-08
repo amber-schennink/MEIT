@@ -79,7 +79,7 @@
                         @else
                           <?php 
                             $deadline = new DateTime($training->start_moment);
-                            $deadline->modify('-7 day');
+                            $deadline->modify('-5 day');
                           ?>
                           <p class="text-orange-400 betaal-status">1 termijn betaald <br> (deadline {{$deadline->format('j')}} {{$maanden[$deadline->format('m') - 1]}})</p>
                           @if($deadline < new DateTime('00:00:00'))

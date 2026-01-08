@@ -7,7 +7,7 @@
   $deelnemer = null;
   if(!isset($deadline)){
     $deadline = new DateTime('00:00:00');
-    $deadline->modify('+7 days');
+    $deadline->modify('+5 days');
   }
   if(session('id')){
     $deelnemer = $aanmeldingen->where('id_deelnemer', '=',  session('id'))->first();
