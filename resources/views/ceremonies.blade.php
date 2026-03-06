@@ -20,8 +20,15 @@
       <h2 class="mb-3">Ceremonies</h2>
 
       <!-- on hold info -->
-      <p>De Plantmedicijn Ceremonies zijn voor 2025 volledig volgeboekt. Vanaf maart 2026 gaat de agenda weer open.</p> 
-      <p>Hou de socials van MEIT. in de gaten voor de laatste updates en nieuwe data ✨</p>
+      <p>Moedig dat je hier bent ♡</p> 
+      <br>
+      <p>Op dit moment ben ik bezig met het inrichten van het boekingssysteem voor de ceremonies.</p>
+      <br>
+      <p>De eerste ceremonies van dit seizoen vinden plaats in de week van 6 april 2026. Binnenkort kun je hier de beschikbare data bekijken en jouw ceremonie boeken.</p>
+      <br>
+      <p>Kom daarom binnenkort nog eens terug op deze pagina om te zien welke plekken beschikbaar zijn.</p>
+      <br>
+      <p>Heb je in de tussentijd vragen, stuur me gerust een berichtje! Je kunt ook mijn socials in de gaten houden voor de laatste updates.</p>
     </div>
     @include('partials.footer')
     <?php 
