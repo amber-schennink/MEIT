@@ -66,7 +66,7 @@
                   </div>
                 @endif
               </div>
-              <div class="grid grid-cols-2 gap-3 text-center">
+              <div class="grid grid-cols-2 gap-x-3 text-center">
                 <div onclick="event.stopPropagation(); location.href = `{{url('deelnemers/' . $deelnemer->id . '#trainingen')}}`" class="blokken !bg-trainingen w-full">
                   <p>Trajecten:</p> 
                   <p>{{$aanmeldingen->where('id_deelnemer', '=', $deelnemer->id)->count()}}</p>
@@ -75,13 +75,9 @@
                   <p>Op wachtlijst: </p> 
                   <p>{{$wachtlijst->where('id_deelnemer', '=', $deelnemer->id)->count()}}</p>
                 </div>
-                <div onclick="event.stopPropagation(); location.href = `{{url('deelnemers/' . $deelnemer->id . '#ceremonie')}}`" class="blokken !bg-ceremonies w-full">
+                <div onclick="event.stopPropagation(); location.href = `{{url('deelnemers/' . $deelnemer->id . '#ceremonie')}}`" class="blokken !bg-ceremonies w-full col-span-2">
                   <p>Ceremonies: </p> 
                   <p>{{$ceremonies->where('id_deelnemer', '=', $deelnemer->id)->count()}}</p>
-                </div>
-                <div onclick="event.stopPropagation(); location.href = `{{url('deelnemers/' . $deelnemer->id . '#ceremonie')}}`" class="blokken !bg-ceremonies/50 w-full">
-                  <p>Ceremonies resevatielijst: </p> 
-                  <!-- <p>{{$ceremonies->where('id_deelnemer', '=', $deelnemer->id)->count()}}</p> -->
                 </div>
               </div>
               <a onclick="showPopUp('{{$deelnemer->id}}', '{{$deelnemer->voornaam}} {{$deelnemer->tussenvoegsel}} {{$deelnemer->achternaam}}'); event.stopPropagation();"><button class="w-full !bg-red-600/90 hover:!bg-red-700/90 mt-3">Verwijderen</button></a>
