@@ -23,14 +23,14 @@
       <p>Niet iedereen voelt zich geroepen om deze ceremonie te ervaren. Of je nu ervaring hebt met plantmedicijnen of nog niet, je bent meer dan <span class="text-second">welkom</span>. Ik begeleid je van begin tot eind.</p>
       <br>
       <p>Ik beloof je dat het een bijzondere dag wordt. En die ziet er zo uit:</p>
-      <ul class="ceremonie-list">
-        <li><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/> Je arriveert om 11:00 uur bij mijn magische huisje in Schiedam</li>
-        <li><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/> Rond 12:00 starten we met de ceremonie</li>
-        <li><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/> Rond 13:30 is de ceremonie afgelopen (het effect van het medicijn duurt maximaal 20 minuten)</li>
-        <li><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/> Daarna is er ruimte voor nabespreking</li>
-        <li><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/> Vervolgens verzorg ik voor ons de lunch</li>
-        <li><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/> Rond 16:00 uur ronden we de dag meestal af</li>
-      </ul>
+      <div class="ceremonie-list">
+        <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/> Je arriveert om 11:00 uur bij mijn magische huisje in Schiedam</p>
+        <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/> Rond 12:00 starten we met de ceremonie</p>
+        <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/> Rond 13:30 is de ceremonie afgelopen (het effect van het medicijn duurt maximaal 20 minuten)</p>
+        <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/> Daarna is er ruimte voor nabespreking</p>
+        <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/> Vervolgens verzorg ik voor ons de lunch</p>
+        <p><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/> Rond 16:00 uur ronden we de dag meestal af</p>
+      </div>
       <br>
       <p>Het effect van het medicijn is kort, maar de ervaring is <span class="text-second">intens</span>. Daarom is het belangrijk dat je de ruimte neemt om te verwerken wat je hebt ervaren. Er wordt veel in beweging gezet tijdens en na de ceremonie.</p>
       <br>
