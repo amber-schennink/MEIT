@@ -128,9 +128,6 @@ input[type=text], input[type=email], input[type=tel], input[type=password], inpu
   @apply bg-main rounded p-5 w-full lg:w-1/5
 }
 
-/* .ceremonie-container {
-  @apply grid grid-cols-3 gap-4
-} */
 .ceremonie-container > div {
   @apply rounded-xl px-8 py-6 bg-main-light flex flex-col items-center gap-4 ;
 }
