@@ -61,82 +61,132 @@
       @else
         <h2>Welkom {{$deelnemer->voornaam}}</h2>
       @endif
-      <h3 id="trainingen" class="mt-5">Traject<?php if($trainingen->count() != 1){echo 'en';}?></h3>
+
+      @if($ceremonies->isNotEmpty())
+        <div>
+          <h3 id="ceremonie" class="mb-3 mt-5">Ceremonie<?php if($ceremonies->count() > 1){echo 's';}?></h3>
+          
+          <div class="deelnemer-ceremonie-container">
+            @foreach($ceremonies as $ceremonie)
+              <div>
+                <div>
+                  <?php $datum = new DateTime($ceremonie->datum); ?>
+                  <div class="flex-1">
+                    <img src="{{asset('assets/date.svg')}}" />
+                    <p>{{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}</p>
+                  </div>
+                  <div class="flex-1">
+                    <img src="{{asset('assets/time.svg')}}" /> 
+                    <p>van 11:00 - 16:00</p>
+                  </div>
+                  <div class="flex-1">
+                    <img src="{{asset('assets/location.svg')}}" /> 
+                    <p>Schiedam</p>
+                  </div>
+                </div>
+                <div>
+                  @if($ceremonie->betaal_status == 0)
+                    <div>
+                      <p class="text-orange-400">Betaal €{{$prijs/2}} contant op {{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}</p>
+                    </div>
+                  @else
+                    <div>
+                      <p class="text-green-400">Betaald</p>
+                    </div>
+                  @endif
+                  <a href="https://www.meit.nl/ceremonie"><button>Meer informatie -></button></a>
+                </div>
+              </div>
+            @endforeach
+          </div>
+        </div>
+      @endif
+      @if($ceremonies->isEmpty())
+        <h3 class="mb-3 mt-5">Ceremonies</h3>
+        @if(!isset($admin) || $admin !== true)
+          <a href="{{url('ceremonies')}}"><button>Meld je aan voor een ceremonie</button></a>
+        @else 
+          <p>Deze deelnemer heeft zich hiervoor nog niet aangemeld</p>
+        @endif
+      @endif
+
+      <h3 id="trainingen" class="mt-20">Traject<?php if($trainingen->count() != 1){echo 'en';}?></h3>
       @if(!isset($admin) || $admin !== true)
         <div class="mb-5">
           <p>Hieronder vind je de data van alle bijeenkomstdagen van het traject waarvoor je je plek hebt gereserveerd.</p> 
+          <br>
           <p>Klik op meer info om te zien wat het thema van die dag is en hoe laat we samenkomen. </p> 
           <p>Ik kijk er naar uit om je te ontmoeten en samen deze reis te maken ♡</p>
         </div>
       @endif
-        @if($trainingen->count() != 0) 
-          <div class="trainingen">
-            @foreach($trainingen as $training)
-              <?php 
-                if(isset($admin) && $admin){
-                  $aanmelding = $aanmeldingen->where('id_training', '=', $training->id)->where('id_deelnemer', '=', $id)->first();
-                }else{
-                  $aanmelding = $aanmeldingen->where('id_training', '=', $training->id)->where('id_deelnemer', '=', session('id'))->first();
-                }
-                if($aanmelding->betaal_status == 2){
-                  $betaald = true ;
-                }else{
-                  $betaald = false ;
-                }
-              ?>
-              <div onclick="location.href = `{{url('training/'.$training->id)}}`" class="cursor-pointer flex flex-col justify-between gap-2
-              <?php if(new DateTime($training->start_moment_4) < new DateTime('00:00:00')){echo 'opacity-75 ';} if($betaald) {echo ' !bg-main-payed';} ?>">
-                <div class="datums">
-                  @foreach($training as $key => $val)
-                    @if(str_contains($key, 'start_moment'))
-                      <?php
-                        $datetime = new DateTime($val);
-                        $maand = $datetime->format('m') - 1;
-                      ?>
-                      <div>
-                        <p>{{$datetime->format('j')}}</p>
-                        <p>{{substr($maanden[$maand], 0, 3)}}</p>
-                      </div>
-                    @endif
-                  @endforeach
-                </div>
-                @php
-                  $beginTijd = new DateTime($training->start_moment);
-                  $eindTijd = new DateTime($training->start_moment);
-                  $eindTijd->modify('+3 hours');
-                @endphp
-                <p>{{$beginTijd->format('H:i')}} - {{$eindTijd->format('H:i')}}</p>
-                <p class="hover:underline underline-offset-2 mt-auto w-fit">Meer informatie -></p>
-                @if($betaald)
-                  <p class="font-bold text-2xl ml-auto">Betaald</p>
-                @else
-                  <?php 
-                    $deadline = new DateTime($training->start_moment);
-                    $deadline = $deadline->modify('-5 day');
-                    $deadline_maand = $deadline->format('m') - 1;
-                  ?>
-                  <p>Eerste termijn van €{{$prijs / 2}},- betaald</p>
-                  <p>Tweede temijn van €{{$prijs / 2}},- betalen voor <span class="font-semibold underline underline-offset-2">{{$deadline->format('j')}} {{$maanden[$deadline_maand]}}</span></p> 
-                    
-                  @if(!isset($admin) || $admin !== true)
-                    @if($datetime < new DateTime('00:00:00'))
-                      <h4 class="!text-xl">Sorry de deadline voor het betalen van het tweede termijn is verlopen</h4>
-                      <button onclick="event.stopPropagation();" class="w-full uit">Betaal termijn</button>
-                    @else
-                      <a class="mt-3" onclick="event.stopPropagation();" href="{{url('/checkout/charge-remaining/' . $aanmelding->id)}}"><button class="w-full">Betaal termijn</button></a>
-                    @endif
+      @if($trainingen->count() != 0) 
+        <div class="trainingen">
+          @foreach($trainingen as $training)
+            <?php 
+              if(isset($admin) && $admin){
+                $aanmelding = $aanmeldingen->where('id_training', '=', $training->id)->where('id_deelnemer', '=', $id)->first();
+              }else{
+                $aanmelding = $aanmeldingen->where('id_training', '=', $training->id)->where('id_deelnemer', '=', session('id'))->first();
+              }
+              if($aanmelding->betaal_status == 2){
+                $betaald = true ;
+              }else{
+                $betaald = false ;
+              }
+            ?>
+            <div onclick="location.href = `{{url('training/'.$training->id)}}`" class="cursor-pointer flex flex-col justify-between gap-2
+            <?php if(new DateTime($training->start_moment_4) < new DateTime('00:00:00')){echo 'opacity-75 ';} if($betaald) {echo ' !bg-main-payed';} ?>">
+              <div class="datums">
+                @foreach($training as $key => $val)
+                  @if(str_contains($key, 'start_moment'))
+                    <?php
+                      $datetime = new DateTime($val);
+                      $maand = $datetime->format('m') - 1;
+                    ?>
+                    <div>
+                      <p>{{$datetime->format('j')}}</p>
+                      <p>{{substr($maanden[$maand], 0, 3)}}</p>
+                    </div>
+                  @endif
+                @endforeach
+              </div>
+              @php
+                $beginTijd = new DateTime($training->start_moment);
+                $eindTijd = new DateTime($training->start_moment);
+                $eindTijd->modify('+3 hours');
+              @endphp
+              <p>{{$beginTijd->format('H:i')}} - {{$eindTijd->format('H:i')}}</p>
+              <p class="hover:underline underline-offset-2 mt-auto w-fit">Meer informatie -></p>
+              @if($betaald)
+                <p class="font-bold text-2xl ml-auto">Betaald</p>
+              @else
+                <?php 
+                  $deadline = new DateTime($training->start_moment);
+                  $deadline = $deadline->modify('-5 day');
+                  $deadline_maand = $deadline->format('m') - 1;
+                ?>
+                <p>Eerste termijn van €{{$prijs / 2}},- betaald</p>
+                <p>Tweede temijn van €{{$prijs / 2}},- betalen voor <span class="font-semibold underline underline-offset-2">{{$deadline->format('j')}} {{$maanden[$deadline_maand]}}</span></p> 
+                  
+                @if(!isset($admin) || $admin !== true)
+                  @if($datetime < new DateTime('00:00:00'))
+                    <h4 class="!text-xl">Sorry de deadline voor het betalen van het tweede termijn is verlopen</h4>
+                    <button onclick="event.stopPropagation();" class="w-full uit">Betaal termijn</button>
+                  @else
+                    <a class="mt-3" onclick="event.stopPropagation();" href="{{url('/checkout/charge-remaining/' . $aanmelding->id)}}"><button class="w-full">Betaal termijn</button></a>
                   @endif
                 @endif
-              </div>
-            @endforeach
-          </div>
-        @elseif($wachtlijst->isEmpty())
-          @if(!isset($admin) || $admin !== true)
-            <a href="{{url('trainingen')}}"><button class="mt-3">Meld je hier aan voor het MEIT. Traject</button></a>
-          @else 
-            <p>Deze deelnemer heeft zich hiervoor nog niet aangemeld</p>
-          @endif
+              @endif
+            </div>
+          @endforeach
+        </div>
+      @elseif($wachtlijst->isEmpty())
+        @if(!isset($admin) || $admin !== true)
+          <a href="{{url('trainingen')}}"><button class="mt-3">Meld je hier aan voor het MEIT. Traject</button></a>
+        @else 
+          <p>Deze deelnemer heeft zich hiervoor nog niet aangemeld</p>
         @endif
+      @endif
       @if($wachtlijst->isNotEmpty())
         <h5 id="wachtlijst" class="mt-5">Wachtlijst</h5>
         <div class="trainingen">
@@ -181,55 +231,6 @@
             </div>
           @endforeach
         </div>
-      @endif
-
-      @if($ceremonies->isNotEmpty())
-        <div>
-          <h3 id="ceremonie" class="mb-3 mt-20">Ceremonie<?php if($ceremonies->count() > 1){echo 's';}?></h3>
-          
-          <div class="deelnemer-ceremonie-container">
-            @foreach($ceremonies as $ceremonie)
-              <div>
-                <div>
-                  <?php $datum = new DateTime($ceremonie->datum); ?>
-                  <div class="flex-1">
-                    <img src="{{asset('assets/date.svg')}}" />
-                    <p>{{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}</p>
-                  </div>
-                  <div class="flex-1">
-                    <img src="{{asset('assets/time.svg')}}" /> 
-                    <p>van 11:00 - 16:00</p>
-                  </div>
-                  <div class="flex-1">
-                    <img src="{{asset('assets/location.svg')}}" /> 
-                    <p>Schiedam</p>
-                  </div>
-                </div>
-                <div>
-                  @if($ceremonie->betaal_status == 0)
-                    <div>
-                      <p class="text-orange-400">Betaal €{{$prijs/2}} contant op {{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}</p>
-                    </div>
-                  @else
-                    <div>
-                      <p class="text-green-400">Betaald</p>
-                    </div>
-                  @endif
-                  <a href="https://www.meit.nl/ceremonie"><button>Meer informatie -></button></a>
-                </div>
-              </div>
-            @endforeach
-          </div>
-        </div>
-      @endif
-
-      @if($ceremonies->isEmpty())
-        <h3 class="mb-3 mt-20">Ceremonies</h3>
-        @if(!isset($admin) || $admin !== true)
-          <a href="{{url('ceremonies')}}"><button>Meld je aan voor een ceremonie</button></a>
-        @else 
-          <p>Deze deelnemer heeft zich hiervoor nog niet aangemeld</p>
-        @endif
       @endif
 
       <div id="pop-up" onclick="this.classList.add('!hidden')" class="!hidden">
