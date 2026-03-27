@@ -39,9 +39,9 @@
       <p>De kosten voor de gehele dag bedragen €444,-.</p>
       <br>
       <h3>Belangrijk</h3>
-      <p>Als je antidepressiva of andere zware medicatie gebruikt, is het noodzakelijk dat je hier minimaal 72 uur van tevoren mee stopt.</p>
+      <p>Als je 72 uur voor dat de  ceremonie plaatsvindt antidepressiva of andere zware medicatie slikt, dan kan ik de ceremonie niet doen.</p>
       <br>
-      <p>Tepezcohuite werkt geestverruimend, terwijl antidepressiva geestvernauwend werken. Dit kan tijdens de ceremonie voor complicaties zorgen, en dat willen we niet.</p>
+      <p>Tepezcohuite werkt geestverruimend, terwijl antidepressiva of andere zware medicatie geestvernauwend werken.</p>
       <br>
       <br>
       <h5>Kies hieronder jouw datum.</h5>
