@@ -22,12 +22,6 @@
             if(array_key_exists('ceremonies', $data)){
               $dag_data['ceremonies'] = $data['ceremonies']->where('datum', '=', $datum->format('Y-m-d')); 
             }
-            if(array_key_exists('intakegesprekken', $data)){
-              $dag_data['intakegesprekken'] = $data['intakegesprekken']->where('datum', '=', $datum->format('Y-m-d')); 
-            }
-            if(array_key_exists('mogelijkheden', $data)){
-              $dag_data['mogelijkheden'] = $data['mogelijkheden']->where('datum', '=', $datum->format('Y-m-d')); 
-            }
             if(array_key_exists('trainingen', $data)){
               $next_datum = new DateTime($datum->format('Y-m-d'));
               $next_datum->modify('+1 day');
@@ -52,10 +46,9 @@
           ?>
           <h6 class="whitespace-nowrap">{{$datum->format('j')}} <span class="hidden lg:inline">{{$maanden[$datum->format('m') - 1]}}</span> <span class="lg:hidden">{{substr($maanden[$datum->format('m') - 1], 0, 3)}}</span></h6>
 
-          @if($file == 'overzicht_ceremonies' &&
-            (!array_key_exists('mogelijkheden', $dag_data) || $dag_data['mogelijkheden']->isEmpty()) && 
-            (!array_key_exists('intakegesprekken', $dag_data) || $dag_data['intakegesprekken']->isEmpty()))
-            <div class="{{$datum->format('Y-m-d')}}" class="cursor-pointer" <?php echo 'onclick="setDatum(`'. $datum->format('Y-m-d') .'`)"';?>>
+          @if($file == 'ceremonie_form' &&
+              (!array_key_exists('ceremonies', $dag_data) || $dag_data['ceremonies']->isEmpty()))
+            <div class="{{$datum->format('Y-m-d')}} cursor-pointer" <?php echo 'onclick="setDatum(`'. $datum->format('Y-m-d') .'`)"';?>>
           @else
             <div class="{{$datum->format('Y-m-d')}}">
           @endif
@@ -79,7 +72,7 @@
               </div>
             @elseif($file == 'ceremonie_form')
               <div class="ghost-block hidden !bg-ceremonies !opacity-100 ">
-                <p>11:00 tot deelnemer naar huis gaat</p>
+                <p>11:00 - 16:00</p>
               </div>
             @elseif($file != 'ceremonies')
               <div class="ghost-block hidden">
@@ -118,12 +111,6 @@
               if(array_key_exists('ceremonies', $data)){
                 $dag_data['ceremonies'] = $data['ceremonies']->where('datum', '=', $datum->format('Y-m-d')); 
               }
-              if(array_key_exists('intakegesprekken', $data)){
-                $dag_data['intakegesprekken'] = $data['intakegesprekken']->where('datum', '=', $datum->format('Y-m-d')); 
-              }
-              if(array_key_exists('mogelijkheden', $data)){
-                $dag_data['mogelijkheden'] = $data['mogelijkheden']->where('datum', '=', $datum->format('Y-m-d')); 
-              }
               if(array_key_exists('trainingen', $data)){
                 $next_datum = new DateTime($datum->format('Y-m-d'));
                 $next_datum->modify('+1 day');
@@ -147,11 +134,9 @@
               }
             ?>
             <h6 class="whitespace-nowrap">{{$datum->format('j')}} <span class="hidden lg:inline">{{$maanden[$datum->format('m') - 1]}}</span> <span class="lg:hidden">{{substr($maanden[$datum->format('m') - 1], 0, 3)}}</span></h6>
-
-            @if($file == 'overzicht_ceremonies' &&
-              (!array_key_exists('mogelijkheden', $dag_data) || $dag_data['mogelijkheden']->isEmpty()) && 
-              (!array_key_exists('intakegesprekken', $dag_data) || $dag_data['intakegesprekken']->isEmpty()))
-              <div class="{{$datum->format('Y-m-d')}}" class="cursor-pointer" <?php echo 'onclick="setDatum(`'. $datum->format('Y-m-d') .'`)"';?>>
+            @if($file == 'ceremonie_form' &&
+              (!array_key_exists('ceremonies', $dag_data) || $dag_data['ceremonies']->isEmpty()))
+              <div class="{{$datum->format('Y-m-d')}} cursor-pointer" <?php echo 'onclick="setDatum(`'. $datum->format('Y-m-d') .'`)"';?>>
             @else
               <div class="{{$datum->format('Y-m-d')}}">
             @endif
@@ -175,7 +160,7 @@
                 </div>
               @elseif($file == 'ceremonie_form')
                 <div class="ghost-block hidden !bg-ceremonies !opacity-100 ">
-                  <p>11:00 tot deelnemer naar huis gaat</p>
+                  <p>11:00 - 16:00</p>
                 </div>
               @elseif($file != 'ceremonies')
                 <div class="ghost-block hidden">
@@ -191,12 +176,6 @@
   <img onclick="scrollSchema(this.parentElement, 'r')" class="schema-knop-r -right-[10%] !w-[10%]" src="{{asset('assets/arrow_right.svg')}}"/>
 </div>
 <div class="mt-4 ml-[10%]">
-  @if(array_key_exists('intakegesprekken', $data))
-    <p class="before:content-[''] before:bg-intakegesprekken before:h-5 before:w-5 before:block flex gap-2">Intakegesprekken</p>
-  @endif
-  @if(array_key_exists('mogelijkheden', $data))
-    <p class="before:content-[''] before:bg-mogelijkheden before:h-5 before:w-5 before:block flex gap-2">Intakegesprek mogelijkheden</p>
-  @endif
   @if(array_key_exists('ceremonies', $data))
     <p class="before:content-[''] before:bg-ceremonies before:h-5 before:w-5 before:block flex gap-2">Ceremonies</p>
   @endif

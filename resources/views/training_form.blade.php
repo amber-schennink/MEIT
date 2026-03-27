@@ -78,8 +78,6 @@
         <?php 
           $data = [];
           $data['ceremonies'] = DB::table('ceremonies')->get(); 
-          $data['intakegesprekken'] = DB::table('intakegesprekken')->get(); 
-          $data['mogelijkheden'] = DB::table('intake_mogelijkheden')->get(); 
           $data['trainingen'] = DB::table('trainingen')->get();
 
           $file = 'training_form';
@@ -93,8 +91,6 @@
   </body>
 </html>
 <style>
-  .\!bg-intakegesprekken, .before\:bg-intakegesprekken::before, 
-  .\!bg-mogelijkheden, .before\:bg-mogelijkheden::before, 
   .\!bg-ceremonies, .before\:bg-ceremonies::before, 
   .\!bg-trainingen, .before\:bg-trainingen::before{
     opacity: 70%;

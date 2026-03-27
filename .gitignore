@@ -24,3 +24,6 @@ Homestead.yaml
 Thumbs.db
 resources/views/overzicht.blade copy.php
 resources/views/overzicht.blade copy 2.php
+
+resources/views/ceremonie_oud
+app/Http/Controllers/CeremonieCheckoutController copy.php

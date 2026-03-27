@@ -17,11 +17,17 @@
       <h2 class="mb-3 wrap-break-word">MEIT. Traject</h2>
       <p class="mb-6">Kies hieronder de startdatum van jouw Traject. Elke reeks bestaat uit 4 bijeenkomsten van 3 uur, op vaste dagen en tijden. Bekijk goed of je op alle data aanwezig kunt zijn voordat je je plek reserveert.</p>
       <div class="trainingen">
+        @php
+          $trainingenIsEmpty = true;
+        @endphp
         @foreach($trainingen as $key => $training)
           @if(new DateTime($training->start_moment_4) < new DateTime('00:00:00'))
             @continue
           @endif
           <?php
+            if($trainingenIsEmpty){
+              $trainingenIsEmpty = false;
+            }
             $aanmeldingen = DB::table('aanmeldingen')
               ->where('id_training', '=', $training->id)->get();
             $beschikbaar = 4;
@@ -69,7 +75,7 @@
           </div>
         @endforeach
       </div>
-      @if($trainingen->isEmpty())
+      @if($trainingen->isEmpty() || $trainingenIsEmpty)
         <p>Er zijn momenteel geen trajecten beschikbaar.</p>
         <p>Hou de socials van MEIT. in de gaten voor de laatste updates en nieuwe data ✨</p>
         <p>Al ingeschreven voor een traject? <a class="hover:underline underline-offset-2 text-second" href="{{url('login')}}">Log in</a> om de trajecten te bekijken</p>

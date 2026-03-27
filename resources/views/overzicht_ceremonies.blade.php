@@ -18,148 +18,121 @@
     
     <div class="container">
       <div id="ceremonies">
-        <h2 class="mb-3">Ceremonies</h2>
+        <div class="flex flex-col md:flex-row justify-between items-center mb-3">
+          <h2 class="mb-3">Ceremonies</h2>
+          <a href="{{url('ceremonie_form')}}"><button class="md:ml-5 mt-3 md:mt-0">Nieuwe ceremonie</button></a>
+        </div>
         <div class="ceremonie-container">
           @foreach($ceremonies as $ceremonie)
             <?php 
               $datum = new DateTime($ceremonie->datum);
-              $deelnemer = $deelnemers->where('id', '=', $ceremonie->id_deelnemer)->first();
+              if($ceremonie->id_deelnemer){
+                $deelnemer = $deelnemers->where('id', '=', $ceremonie->id_deelnemer)->first();
+              }else{
+                $deelnemer = NULL;
+              }
             ?>
-            <div>
+            <div <?php if($datum < new DateTime('00:00:00')){echo 'class="opacity-75 order-1"';}?>>
               <div>
-                <img src="{{asset('assets/date.svg')}}" /> 
-                <p>{{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}</p>
-              </div>
-              <div>
-                <img src="{{asset('assets/time.svg')}}" /> 
-                <p>11:00</p>
-              </div>
-              <div class="flex items-center">
-                <a class="hover:underline underline-offset-2 flex items-center" href="{{url('deelnemers/' . $deelnemer->id)}}">
-                  <img src="{{asset('assets/user.svg')}}" /> 
-                  <p>{{$deelnemer->voornaam}} {{$deelnemer->tussenvoegsel}} {{$deelnemer->achternaam}}</p>
-                </a>
-              </div>
-              <div>
-                <img src="{{asset('assets/email.svg')}}" /> 
-                <a class="hover:underline underline-offset-2" href="mailto: {{$deelnemer->email}}"><p>{{$deelnemer->email}}</p></a>
-              </div>
-              @if(isset($deelnemer->telefoon_nummer))
-                <div>
-                  <a class="hover:underline underline-offset-2 flex items-center" href="tel:{{$deelnemer->telefoon_nummer}}">
-                    <img src="{{asset('assets/telephone.svg')}}" /> 
-                    <p>{{$deelnemer->telefoon_nummer}}</p>
-                  </a>
-                </div>
-              @else
-                <div class="!hidden lg:!flex cursor-default">
-                  <div class="flex opacity-0 items-center">
-                    <img src="{{asset('assets/telephone.svg')}}" /> 
-                    <p>06-12345678</p>
-                  </div>
-                </div>
-              @endif
-            </div>
-          @endforeach
-        </div>
-        <div id="intakegesprekken">
-          <h3 class="mb-3 mt-6">Intakegesprekken</h3>
-          <div class="ceremonie-container intake">
-            @foreach($intakegesprekken as $intakegesprek)
-              <?php 
-                $datum = new DateTime($intakegesprek->datum);
-                $begin_tijd = new DateTime($intakegesprek->begin_tijd);
-                $eind_tijd = new DateTime($intakegesprek->eind_tijd);
-                
-                if($intakegesprek->id_deelnemer != null){
-                  $deelnemer = $deelnemers->where('id', '=', $intakegesprek->id_deelnemer)->first();
-                }else{
-                  $deelnemer = null;
-                }
-              ?>
-              <div>
-                <div>
-                  <a class="hover:underline underline-offset-2 flex items-center" href="{{url('deelnemers/' . $deelnemer->id)}}">
-                    <img src="{{asset('assets/user.svg')}}" /> 
-                    <p>{{$deelnemer->voornaam}} {{$deelnemer->tussenvoegsel}} {{$deelnemer->achternaam}}</p>
-                  </a>
-                </div>
-                <div>
-                  <a class="hover:underline underline-offset-2 flex items-center" href="mailto:{{$deelnemer->email}}">
-                    <img src="{{asset('assets/email.svg')}}" /> 
-                    <p>{{$deelnemer->email}}</p>
-                  </a>
-                </div>
-                @if(isset($deelnemer->telefoon_nummer))
-                  <div>
-                    <a class="hover:underline underline-offset-2 flex items-center" href="tel:{{$deelnemer->telefoon_nummer}}">
-                      <img src="{{asset('assets/telephone.svg')}}" /> 
-                      <p>{{$deelnemer->telefoon_nummer}}</p>
-                    </a>
-                  </div>
-                @else
-                  <div class="!hidden md:!flex cursor-default">
-                    <div class="flex opacity-0 items-center">
-                      <img src="{{asset('assets/telephone.svg')}}" /> 
-                      <p>06-12345678</p>
-                    </div>
-                  </div>
-                @endif
                 <div>
                   <img src="{{asset('assets/date.svg')}}" /> 
-                  <p>{{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}</p>
+                  <p>{{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}} <?php if($datum->format('Y') != date("Y")){ echo $datum->format('Y');} ?></p>
                 </div>
                 <div>
                   <img src="{{asset('assets/time.svg')}}" /> 
-                  <p>{{$begin_tijd->format('H:i')}} - {{$eind_tijd->format('H:i')}}</p>
+                  <p>11:00 - 16:00</p>
                 </div>
-                <a href="{{url('ceremonies/'.$intakegesprek->id)}}"><button>Plan ceremonie</button></a>
               </div>
-            @endforeach
-          </div>
-        </div>
-        <div>
-          <div class="flex items-center">
-            <h4 class="text-second mb-3 mt-6">Intake mogelijkheden</h4>
-          </div>
-          <?php 
-            $data = [];
-            $data['ceremonies'] = DB::table('ceremonies')->get(); 
-            $data['intakegesprekken'] = DB::table('intakegesprekken')->get(); 
-            $data['mogelijkheden'] = DB::table('intake_mogelijkheden')->get(); 
-            $data['trainingen'] = DB::table('trainingen')->get();
-
-            $file = 'overzicht_ceremonies';
-          ?>
-          @include('partials.schema')
-          <form action="{{url('gesprek_mogelijkheden')}}" method="POST" class="m-auto w-fit flex flex-col md:block mt-5 md:mt-auto">
-            @csrf
-            <input class="mt-3 md:mt-0" onchange="setDatum(this.value)" id="mogenlijkheid-form-datum" name="datum" type="date" required/>
-            <input class="md:ml-4 md:mr-2 mt-3 md:mt-0" onchange="setTijden(this.value, document.getElementById('mogenlijkheid-form-eind-tijd').value)" id="mogenlijkheid-form-begin-tijd" name="begin_tijd" type="time" required />
-            <input class="md:mr-4 md:ml-2 mt-3 md:mt-0" onchange="setTijden(document.getElementById('mogenlijkheid-form-begin-tijd').value, this.value)" id="mogenlijkheid-form-eind-tijd" name="eind_tijd" type="time" required />
-            <button id="mogenlijkheid-form-button" class="mb-3 mt-6 ml-auto" type="submit">Voeg intake mogenlijkheid toe</button>
-          </form>
+              <div>
+                @if($deelnemer)
+                  <div class="flex items-center">
+                    <a class="hover:underline underline-offset-2 flex items-center" href="{{url('deelnemers/' . $deelnemer->id)}}">
+                      <img src="{{asset('assets/user.svg')}}" /> 
+                      <p>{{$deelnemer->voornaam}} {{$deelnemer->tussenvoegsel}} {{$deelnemer->achternaam}}</p>
+                    </a>
+                  </div>
+                  <div>
+                    <img src="{{asset('assets/email.svg')}}" /> 
+                    <a class="hover:underline underline-offset-2" href="mailto: {{$deelnemer->email}}"><p>{{$deelnemer->email}}</p></a>
+                  </div>
+                  @if(isset($deelnemer->telefoon_nummer))
+                    <div>
+                      <a class="hover:underline underline-offset-2 flex items-center" href="tel:{{$deelnemer->telefoon_nummer}}">
+                        <img src="{{asset('assets/telephone.svg')}}" /> 
+                        <p>{{$deelnemer->telefoon_nummer}}</p>
+                      </a>
+                    </div>
+                  @endif
+                  <div class="cursor-pointer" onclick="showPopUpUpdateBetaalStatus('{{$ceremonie->id}}', '{{$deelnemer->voornaam}} {{$deelnemer->tussenvoegsel}} {{$deelnemer->achternaam}}')">
+                    @if($ceremonie->betaal_status == 2)
+                      <p class="text-green-400 betaal-status">Betaald met betaal link</p>
+                    @elseif($ceremonie->betaal_status == 1)
+                      <p class="text-green-400 betaal-status">Contant betaald</p>
+                    @else
+                      <p class="text-orange-400 betaal-status">Deels betaald</p>
+                    @endif
+                  </div>
+                  <div class="flex justify-between">
+                    <a class="w-1/2 pr-1" onclick="showPopUpUpdateBetaalStatus('{{$ceremonie->id}}', '{{$deelnemer->voornaam}} {{$deelnemer->tussenvoegsel}} {{$deelnemer->achternaam}}'); event.stopPropagation();">
+                      <button class="w-full !min-w-0 !bg-second/90 hover:!bg-second-dark/90 mt-3 !text-sm">Aanpassen</button>
+                    </a>
+                    <a class="w-1/2 pl-1" onclick="showPopUpDeelnemerVerwijderen(`{{$ceremonie->id}}`, '{{$deelnemer->voornaam}} {{$deelnemer->tussenvoegsel}} {{$deelnemer->achternaam}}', `{{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}`); event.stopPropagation();">
+                      <button class="w-full !min-w-0 !bg-red-600/90 hover:!bg-red-700/90 mt-3 !text-sm">Verwijderen</button>
+                    </a>
+                  </div>
+                @else
+                  <p>Er is nog geen aanmelding gedaan voor deze ceremonie</p>
+                @endif
+              </div>
+              <a class="mt-auto" href="/ceremonie_form/{{$ceremonie->id}}"><button class="w-full mt-10">Aanpassen</button></a>
+              <a onclick="showPopUpVerwijderCeremonie('{{$ceremonie->id}}')"><button class="w-full !bg-red-600/90 hover:!bg-red-700/90 mt-3">Verwijderen</button></a>
+            </div>
+          @endforeach
         </div>
       </div>
     </div>
+  
+    <div id="pop-up-verwijder-ceremonie" onclick="this.classList.add('!hidden')" class="!hidden pop-up">
+      <div>
+        <h4>Weet je zeker dat je deze ceremonie wilt verwijderen?</h4>
+        <p>Een eventuele aanmelding wordt ook verwijderd</p>
+        <div>
+          <a id="afmelden" onclick="event.stopPropagation();"><button>Verwijderen</button></a>
+          <button class="!cursor-pointer alt-2">Niet verwijderen</button>
+        </div>
+      </div>
+    </div>
+    <div id="pop-up-update-betaal-status" onclick="this.classList.add('!hidden')" class="!hidden pop-up">
+      <div>
+        <h4>Heeft <span>naam</span> betaald?</h4>
+        <form action="" method="POST" class="mt-4">
+          @csrf
+          <input class="id_ceremonie hidden" name="id_ceremonie" readonly required/>
+          <div>
+            <a onclick="event.stopPropagation();"><button formaction="/ceremonieDeelnemerBetaalStatusAanpassen/1" class="bg-green-600/90!">Ja, Contant</button></a>
+            <a onclick="event.stopPropagation();" class=" ml-4"><button formaction="/ceremonieDeelnemerBetaalStatusAanpassen/2" class="bg-green-600/90!">Ja, via betaal link</button></a>
+          </div>
+          <div class="mt-4!">
+            <a onclick="event.stopPropagation();"><button formaction="/ceremonieDeelnemerBetaalStatusAanpassen/0" class="bg-second/90!">Deels</button></a>
+            <button type="button" class="!cursor-pointer alt-2 ml-4">Annuleren</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div id="pop-up-deelnemer-verwijderen" onclick="this.classList.add('!hidden')" class="!hidden pop-up">
+        <div>
+          <h4>Weet je zeker dat je <span class="pop-up-naam">naam</span> van deze ceremonie <br> op <span class="pop-up-datum">datum</span> wilt verwijderen?</h4>
+          <p>De ceremonie wordt weer opengezet voor een nieuwe deelnemer</p>
+          <div>
+            <a id="deelnemer-verwijderen" onclick="event.stopPropagation();"><button>Verwijderen</button></a>
+            <button class="!cursor-pointer alt-2">Niet verwijderen</button>
+          </div>
+        </div>
+      </div>
     
     @include('partials.footer')
   </body>
 </html>
-<style>
-  .\!bg-intakegesprekken, .before\:bg-intakegesprekken::before , 
-  .\!bg-ceremonies, .before\:bg-ceremonies::before, 
-  .\!bg-trainingen, .before\:bg-trainingen::before{
-    opacity: 70%;
-  }
-</style>
-@if($errors->any())
-  <script>
-    document.getElementById('mogenlijkheid-form-datum').value ='';
-    document.getElementById('mogenlijkheid-form-begin-tijd').value = '';
-    document.getElementById('mogenlijkheid-form-eind-tijd').value = '';
-  </script>
-@endif
 
 <script>
   var schema_start = '<?php echo str_pad($schema_start->format('H:i'), 5, '0', STR_PAD_LEFT); ?>';
@@ -246,5 +219,29 @@
       button.classList.add('uit')
     }
 
+  }
+
+  function showPopUpVerwijderCeremonie(id) {
+    pop_up = document.getElementById('pop-up-verwijder-ceremonie');
+    pop_up.classList.remove('!hidden');
+    afmelden = document.getElementById('afmelden');
+
+    afmelden.href = "ceremonie_verwijderen/" + id;
+  }
+  function showPopUpUpdateBetaalStatus(id, naam) { 
+    pop_up = document.getElementById('pop-up-update-betaal-status');
+    pop_up.getElementsByTagName('span')[0].innerText = naam
+    pop_up.getElementsByClassName('id_ceremonie')[0].value = id
+    pop_up.classList.remove('!hidden');
+    afmelden = document.getElementById('deelnemer-aanpassen');
+  }
+  function showPopUpDeelnemerVerwijderen(id, naam, datum) {
+    pop_up = document.getElementById('pop-up-deelnemer-verwijderen');
+    pop_up.getElementsByClassName('pop-up-naam')[0].innerText = naam 
+    pop_up.getElementsByClassName('pop-up-datum')[0].innerText = datum 
+    pop_up.classList.remove('!hidden');
+    afmelden = document.getElementById('deelnemer-verwijderen');
+
+    afmelden.href = "ceremonie_deelnemer_verwijderen/" + id;
   }
 </script>
