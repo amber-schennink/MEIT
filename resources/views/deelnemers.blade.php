@@ -66,7 +66,7 @@
                   </div>
                 @endif
               </div>
-              <div class="grid grid-cols-2 gap-x-3 text-center">
+              <div class="grid grid-cols-2 gap-3 text-center">
                 <div onclick="event.stopPropagation(); location.href = `{{url('deelnemers/' . $deelnemer->id . '#trainingen')}}`" class="blokken !bg-trainingen w-full">
                   <p>Trajecten:</p> 
                   <p>{{$aanmeldingen->where('id_deelnemer', '=', $deelnemer->id)->count()}}</p>
