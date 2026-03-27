@@ -15,6 +15,8 @@
     ?>
     @include('partials.nav')
     @include('partials.flash')
+<<<<<<< ceremonie_update
+=======
     
     <div class="container">
       <h2 class="mb-3">Ceremonies</h2>
@@ -36,172 +38,78 @@
     ?>
     <!-- on hold info -->
 
+>>>>>>> main
 
-      <h3 class="ml-[10%]">Inschrijven intakegesprek</h3>
-      <div>
-        <?php 
-          $data = [];
-          $data['mogelijkheden'] = DB::table('intake_mogelijkheden')->get(); 
+    <div class="container">
+      <h2 class="mb-3 wrap-break-word">Ceremonies</h2>
+      <p><span class="text-second">Moedig</span> dat je hier bent ♡</p>
+      <br>
+      <p>Niet iedereen voelt zich geroepen om deze ceremonie te ervaren. Of je nu ervaring hebt met plantmedicijnen of nog niet, je bent meer dan <span class="text-second">welkom</span>. Ik begeleid je van begin tot eind.</p>
+      <br>
+      <p>Ik beloof je dat het een bijzondere dag wordt. En die ziet er zo uit:</p>
+      <ul class="ceremonie-list">
+        <li><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/> Je arriveert om 11:00 uur bij mijn magische huisje in Schiedam</li>
+        <li><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/> Rond 12:00 starten we met de ceremonie</li>
+        <li><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/> Rond 13:30 is de ceremonie afgelopen (het effect van het medicijn duurt maximaal 20 minuten)</li>
+        <li><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/> Daarna is er ruimte voor nabespreking</li>
+        <li><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/> Vervolgens verzorg ik voor ons de lunch</li>
+        <li><img class="h-5 inline" src="{{asset('assets/point_right.svg')}}"/> Rond 16:00 uur ronden we de dag meestal af</li>
+      </ul>
+      <br>
+      <p>Het effect van het medicijn is kort, maar de ervaring is <span class="text-second">intens</span>. Daarom is het belangrijk dat je de ruimte neemt om te verwerken wat je hebt ervaren. Er wordt veel in beweging gezet tijdens en na de ceremonie.</p>
+      <br>
+      <p>Om die reden raad ik je aan om de dag zelf en de dag erna volledig vrij te houden van afspraken of andere verplichtingen. Zie het als een <span class="text-second">mini-vakantie</span> voor jezelf. 😉</p>
+      <br>
+      <p>De kosten voor de gehele dag bedragen €444,-.</p>
+      <br>
+      <h3>Belangrijk</h3>
+      <p>Als je antidepressiva of andere zware medicatie gebruikt, is het noodzakelijk dat je hier minimaal 72 uur van tevoren mee stopt.</p>
+      <br>
+      <p>Tepezcohuite werkt geestverruimend, terwijl antidepressiva geestvernauwend werken. Dit kan tijdens de ceremonie voor complicaties zorgen, en dat willen we niet.</p>
+      <br>
+      <br>
+      <h5>Kies hieronder jouw datum.</h5>
+      <div class="trainingen mt-6">
+        @php
+          $ceremoniesIsEmpty = true;
 
-          $file = 'ceremonies';
-        ?>
-        @include('partials.schema')
-      </div>
-      <form action="{{url('intakegesprek')}}" method="POST">
-        @csrf
-        <div class="m-auto w-fit flex flex-col md:block mt-5 md:mt-auto">
-          @if(session('login') && session('id'))
-            <input name="id_deelnemer" class="hidden" value="{{session('id')}}" readonly required/>
+          $deadline = New DateTime();
+          $deadline->modify('+5 days');
+        @endphp
+        @foreach($ceremonies as $key => $ceremonie)
+          @if(new DateTime($ceremonie->datum . '11:00:00') < $deadline)
+            @continue
           @endif
-          <input id="intakegesprek-form-id-mogenlijkheid" name="id_mogenlijkheid" class="hidden" readonly required/>
-          <input onchange="setDatum(this.value)" id="intakegesprek-form-datum" name="datum" type="date" required/>
-          <input class="ml-4 mr-2 mt-3 md:mt-0" onchange="setTijden(this.value)" id="intakegesprek-form-begin-tijd" name="begin_tijd" type="time" required />
-          <button id="intakegesprek-form-button" class="mb-3 mt-6 ml-auto" type="submit">Inschrijven</button>
-        </div>
-        @if(!session('login') || !session('id'))
-          @include('partials.form_info_deelnemer')
-        @endif
-      </form>
+          @php 
+            if($ceremoniesIsEmpty){
+              $ceremoniesIsEmpty = false;
+            }
+            $datetime = new DateTime($ceremonie->datum);
+            $maand = $datetime->format('m') - 1;
+          @endphp
+          @if($ceremonie->id_deelnemer)
+          <div class="flex flex-col justify-between h-fit bg-main-light/70!">
+          @else
+          <div class="flex flex-col justify-between h-fit">
+          @endif
+            
+            <div class="bg-main rounded px-2 py-6">
+              <h4 class="mx-auto w-fit">{{$datetime->format('j')}} {{$maanden[$maand]}} {{$datetime->format('Y')}}</h4>
+              <p class="mx-auto w-fit">11:00 - 16:00</p>
+            </div>
+            <a href="/ceremonie/{{$ceremonie->id}}"><button class="mt-4 w-full">Aanmelden</button></a>
+          </div>
+        @endforeach
+      </div>
+      @if($ceremonies->isEmpty() || $ceremoniesIsEmpty)
+        <p>Er zijn momenteel geen ceremonies beschikbaar.</p>
+        <p>Hou de socials van MEIT. in de gaten voor de laatste updates en nieuwe data ✨</p>
+        <p>Al ingeschreven voor een ceremonie? <a class="hover:underline underline-offset-2 text-second" href="{{url('login')}}">Log in</a> om de ceremonies te bekijken</p>
+      @endif
+      <br>
+      <p>Komt geen van de beschikbare data voor jou goed uit, maar heb je wel een specifieke dag in gedachten? Stuur me dan even een <a href="mailto:welkom@meit.nl">mail</a>, dan kijken we samen naar de mogelijkheden.</p>
     </div>
 
     @include('partials.footer')
   </body>
 </html>
-
-<style>
-  div:has(>.before\:bg-mogelijkheden) {
-    display: none;
-  }
-</style>
-
-@if($errors->any())
-  <script>
-    document.getElementById('intakegesprek-form-datum').value ='';
-    document.getElementById('intakegesprek-form-begin-tijd').value = '';
-  </script>
-@endif
-
-<script>
-  const intake_mogelijkheden = <?php echo json_encode($intake_mogelijkheden); ?>;
-  function setBlock(mogenlijkheid_id){
-    block_data = intake_mogelijkheden.find(obj => {
-      return obj.id == mogenlijkheid_id
-    })
-    
-    ghosts = document.querySelectorAll('.ghost-block:not(.hidden)')
-    ghosts.forEach(ghost => {
-      ghost.style.marginTop = "0px";
-      ghost.classList.add('hidden')
-    });
-
-    ghost_blocks = document.getElementsByClassName('ghost-' + mogenlijkheid_id);
-    ghost_blocks[0].classList.remove('hidden')
-    ghost_blocks[1].classList.remove('hidden')
-    document.getElementById('intakegesprek-form-id-mogenlijkheid').value = mogenlijkheid_id;
-    
-    document.getElementById('intakegesprek-form-datum').value = block_data['datum']
-
-  }
-  function setDatum(datum){
-    blocks = document.getElementsByClassName(datum)
-    document.getElementById('intakegesprek-form-id-mogenlijkheid').value = '';
-    ghosts = document.querySelectorAll('.ghost-block:not(.hidden)')
-    button = document.getElementById('intakegesprek-form-button')
-    button.classList.remove('uit')
-    document.getElementById('intakegesprek-form-begin-tijd').value = '';
-
-    ghosts.forEach(ghost => {
-      ghost.style.marginTop = "0px";
-      ghost.classList.add('hidden')
-    });
-    scrollSchemaTo(datum)
-    if(blocks.length > 0){
-      for (let i = 0; i < 2; i++) {
-        ghost_block = blocks[i].getElementsByClassName('ghost-block')[0]
-        
-        if(ghost_block){
-          ghost_block.classList.remove('hidden')
-          document.getElementById('intakegesprek-form-id-mogenlijkheid').value = ghost_block.id;
-        }else{
-          button.classList.add('uit')
-        }
-      }
-    }else{
-      button.classList.add('uit')
-    }
-    
-    
-    document.getElementById('intakegesprek-form-datum').value = datum
-    setTijden()
-  }
-
-  function setTijden(begintijd){
-    ghosts = document.querySelectorAll('.ghost-block:not(.hidden)')
-    if(ghosts.length < 1){
-      return
-    }
-    id = ghosts[0].classList[0].replace('ghost-','');
-    block_data = intake_mogelijkheden.find(obj => {
-      return obj.id == id
-    })
-    other_blocks_data = intake_mogelijkheden.filter(obj => {
-      return obj.datum == block_data.datum && obj.id != id
-    })
-    document.getElementById('intakegesprek-form-id-mogenlijkheid').value = id
-    input_begin = document.getElementById('intakegesprek-form-begin-tijd')
-    input_begin.style.border = "none"
-    button = document.getElementById('intakegesprek-form-button')
-    button.classList.remove('uit')
-
-    block_start_split = block_data.begin_tijd.split(':')
-    block_start = block_start_split[0] + ":" + block_start_split[1]
-    block_einde_split = block_data.eind_tijd.split(':')
-    block_einde = (block_einde_split[0] - 1).toString().padStart(2,"0") + ":" + block_einde_split[1]
-
-    if(!begintijd){
-      begintijd = block_start;
-    }
-    begintijd = begintijd.padStart(5,"0")
-    
-    var [uur_begin, min_begin] = begintijd.split(':');
-    
-    if(begintijd < block_start || begintijd > block_einde){
-      data_id = null;
-      other_blocks_data.forEach(data => {
-        block_start_split = data.begin_tijd.split(':')
-        block_start = block_start_split[0] + ":" + block_start_split[1]
-        block_einde_split = data.eind_tijd.split(':')
-        block_einde = (block_einde_split[0] - 1).toString().padStart(2,"0") + ":" + block_einde_split[1]
-        if(begintijd >= block_start && begintijd <= block_einde){
-          other_block = true;
-          return data_id = data.id
-        }
-      });
-      if(data_id){
-        setBlock(data_id)
-        setTijden(begintijd)
-      }else{
-        input_begin.style.border = "red solid 2px"
-        button.classList.add('uit')
-        for (let i = 0; i < 2; i++) {
-          if(ghosts[i].getElementsByClassName('ghost-begin-tijd')[0].innerHTML != "00:00"){
-            ghosts[i].getElementsByClassName('ghost-begin-tijd')[0].innerHTML = "00:00";
-            ghosts[i].getElementsByClassName('ghost-eind-tijd')[0].innerHTML = "00:00";
-            ghosts[i].style.marginTop = "0px";
-          }
-        }
-      }
-    }else{
-      m_top = (uur_begin - block_start_split[0]) * 50 + ((min_begin - block_start_split[1]) / 60) * 50;
-      eindtijd = (parseInt(uur_begin) + 1) + ":" + min_begin
-      eindtijd = eindtijd.padStart(5,"0")
-      document.getElementById('intakegesprek-form-begin-tijd').value = begintijd;
-      for (let i = 0; i < 2; i++) {
-        ghosts[i].getElementsByClassName('ghost-begin-tijd')[0].innerHTML = begintijd;
-        ghosts[i].getElementsByClassName('ghost-eind-tijd')[0].innerHTML = eindtijd;
-        ghosts[i].style.marginTop = m_top  + "px";
-      }
-    }
-
-  }
-</script>

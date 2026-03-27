@@ -258,7 +258,7 @@ class CheckoutController extends Controller
                         'currency'    => 'eur',
                         'unit_amount' => $amountFull,
                         'product_data'=> [
-                            'name'        => 'MEIT. Traject (Pilot)',          // titel links
+                            'name'        => 'MEIT. Traject',          // titel links
                             'description' => $checkoutDescription,             // tekst onder de prijs
                             'images'      => [$checkoutImageUrl],              // grote afbeelding (phoenix)
                         ],
@@ -395,20 +395,19 @@ class CheckoutController extends Controller
       }
 
       // 2) deelnemer verwijderen, maar alleen als hij verder nergens aan gekoppeld is
-      if ($deelnemerId) {
-        $heeftNogAanmeldingen = DB::table('aanmeldingen')
-          ->where('id_deelnemer', $deelnemerId)
-          ->exists();
+      // if ($deelnemerId) {
+      //   $heeftNogAanmeldingen = DB::table('aanmeldingen')
+      //     ->where('id_deelnemer', $deelnemerId)
+      //     ->exists();
 
-        if (!$heeftNogAanmeldingen) {
-          DB::table('deelnemers')->where('id', $deelnemerId)->delete();
-        }
-      }
+      //   if (!$heeftNogAanmeldingen) {
+      //     DB::table('deelnemers')->where('id', $deelnemerId)->delete();
+      //   }
+      // }
 
       // Uitloggen + sessie opschonen
+        // 'login',
       session()->forget([
-        'login',
-        'id',
         'pending_aanmelding_id',
         'pending_deelnemer_id',
       ]);

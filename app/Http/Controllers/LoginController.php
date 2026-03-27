@@ -24,9 +24,6 @@ class LoginController extends Controller {
     DB::table('ceremonies')->where([
       ['id_deelnemer', '=', $id],
     ])->delete();
-    DB::table('intakegesprekken')->where([
-      ['id_deelnemer', '=', $id],
-    ])->delete();
     return Redirect::to('deelnemers');
   }
 }

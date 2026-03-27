@@ -79,9 +79,9 @@
                   <p>Ceremonies: </p> 
                   <p>{{$ceremonies->where('id_deelnemer', '=', $deelnemer->id)->count()}}</p>
                 </div>
-                <div onclick="event.stopPropagation(); location.href = `{{url('deelnemers/' . $deelnemer->id . '#intakegesprek')}}`" class="blokken !bg-intakegesprekken w-full">
-                  <p>Tel intake: </p> 
-                  <p>{{$intakegesprekken->where('id_deelnemer', '=', $deelnemer->id)->count()}}</p>
+                <div onclick="event.stopPropagation(); location.href = `{{url('deelnemers/' . $deelnemer->id . '#ceremonie')}}`" class="blokken !bg-ceremonies/50 w-full">
+                  <p>Ceremonies resevatielijst: </p> 
+                  <!-- <p>{{$ceremonies->where('id_deelnemer', '=', $deelnemer->id)->count()}}</p> -->
                 </div>
               </div>
               <a onclick="showPopUp('{{$deelnemer->id}}', '{{$deelnemer->voornaam}} {{$deelnemer->tussenvoegsel}} {{$deelnemer->achternaam}}'); event.stopPropagation();"><button class="w-full !bg-red-600/90 hover:!bg-red-700/90 mt-3">Verwijderen</button></a>

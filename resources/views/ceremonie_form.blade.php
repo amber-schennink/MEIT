@@ -15,6 +15,13 @@
         redirect(url('/'));
         die();
       }
+
+      $edit = false;
+      if(isset($ceremonie) && $ceremonie){
+        $edit = true;
+        $datumOud = new DateTime($ceremonie->datum);
+      }
+
       $file_type = 'ceremonie'
     ?>
     @include('partials.nav')
@@ -23,23 +30,18 @@
       <div id="error" class="fixed top-5 left-0 right-0 w-fit m-auto bg-red-600 rounded-xl p-4 transition duration-500 opacity-0">
         <h4></h4>
       </div>
-      <h2 class="mb-8">Ceremonie inplannen</h2>
-      <form onsubmit="return checkForm()" action="{{url('ceremonies')}}" method="POST">
+      @if($edit)
+        <h2 class="mb-8">Ceremonie aanpassen</h2>
+        <form onsubmit="return checkForm()" action="{{url('ceremonieDatumAanpassen/'.$ceremonie->id)}}" method="POST">
+      @else
+        <h2 class="mb-8">Ceremonie toevoegen</h2>
+        <form onsubmit="return checkForm()" action="{{url('ceremonies')}}" method="POST">
+      @endif
         @csrf
         <input name="first_name" type="text" class="hidden">
 
-        <input id="id_intakegesprek" name="id_intakegesprek" value="{{$intakegesprek->id}}" class="hidden"/>
-        <input id="id_deelnemer" name="id_deelnemer" value="{{$deelnemer->id}}" class="hidden"/>
-        <h3>Info deelnemer</h3>
-        <div class="my-8 flex flex-col">
-          <p>Naam</p>
-          <p class="font-semibold">{{$deelnemer->voornaam}} {{$deelnemer->tussenvoegsel}} {{$deelnemer->achternaam}}</p>
-          <p class="mt-4">E-mail</p>
-          <p class="font-semibold">{{$deelnemer->email}}</p>
-        </div>
+        <input id="ceremonie_form_datum" onchange="setGhost(this.value)" name="datum" type="date" required/>
 
-        <input onchange="setGhost(this.value)" name="datum" type="date" required/>
-        
         <br>
         <br>
         <button type="submit">Opslaan</button>
@@ -48,8 +50,6 @@
         <?php 
           $data = [];
           $data['ceremonies'] = DB::table('ceremonies')->get(); 
-          $data['intakegesprekken'] = DB::table('intakegesprekken')->get(); 
-          $data['mogelijkheden'] = DB::table('intake_mogelijkheden')->get(); 
           $data['trainingen'] = DB::table('trainingen')->get();
 
           $file = 'ceremonie_form';
@@ -61,9 +61,15 @@
     @include('partials.footer')
   </body>
 </html>
+@if($edit)
+  <script>
+    datum = "<?php echo $datumOud->format('Y-m-d') ?>";
+    document.body.onload = function test(){
+      setDatum(datum);
+    }
+  </script>
+@endif
 <style>
-  .\!bg-intakegesprekken, .before\:bg-intakegesprekken::before, 
-  .\!bg-mogelijkheden, .before\:bg-mogelijkheden::before, 
   .\!bg-ceremonies, .before\:bg-ceremonies::before, 
   .\!bg-trainingen, .before\:bg-trainingen::before{
     opacity: 70%;
@@ -72,11 +78,21 @@
     background-color: var(--color-ceremonies) !important;
   }
 </style>
+@if($errors->any())
+  <script>
+    document.getElementById('ceremonie_form_datum').value ='';
+  </script>
+@endif
 <script>
   var schema_start = '<?php echo str_pad($schema_start->format('H:i'), 5, '0', STR_PAD_LEFT); ?>';
   var [uur_start, min_start] = schema_start.split(':');
   var schema_eindig = '<?php echo str_pad($schema_eindig->format('H:i'), 5, '0', STR_PAD_LEFT); ?>';
   var [uur_eindig, min_eindig] = schema_eindig.split(':');
+
+  function setDatum(datum){
+    document.getElementById('ceremonie_form_datum').value = datum
+    setGhost(datum)
+  }
 
   function setGhost(datum){
     blocks = document.getElementsByClassName(datum)
@@ -90,8 +106,8 @@
         ghost_block.classList.remove('hidden')
         scrollSchemaTo(datum)
         
-        duur_uur = uur_eindig - 11
-        duur_min = min_eindig - 0
+        duur_uur = 16 - 11
+        duur_min = 0
         if(duur_min < 0){
           duur_min = 60 + duur_min
           duur_uur--

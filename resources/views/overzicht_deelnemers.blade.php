@@ -186,73 +186,47 @@
       @if($ceremonies->isNotEmpty())
         <div>
           <h3 id="ceremonie" class="mb-3 mt-20">Ceremonie<?php if($ceremonies->count() > 1){echo 's';}?></h3>
-          <div class="ceremonie-container">
+          
+          <div class="deelnemer-ceremonie-container">
             @foreach($ceremonies as $ceremonie)
               <div>
-                <?php $datum = new DateTime($ceremonie->datum); ?>
                 <div>
-                  <img src="{{asset('assets/date.svg')}}" />
-                  <p>{{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}</p>
+                  <?php $datum = new DateTime($ceremonie->datum); ?>
+                  <div class="flex-1">
+                    <img src="{{asset('assets/date.svg')}}" />
+                    <p>{{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}</p>
+                  </div>
+                  <div class="flex-1">
+                    <img src="{{asset('assets/time.svg')}}" /> 
+                    <p>van 11:00 - 16:00</p>
+                  </div>
+                  <div class="flex-1">
+                    <img src="{{asset('assets/location.svg')}}" /> 
+                    <p>Schiedam</p>
+                  </div>
                 </div>
                 <div>
-                  <img src="{{asset('assets/time.svg')}}" /> 
-                  <p>van 11:00 tot je voelt dat je naar huis wilt</p>
-                </div>
-                <div>
-                  <img src="{{asset('assets/location.svg')}}" /> 
-                  <p>Schiedam</p>
-                </div>
-                <a href="https://www.meit.nl/ceremonie"><button>Meer informatie -></button></a>
-              </div>
-            @endforeach
-          </div>
-        </div>
-      @endif
-
-      @if($intakegesprekken->isNotEmpty())
-        <div>
-          <h3 id="intakegesprek" class="mb-3 mt-20">Telefonisch intakegesprek</h3>
-          <div class="ceremonie-container">
-            @foreach($intakegesprekken as $intakegesprek)
-              <div>
-                <?php 
-                  $datum = new DateTime($intakegesprek->datum); 
-                  $begin_tijd = new DateTime($intakegesprek->begin_tijd);
-                  $eind_tijd = new DateTime($intakegesprek->eind_tijd);
-                  $begin_belmoment = new DateTime($intakegesprek->datum . $intakegesprek->begin_tijd);
-                  $begin_belmoment->modify('-5 minutes');
-                  $eind_belmoment = new DateTime($intakegesprek->datum . $intakegesprek->eind_tijd);
-                ?>
-                <div>
-                  <img src="{{asset('assets/date.svg')}}" />
-                  <p>{{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}</p>
-                </div>
-                <div>
-                  <img src="{{asset('assets/time.svg')}}" /> 
-                  <p>{{$begin_tijd->format('H:i')}} - {{$eind_tijd->format('H:i')}}</p>
-                </div>
-                @if(isset($admin) && $admin === true)
-                  @if($deelnemer->telefoon_nummer)
-                    <a href="tel:{{$deelnemer->telefoon_nummer}}"><button class="flex justify-center items-center"><img src="{{asset('assets/telephone.svg')}}"/> Bellen </button></a>
-                  @endif
-                @else
-                  @if($begin_belmoment < new DateTime('00:00:00') && $eind_belmoment > new DateTime('00:00:00'))
-                    <a href="tel:06-34733235"><button class="flex justify-center items-center"><img src="{{asset('assets/telephone.svg')}}"/> Bellen </button></a>
+                  @if($ceremonie->betaal_status == 0)
+                    <div>
+                      <p class="text-orange-400">Betaal €{{$prijs/2}} contant op {{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}</p>
+                    </div>
                   @else
-                    <button class="flex justify-center items-center uit"><img src="{{asset('assets/telephone.svg')}}"/> Bellen </button>
+                    <div>
+                      <p class="text-green-400">Betaald</p>
+                    </div>
                   @endif
-                @endif
+                  <a href="https://www.meit.nl/ceremonie"><button>Meer informatie -></button></a>
+                </div>
               </div>
             @endforeach
           </div>
         </div>
-
       @endif
 
-      @if($ceremonies->isEmpty() && $intakegesprekken->isEmpty())
+      @if($ceremonies->isEmpty())
         <h3 class="mb-3 mt-20">Ceremonies</h3>
         @if(!isset($admin) || $admin !== true)
-          <a href="{{url('ceremonies')}}"><button>Boek een intakegesprek</button></a>
+          <a href="{{url('ceremonies')}}"><button>Meld je aan voor een ceremonie</button></a>
         @else 
           <p>Deze deelnemer heeft zich hiervoor nog niet aangemeld</p>
         @endif

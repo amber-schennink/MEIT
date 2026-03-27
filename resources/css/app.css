@@ -85,7 +85,7 @@ input[type=text], input[type=email], input[type=tel], input[type=password], inpu
   display: none;
 }
 
-.trainingen {
+.trainingen, .ceremonie-container {
   @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5
 }
 .trainingen>div {
@@ -128,19 +128,32 @@ input[type=text], input[type=email], input[type=tel], input[type=password], inpu
   @apply bg-main rounded p-5 w-full lg:w-1/5
 }
 
-.ceremonie-container {
-  @apply bg-main-light rounded-xl px-8 py-6 flex flex-col gap-4
-}
 .ceremonie-container > div {
-  @apply flex flex-col lg:flex-row bg-main rounded-xl px-8 py-6 justify-between items-center gap-4 
-}
-.ceremonie-container.intake > div {
-  @apply grid grid-cols-1 md:grid-cols-3 justify-items-center
+  @apply rounded-xl px-8 py-6 bg-main-light flex flex-col items-center gap-4 ;
 }
 .ceremonie-container > div > div {
-  @apply flex items-center;
+  @apply flex flex-col w-full bg-main rounded-xl px-8 py-6 justify-between items-center gap-4
+}
+.ceremonie-container > div > div > div {
+  @apply flex items-center
 }
 .ceremonie-container img {
+  @apply h-10 mr-1
+}
+
+.deelnemer-ceremonie-container {
+  @apply grid grid-cols-1 gap-5
+}
+.deelnemer-ceremonie-container > div {
+  @apply rounded-xl px-8 py-6 bg-main-light flex flex-col items-center gap-4 ;
+}
+.deelnemer-ceremonie-container > div > div {
+  @apply flex flex-col md:flex-row justify-between items-center gap-4 w-full
+}
+.deelnemer-ceremonie-container > div > div > div {
+  @apply flex items-center bg-main rounded-xl px-8 py-6 h-full w-full md:w-fit justify-center
+}
+.deelnemer-ceremonie-container img {
   @apply h-10 mr-1
 }
 
@@ -208,7 +221,7 @@ input[type=text], input[type=email], input[type=tel], input[type=password], inpu
   @apply m-auto bg-main px-8 py-6 rounded-xl border-4 border-main-light max-w-screen
 }
 #pop-up > div > div, .pop-up > div > div {
-  @apply flex justify-between mt-10 flex-col md:flex-row
+  @apply flex justify-between mt-10 flex-col md:flex-row gap-4
 }
 #pop-up > div > div button, .pop-up > div > div button{
   @apply w-full mt-3 md:mt-auto md:w-fit

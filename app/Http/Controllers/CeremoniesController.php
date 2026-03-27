@@ -9,121 +9,77 @@ use Illuminate\Support\Facades\Redirect;
 
 class CeremoniesController extends Controller {
   public function ceremonieNieuw(Request $request){
-    $data_ceremonie = array(
-      "id_deelnemer" => $request->id_deelnemer,
+    $data_ceremonie = [
       "datum" => $request->datum,
-    );
-    DB::table('ceremonies')->insert($data_ceremonie);
-    
-    DB::table('intakegesprekken')->delete($request->id_intakegesprek);
-
-    return Redirect::to('overzicht');
-  }
-  public function intakegesprekNieuw(Request $request){
-    $mogenlijkheid = DB::table('intake_mogelijkheden')->where('id', '=', $request->id_mogenlijkheid)->first();
-    $intakegesprekken = DB::table('intakegesprekken')->where('datum', '=', $request->datum)->get();
-
-    // check of tijden binnen de intake mogenlijkheid passen
-    $begin_tijd = new DateTime($mogenlijkheid->begin_tijd);
-    $eind_tijd = new DateTime($mogenlijkheid->eind_tijd);
-    [$eind_uur, $eind_min] = explode(':', $eind_tijd->format('H:i'));
-    $eind_uur = str_pad($eind_uur - 1, 2, '0', STR_PAD_LEFT);
-    if(($begin_tijd->format('H:i') > $request->begin_tijd) || ($eind_uur . ":" . $eind_min < $request->begin_tijd) ){
-      return redirect()->back()->withErrors(['msg' => 'Het is niet mogenlijk om voor dit moment een intake gesprek te plannen']);
-      die();
-    }
-
-
-    //check of de tijden niet overlappen met andere aanmeldingen
-    foreach ($intakegesprekken as $gesprek) {
-      $begin_gesprek = new DateTime($gesprek->begin_tijd);
-      [$begin_gesprek_uur, $begin_gesprek_min] = explode(':', $begin_gesprek->format('H:i'));
-      $begin_gesprek_uur = str_pad($begin_gesprek_uur - 1, 2, '0', STR_PAD_LEFT);
-
-      $eind_gesprek = new DateTime($gesprek->eind_tijd);
-      
-      if(($begin_gesprek_uur . ":" . $begin_gesprek_min < $request->begin_tijd) && ($eind_gesprek->format('H:i') > $request->begin_tijd)){
-        return redirect()->back()->withErrors(['msg' => 'Het is niet mogenlijk om voor dit moment een intake gesprek te plannen']);
-        die();
-      }
-    }
-    
-    $id_deelnemer = $this->handleDeelnemerData($request);
-    $request_begin_tijd = new DateTime($request->begin_tijd);
-    $request_eind_tijd = new DateTime($request->begin_tijd);
-    [$request_eind_uur, $request_eind_min] = explode(':', $request_eind_tijd->format('H:i'));
-    $request_eind_uur = str_pad($request_eind_uur + 1, 2, '0', STR_PAD_LEFT);
-
-    $request['eind_tijd'] = $request_eind_uur . ':' . $request_eind_min;
-    $request_eind_tijd = new DateTime($request->eind_tijd);
-
-
-    //splits mogenlijkheid blok op in 2 indien mogenlijk
-    $begin_diff = $begin_tijd->diff($request_begin_tijd);
-    if($begin_diff->h > 0){
-      [$mogenlijkheid_uur, $mogenlijkheid_min] = explode(':', $mogenlijkheid->begin_tijd);
-      $mogenlijkheid_min = str_pad($mogenlijkheid_min + $begin_diff->i, 2, '0', STR_PAD_LEFT);
-      if($mogenlijkheid_min >= 60){
-        $mogenlijkheid_min = str_pad($mogenlijkheid_min - 60, 2, '0', STR_PAD_LEFT);
-        $mogenlijkheid_uur++;
-      }
-      $mogenlijkheid_uur = str_pad($mogenlijkheid_uur + $begin_diff->h, 2, '0', STR_PAD_LEFT);
-      $eind_tijd_mogenlijkheid = $mogenlijkheid_uur . ':' . $mogenlijkheid_min;
-
-      $data_mogenlijkheid = [
-        "datum" => $mogenlijkheid->datum,
-        "begin_tijd" => $mogenlijkheid->begin_tijd,
-        "eind_tijd" => $eind_tijd_mogenlijkheid,
-      ];
-      DB::table('intake_mogelijkheden')->insert($data_mogenlijkheid);
-    }
-
-    $eind_diff = $eind_tijd->diff($request_eind_tijd);
-    if($eind_diff->h > 0){
-      [$mogenlijkheid_uur, $mogenlijkheid_min] = explode(':', $mogenlijkheid->eind_tijd);
-      
-      $mogenlijkheid_min = str_pad($mogenlijkheid_min - $eind_diff->i, 2, '0', STR_PAD_LEFT);
-      if($mogenlijkheid_min < 0){
-        $mogenlijkheid_min = str_pad($mogenlijkheid_min + 60, 2, '0', STR_PAD_LEFT);
-        $mogenlijkheid_uur--;
-      }
-      $mogenlijkheid_uur = str_pad($mogenlijkheid_uur - $eind_diff->h + 1, 2, '0', STR_PAD_LEFT);
-      $begin_tijd_mogenlijkheid = str_pad($mogenlijkheid_uur - 1, 2, '0', STR_PAD_LEFT) . ':' . $mogenlijkheid_min;
-
-      $data_mogenlijkheid = [
-        "datum" => $mogenlijkheid->datum,
-        "begin_tijd" => $begin_tijd_mogenlijkheid,
-        "eind_tijd" => $mogenlijkheid->eind_tijd,
-      ];
-      DB::table('intake_mogelijkheden')->insert($data_mogenlijkheid);
-    }
-    DB::table('intake_mogelijkheden')->delete($mogenlijkheid->id);
-
-    //upload data
-    $data_intakegesprekken = [
-      "id_deelnemer" => $id_deelnemer,
-      "datum" => $request->datum,
-      "begin_tijd" => $request->begin_tijd,
-      "eind_tijd" => $request->eind_tijd,
     ];
-
-    DB::table('intakegesprekken')->insert($data_intakegesprekken);
-    return Redirect::to('overzicht');
+    DB::table('ceremonies')->insert($data_ceremonie);
+    return Redirect::to('ceremonies');
   }
-  public function gesprekMogenlijkheidNieuw(Request $request){
-    $zelfde_datum = DB::table('intake_mogelijkheden')->where('datum', '=', $request->datum)->first();
-    $zelfde_datum_intake = DB::table('intakegesprekken')->where('datum', '=', $request->datum)->first();
-    if($zelfde_datum != null || $zelfde_datum_intake != null){
-      return redirect()->back()->withErrors(['msg' => 'Er is al een intakegesprek mogenlijkheid ingepland op deze dag']);
+  public function ceremonieDatumAanpassen($id, Request $request){
+    if(!session('login') && session('admin') !== true){
       die();
     }
-    $data_ceremonie = array(
-      "datum" => $request->datum,
-      "begin_tijd" => $request->begin_tijd,
-      "eind_tijd" => $request->eind_tijd,
-    );
-    DB::table('intake_mogelijkheden')->insert($data_ceremonie);
+    if($request->first_name){
+      die();
+    }
+    DB::table('ceremonies')->where([
+        ['id', '=', $id]
+      ])->update([
+      'datum' => $request->datum,
+    ]);
     return Redirect::to('ceremonies');
+  }
+  public function ceremonieDeelnemerBetaalStatusAanpassen($betaalStatus, Request $request){
+    if(!session('login') && session('admin') !== true){
+      die();
+    }
+    if(DB::table('ceremonies')->where('id', '=', $request->id_ceremonie)->first()){
+      DB::table('ceremonies')->where([
+        ['id', '=', $request->id_ceremonie]
+      ])->update([
+        'betaal_status' => $betaalStatus,
+      ]);
+    }
+    return Redirect::to('ceremonies');
+  }
+  public function ceremonieVerwijderen($id){
+    $ceremonie = DB::table('ceremonies')->where('id', '=', $id)->first();
+
+    if($ceremonie == null){
+      return Redirect::to('ceremonies');
+      die();
+    }
+    
+    DB::table('ceremonies')->delete($id);
+    return Redirect::to('ceremonies');
+  }
+  public function ceremonieDeelnemerVerwijderen($id){
+    $ceremonie = DB::table('ceremonies')->where('id', '=', $id)->first();
+
+    if($ceremonie == null){
+      return Redirect::to('ceremonies');
+      die();
+    }
+    
+    DB::table('ceremonies')->where([
+        ['id', '=', $id]
+      ])->update([
+      'id_deelnemer' => NULL,
+      'pending_deelnemer_id' => NULL,
+      'betaal_status' => NULL,
+      'updated_at' => now(),
+      'amount_paid' => 0,
+      'stripe_customer_id' => NULL,
+      'stripe_checkout_session_id' => NULL,
+      'stripe_payment_intent_id' => NULL,
+      'stripe_payment_method_id' => NULL,
+      'customer_email' => NULL,
+    ]);
+    return Redirect::to('ceremonies');
+  }
+
+  public function ceremonieAanmelden($id, Request $request){
+
   }
 }
 ?>

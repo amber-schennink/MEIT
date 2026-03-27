@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CeremonieCheckoutController;
 
 Route::get('/', function () {
   return view('home');
@@ -19,12 +20,8 @@ Route::get('/trainingen', function () {
     $aanmeldingen = DB::table('aanmeldingen')->orderByDesc('created_at')->get();
     $deelnemers = DB::table('deelnemers')->get();
 
-    $ceremonies = DB::table('ceremonies')->get();
-    $intakegesprekken = DB::table('intakegesprekken')->get();
-
     return view('overzicht_trainingen', [
-      'trainingen' => $trainingen, 'aanmeldingen' => $aanmeldingen, 'deelnemers' => $deelnemers, 
-      'ceremonies' => $ceremonies, 'intakegesprekken' => $intakegesprekken
+      'trainingen' => $trainingen, 'aanmeldingen' => $aanmeldingen, 'deelnemers' => $deelnemers
     ]);
 
   }else{
@@ -105,12 +102,10 @@ Route::get('/overzicht', function () {
     $deelnemers = DB::table('deelnemers')->get();
 
     $ceremonies = DB::table('ceremonies')->get();
-    $intakegesprekken = DB::table('intakegesprekken')->get();
-    $intake_mogelijkheden = DB::table('intake_mogelijkheden')->get();
 
     return view('overzicht', [
       'trainingen' => $trainingen, 'aanmeldingen' => $aanmeldingen, 'deelnemers' => $deelnemers, 
-      'ceremonies' => $ceremonies, 'intakegesprekken' => $intakegesprekken, 'intake_mogelijkheden' => $intake_mogelijkheden
+      'ceremonies' => $ceremonies
     ]);
   }else{
     $deelnemer = DB::table('deelnemers')->where('id', '=', session('id'))->first();
@@ -122,11 +117,10 @@ Route::get('/overzicht', function () {
     $wachtlijst = DB::table('trainingen')->whereIn('id', $aanmeldingen_wachtlijst)->orderBy('id','desc')->get();
     
     $ceremonies = DB::table('ceremonies')->where('id_deelnemer', '=', session('id'))->orderBy('datum')->get();
-    $intakegesprekken = DB::table('intakegesprekken')->where('id_deelnemer', '=', session('id'))->orderBy('datum')->orderBy('begin_tijd')->get();
 
     return view('overzicht_deelnemers', [
       'trainingen' => $trainingen, 'aanmeldingen' => $aanmeldingen, 'deelnemer' => $deelnemer, 'wachtlijst' => $wachtlijst, 
-      'ceremonies' => $ceremonies, 'intakegesprekken' => $intakegesprekken
+      'ceremonies' => $ceremonies
     ]);
   }
 });
@@ -139,11 +133,10 @@ Route::get('/deelnemers', function () {
   $aanmeldingen = DB::table('aanmeldingen')->where('betaal_status', '!=', '0')->get();
   $wachtlijst = DB::table('aanmeldingen')->where('betaal_status', '=', '0')->get();
   $ceremonies = DB::table('ceremonies')->get();
-  $intakegesprekken = DB::table('intakegesprekken')->get();
 
   return view('deelnemers', [
       'deelnemers' => $deelnemers, 'aanmeldingen' => $aanmeldingen, 'wachtlijst' => $wachtlijst,
-      'ceremonies' => $ceremonies, 'intakegesprekken' => $intakegesprekken,
+      'ceremonies' => $ceremonies
     ]);
 });
 Route::get('/deelnemers/{id}', function ($id) {
@@ -160,42 +153,61 @@ Route::get('/deelnemers/{id}', function ($id) {
   $wachtlijst = DB::table('trainingen')->whereIn('id', $aanmeldingen_wachtlijst)->orderBy('id','desc')->get();
 
   $ceremonies = DB::table('ceremonies')->where('id_deelnemer', '=', $id)->orderBy('datum')->get();
-  $intakegesprekken = DB::table('intakegesprekken')->where('id_deelnemer', '=', $id)->orderBy('datum')->orderBy('begin_tijd')->get();
 
   return view('overzicht_deelnemers', [
       'id' => $id, 'admin' => true, 'trainingen' => $trainingen, 'aanmeldingen' => $aanmeldingen, 'deelnemer' => $deelnemer, 'wachtlijst' => $wachtlijst, 
-      'ceremonies' => $ceremonies, 'intakegesprekken' => $intakegesprekken
+      'ceremonies' => $ceremonies,
     ]);
 });
 
-Route::get('/ceremonies/{id_intakegesprek}', function ($id_intakegesprek) {
-  $intakegesprek = DB::table('intakegesprekken')->where('id', '=', $id_intakegesprek)->first();
-  $deelnemer = DB::table('deelnemers')->where('id', '=', $intakegesprek->id_deelnemer)->first();
-  return view('ceremonie_form', ['intakegesprek' => $intakegesprek, 'deelnemer' => $deelnemer]);
+Route::get('/ceremonie_form', function () {
+  // $ceremonies = DB::table('ceremonies')->orderBy('datum')->get();
+  return view('ceremonie_form'); //, ['ceremonies' => $ceremonies]
 });
+Route::get('/ceremonie_form/{id}', function ($id) {
+  if(!session('login') || !session('id') || !session('admin')){
+    return redirect(url('/login'));
+  }
+  if(session('admin') == true){
+    $ceremonie = DB::table('ceremonies')->where('id', '=', $id)->first(); 
+    return view('ceremonie_form', ['ceremonie' => $ceremonie]);
+  }
+});
+
+Route::post('/ceremonie_aanmelden', [CeremonieCheckoutController::class, 'start'])->name('ceremonie_checkout.start');
+Route::get('/ceremonie_checkout/success', [CeremonieCheckoutController::class, 'success'])->name('ceremonie_checkout.success');
+Route::get('/ceremonie_checkout/cancel',  [CeremonieCheckoutController::class, 'cancel'])->name('ceremonie_checkout.cancel');
+Route::post('/ceremonie-checkout/abandon', [CeremonieCheckoutController::class, 'abandon'])->name('ceremonie_checkout.abandon');
+Route::post('/stripe/webhook', [CeremonieCheckoutController::class, 'webhook'])->name('stripe.webhook');
+
+Route::post('/ceremonieDatumAanpassen/{id}', 'App\Http\Controllers\CeremoniesController@ceremonieDatumAanpassen');
+Route::post('/ceremonieDeelnemerBetaalStatusAanpassen/{betaalStatus}', 'App\Http\Controllers\CeremoniesController@ceremonieDeelnemerBetaalStatusAanpassen');
+Route::get('/ceremonie_verwijderen/{id}', 'App\Http\Controllers\CeremoniesController@ceremonieVerwijderen');
+Route::get('/ceremonie_deelnemer_verwijderen/{id}', 'App\Http\Controllers\CeremoniesController@ceremonieDeelnemerVerwijderen');
 
 Route::get('ceremonies', function (){
   if(session('admin') == true){
     $deelnemers = DB::table('deelnemers')->get();
     $ceremonies = DB::table('ceremonies')->orderBy('datum')->get();
-    $intakegesprekken = DB::table('intakegesprekken')->orderBy('datum')->orderBy('begin_tijd')->get();
-    $intake_mogelijkheden = DB::table('intake_mogelijkheden')->get();
 
     return view('overzicht_ceremonies', [
-      'deelnemers' => $deelnemers, 'ceremonies' => $ceremonies, 
-      'intakegesprekken' => $intakegesprekken, 'intake_mogelijkheden' => $intake_mogelijkheden
+      'deelnemers' => $deelnemers, 'ceremonies' => $ceremonies
     ]);
   }else{
-    $intakegesprekken = DB::table('intakegesprekken')->get();
-    $intake_mogelijkheden = DB::table('intake_mogelijkheden')->get();
-    return view('ceremonies', ['intakegesprekken' => $intakegesprekken, 'intake_mogelijkheden' => $intake_mogelijkheden]);
+    $deelnemers = DB::table('deelnemers')->get();
+    $ceremonies = DB::table('ceremonies')->whereNull('id_deelnemer')->orderBy('datum')->get(); 
+    return view('ceremonies', [
+      'deelnemers' => $deelnemers, 'ceremonies' => $ceremonies
+      ]);
   }
 });
 
-Route::post('/ceremonies', 'App\Http\Controllers\CeremoniesController@ceremonieNieuw');
+Route::get('/ceremonie/{id}', function ($id) {
+  $ceremonie = DB::table('ceremonies')->where('id', '=', $id)->first(); 
+  return view('ceremonie', ['ceremonie' => $ceremonie]);
+});
 
-Route::post('/intakegesprek', 'App\Http\Controllers\CeremoniesController@intakegesprekNieuw');
-Route::post('/gesprek_mogelijkheden', 'App\Http\Controllers\CeremoniesController@gesprekMogenlijkheidNieuw');
+Route::post('/ceremonies', 'App\Http\Controllers\CeremoniesController@ceremonieNieuw');
 
 Route::get('/login', function () {
   return view('login');

@@ -17,7 +17,8 @@
         }
       }elseif($key == 'ceremonies'){
         $begin_tijd = new DateTime('11:00');
-        $eind_tijd = new DateTime(str_pad($schema_eindig->format('H'), 2, '0', STR_PAD_LEFT) . ':00');
+        $eind_tijd = new DateTime('16:00');
+        // $eind_tijd = new DateTime(str_pad($schema_eindig->format('H'), 2, '0', STR_PAD_LEFT) . ':00');
       }else{
         $begin_tijd = new DateTime($val->begin_tijd);
         $eind_tijd = new DateTime($val->eind_tijd);
@@ -25,31 +26,19 @@
       $duur = $begin_tijd->diff($eind_tijd);
       $top = ($begin_tijd->format('H') - $schema_start->format('H')) * 50 + ($begin_tijd->format('i') / 60) * 50;
       $height = $duur->h * 50 + ($duur->i / 60) * 50;
-      if($file == 'ceremonies'){
-        $return = '<div class="relative cursor-pointer !bg-mogelijkheden" style="top: '. $top .'px;height: '. $height .'px;" onclick="setBlock(`'.$val->id.'`); setTijden()">
-          <div class="ghost-'.$val->id.' ghost-block relative !bg-[#f9b51d]/75 hidden">
-            <p><span class="ghost-begin-tijd">00:00</span> - <span class="ghost-eind-tijd">00:00</span></p>
-          </div>
-        </div>';
-      }else{
-        $return = '<div class="!bg-'. $key .'" style="top: '. $top .'px;height: '. $height .'px; ">';
-          if($file == 'overzicht' && isset($val->id_deelnemer)){
-            $return .= '<a href="deelnemers/'.$val->id_deelnemer.'" class="h-full block">';
-          }elseif($file == 'overzicht' && $key == 'trainingen'){
-            $return .= '<a href="trainingen" class="h-full block">';
-          }
-            $return .= '<p>' . $begin_tijd->format('H:i'); 
-            if($key == 'ceremonies'){
-              $return .= ' tot deelnemer naar huis gaat'; 
-            }else{
-              $return .=' - '.$eind_tijd->format('H:i'); 
-            }
-            $return .='</p>';
-          if($file == 'overzicht' && $key != 'mogelijkheden'){
-            $return .='</a>';
-          }
-        $return .='</div>';
-      }
+      $return = '<div class="!bg-'. $key .'" style="top: '. $top .'px;height: '. $height .'px; ">';
+        if($file == 'overzicht' && isset($val->id_deelnemer)){
+          $return .= '<a href="deelnemers/'.$val->id_deelnemer.'" class="h-full block">';
+        }elseif($file == 'overzicht' && $key == 'trainingen'){
+          $return .= '<a href="trainingen" class="h-full block">';
+        }
+          $return .= '<p>' . $begin_tijd->format('H:i'); 
+          $return .=' - '.$eind_tijd->format('H:i'); 
+          $return .='</p>';
+        if($file == 'overzicht'){
+          $return .='</a>';
+        }
+      $return .='</div>';
       return $return;
     }
   }

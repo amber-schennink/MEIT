@@ -12,8 +12,8 @@
   </div>
   <nav>
     <a href="{{url('/')}}"><img class="h-32" src="{{asset('assets/logo.svg')}}" /></a>
-    <a class="md:ml-auto h-fit" href="{{url('trainingen')}}"><p>Trajecten</p></a>
-    <a class="h-fit" href="{{url('ceremonies')}}"><p>Ceremonies</p></a>
+    <a class="md:ml-auto h-fit" href="{{url('ceremonies')}}"><p>Ceremonies</p></a>
+    <a class="h-fit" href="{{url('trainingen')}}"><p>Trajecten</p></a>
     @if(session('login'))
       @if(session('admin'))
         <a class="h-fit" href="{{url('deelnemers')}}"><p>Deelnemers</p></a>
