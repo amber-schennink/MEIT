@@ -82,6 +82,7 @@
                   </div>
                 @else
                   <p>Er is nog geen aanmelding gedaan voor deze ceremonie</p>
+                  <a onclick="showPopUpDeelnemerToevoegen('{{$ceremonie->id}}', `{{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}`)"><button class="w-full !min-w-0 !text-sm">Deelnemer toevoegen</button></a>
                 @endif
               </div>
               <a class="mt-auto" href="/ceremonie_form/{{$ceremonie->id}}"><button class="w-full mt-10">Aanpassen</button></a>
@@ -120,15 +121,45 @@
       </div>
     </div>
     <div id="pop-up-deelnemer-verwijderen" onclick="this.classList.add('!hidden')" class="!hidden pop-up">
+      <div>
+        <h4>Weet je zeker dat je <span class="pop-up-naam">naam</span> van deze ceremonie <br> op <span class="pop-up-datum">datum</span> wilt verwijderen?</h4>
+        <p>De ceremonie wordt weer opengezet voor een nieuwe deelnemer</p>
         <div>
-          <h4>Weet je zeker dat je <span class="pop-up-naam">naam</span> van deze ceremonie <br> op <span class="pop-up-datum">datum</span> wilt verwijderen?</h4>
-          <p>De ceremonie wordt weer opengezet voor een nieuwe deelnemer</p>
-          <div>
-            <a id="deelnemer-verwijderen" onclick="event.stopPropagation();"><button>Verwijderen</button></a>
-            <button class="!cursor-pointer alt-2">Niet verwijderen</button>
-          </div>
+          <a id="deelnemer-verwijderen" onclick="event.stopPropagation();"><button>Verwijderen</button></a>
+          <button class="!cursor-pointer alt-2">Niet verwijderen</button>
         </div>
       </div>
+    </div>
+    <div id="pop-up-deelnemer-toevoegen" onclick="this.classList.add('!hidden')" class="!hidden pop-up">
+      <div onclick="event.stopPropagation();">
+        <form onsubmit="return checkForm()" action="" method="POST">
+          @csrf
+          <h4>Deelnemer toevoegen aan ceremonie op <span class="pop-up-datum">datum</span></h4>
+          <br>
+          <p>Kies een deelnemer</p>
+          <div class="deelnemerSelect">
+            @foreach($deelnemers as $deelnemerOption)
+              <label>
+                <p>{{$deelnemerOption->voornaam}} {{$deelnemerOption->tussenvoegsel}} {{$deelnemerOption->achternaam}}</p>
+                <input class="hidden" name="deelnemerSelectie" type="radio" value="{{$deelnemerOption->id}}"></input>
+              </label>
+            @endforeach
+          </div>
+          <br>
+          <p>Heeft de deelnemer al betaald?</p>
+          <select name="deelnemerBetaalOptie" required>
+            <option value="" selected disabled>Selecteer een optie</option>
+            <option value="1">Ja, contant</option>
+            <option value="2">Ja, via betaal link</option>
+            <option value="0">Deels</option>
+          </select>
+          <div class="pop-up-buttons mt-7 flex justify-between">
+            <a id="deelnemer-verwijderen"><button type="submit">Toevoegen</button></a>
+            <button onclick="document.getElementById('pop-up-deelnemer-toevoegen').classList.add('!hidden')" class="!cursor-pointer alt-2" type="button">Annuleren</button>
+          </div>
+        </form>
+      </div>
+    </div>
     
     @include('partials.footer')
   </body>
@@ -243,5 +274,28 @@
     afmelden = document.getElementById('deelnemer-verwijderen');
 
     afmelden.href = "ceremonie_deelnemer_verwijderen/" + id;
+  }
+  function showPopUpDeelnemerToevoegen(id, datum){
+    pop_up = document.getElementById('pop-up-deelnemer-toevoegen')
+    pop_up.classList.remove('!hidden');
+    pop_up.getElementsByClassName('pop-up-datum')[0].innerHTML = datum
+    form = pop_up.getElementsByTagName('form')[0]
+    form.action = 'ceremonie_deelnemer_toevoegen/' + id
+  }
+
+  function checkForm(){
+    var inputs = document.getElementsByTagName('input');
+    radio_checked = false;
+    for (let i = 0; i < inputs.length; i++) {
+      if(inputs[i].type == 'radio' && inputs[i].checked){
+        radio_checked = true
+        break
+      }
+    }
+    
+    if(!radio_checked){
+      alert('Selecteer een deelnemer')
+      return false;
+    }
   }
 </script>

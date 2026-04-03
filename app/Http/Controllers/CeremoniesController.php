@@ -77,6 +77,19 @@ class CeremoniesController extends Controller {
     ]);
     return Redirect::to('ceremonies');
   }
+  public function ceremonieDeelnemerToevoegen($id, Request $request){
+    $ceremonie = DB::table('ceremonies')->where('id', '=', $id)->first();
+    if($ceremonie == null){
+      return Redirect::to('ceremonies');
+      die();
+    }
+    
+    DB::table('ceremonies')->where('id', '=', $id)->update([
+      'id_deelnemer' => $request->deelnemerSelectie,
+      'betaal_status' => $request->deelnemerBetaalOptie,
+    ]);
+    return Redirect::to('ceremonies');
+  }
 
   public function ceremonieAanmelden($id, Request $request){
 

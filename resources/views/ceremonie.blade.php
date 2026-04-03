@@ -9,6 +9,7 @@
 
       use Illuminate\Support\Facades\Config;
       $maanden = Config::get('info.maanden');
+      $weekDagen = Config::get('info.weekDagen');
       $prijs = Config::get('info.prijs');
 
       $deadline = New DateTime();
@@ -51,7 +52,7 @@
           <div class="my-8">
             <div class="flex my-3 items-center">
               <img class="h-7 mr-1" src="{{asset('assets/date.svg')}}" /> 
-              <p>{{$datetime->format('j')}} {{$maanden[$datetime->format('m') - 1]}}</p>
+              <p>{{$weekDagen[$datetime->format('w')]}} {{$datetime->format('j')}} {{$maanden[$datetime->format('m') - 1]}}</p>
             </div>
             <div class="flex my-3 items-center">
               <img class="h-7 mr-1" src="{{asset('assets/time.svg')}}" /> 
@@ -65,7 +66,7 @@
         </div>
         @if(!$ceremonie->id_deelnemer)
         <div>
-          <h3>Klaar om te starten?</h3>
+          <h3>Kies je betalingsoptie</h3>
           <div class="betaal-opties">
             <label class="bg-main-payed border-main-payed flex flex-col">
               <h4>Betaal het volledige bedrag</h4>

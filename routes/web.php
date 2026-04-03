@@ -184,6 +184,7 @@ Route::post('/ceremonieDatumAanpassen/{id}', 'App\Http\Controllers\CeremoniesCon
 Route::post('/ceremonieDeelnemerBetaalStatusAanpassen/{betaalStatus}', 'App\Http\Controllers\CeremoniesController@ceremonieDeelnemerBetaalStatusAanpassen');
 Route::get('/ceremonie_verwijderen/{id}', 'App\Http\Controllers\CeremoniesController@ceremonieVerwijderen');
 Route::get('/ceremonie_deelnemer_verwijderen/{id}', 'App\Http\Controllers\CeremoniesController@ceremonieDeelnemerVerwijderen');
+Route::post('/ceremonie_deelnemer_toevoegen/{id}', 'App\Http\Controllers\CeremoniesController@ceremonieDeelnemerToevoegen');
 
 Route::get('ceremonies', function (){
   if(session('admin') == true){
@@ -195,7 +196,7 @@ Route::get('ceremonies', function (){
     ]);
   }else{
     $deelnemers = DB::table('deelnemers')->get();
-    $ceremonies = DB::table('ceremonies')->whereNull('id_deelnemer')->orderBy('datum')->get(); 
+    $ceremonies = DB::table('ceremonies')->orderBy('datum')->get(); //->whereNull('id_deelnemer')
     return view('ceremonies', [
       'deelnemers' => $deelnemers, 'ceremonies' => $ceremonies
       ]);

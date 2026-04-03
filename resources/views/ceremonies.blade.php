@@ -10,6 +10,7 @@
       $schema_start = Config::get('info.schema_start');
       $schema_eindig = Config::get('info.schema_eindig');
       $maanden = Config::get('info.maanden');
+      $weekDagen = Config::get('info.weekDagen');
 
       $file_type = 'ceremonie';
     ?>
@@ -70,10 +71,15 @@
           @endif
             
             <div class="bg-main rounded px-2 py-6">
+              <p class="mx-auto w-fit">{{$weekDagen[$datetime->format('w')]}}</p>
               <h4 class="mx-auto w-fit">{{$datetime->format('j')}} {{$maanden[$maand]}} {{$datetime->format('Y')}}</h4>
               <p class="mx-auto w-fit">11:00 - 16:00</p>
             </div>
+            @if($ceremonie->id_deelnemer)
+            <p class="mt-6.75 mb-2.75 mx-auto text-center">Deze datum is niet beschikbaar</p>
+            @else
             <a href="/ceremonie/{{$ceremonie->id}}"><button class="mt-4 w-full">Aanmelden</button></a>
+            @endif
           </div>
         @endforeach
       </div>

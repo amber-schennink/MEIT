@@ -205,7 +205,10 @@ input[type=text], input[type=email], input[type=tel], input[type=password], inpu
   @apply select-none
 }
 .betaal-opties label:has(input[type="radio"]:checked) {
-  @apply bg-main
+  @apply bg-main border-second
+}
+.betaal-opties label:has(input[type="radio"]:checked) h4 {
+  @apply underline underline-offset-2
 }
 .betaal-opties label h4{
   @apply mb-3
@@ -220,15 +223,24 @@ input[type=text], input[type=email], input[type=tel], input[type=password], inpu
 #pop-up > div, .pop-up > div{
   @apply m-auto bg-main px-8 py-6 rounded-xl border-4 border-main-light max-w-screen
 }
-#pop-up > div > div, .pop-up > div > div {
+#pop-up > div > div, .pop-up > div > div, .pop-up .deelnemerSelect {
   @apply flex justify-between mt-10 flex-col md:flex-row gap-4
 }
-#pop-up > div > div button, .pop-up > div > div button{
+#pop-up > div > div button, .pop-up > div > div button, .pop-up .pop-up-buttons button {
   @apply w-full mt-3 md:mt-auto md:w-fit
+}
+.pop-up .deelnemerSelect{
+  @apply !flex-col max-h-[40vh] overflow-y-scroll !mt-2
+}
+.pop-up .deelnemerSelect > label {
+  @apply bg-main-light rounded p-2 mr-2 cursor-pointer
+}
+.pop-up .deelnemerSelect > label:has(input:checked) {
+  @apply border-2 border-white font-bold underline underline-offset-2
 }
 
 .checkbox-label span{
-  @apply w-6 h-6 bg-main-light rounded relative hover:cursor-pointer
+  @apply w-6 min-w-6 h-6 bg-main-light rounded relative hover:cursor-pointer
 }
 .checkbox-label input:checked ~ span:after{
   display: block;

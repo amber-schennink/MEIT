@@ -44,16 +44,6 @@
           </div>
         </div>
       </div>
-      <div>
-        <?php 
-          $data = [];
-          $data['ceremonies'] = DB::table('ceremonies')->get(); 
-          $data['trainingen'] = DB::table('trainingen')->get();
-
-          $file = 'overzicht';
-        ?>
-        @include('partials.schema')
-      </div>
     </div>
     
     @include('partials.footer')
