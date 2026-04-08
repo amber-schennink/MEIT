@@ -76,7 +76,7 @@
               <p class="mx-auto w-fit">11:00 - 16:00</p>
             </div>
             @if($ceremonie->id_deelnemer)
-            <p class="mt-6.75 mb-2.75 mx-auto text-center">Deze datum is niet beschikbaar</p>
+            <p class="mt-6.75 mb-2.75 mx-auto text-center">Deze datum is niet meer beschikbaar</p>
             @else
             <a href="/ceremonie/{{$ceremonie->id}}"><button class="mt-4 w-full">Aanmelden</button></a>
             @endif
