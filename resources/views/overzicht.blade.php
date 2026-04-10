@@ -32,14 +32,14 @@
           <h2>Overzicht</h2>
         </div>
         <div class="mt-5 mb-7 trainingen md:grid-cols-2!">
-          <div onclick="location.href = `{{url('trainingen')}}`" class="text-center !bg-trainingen cursor-pointer">
-            <p class="text-3xl">{{$aanmeldingen_afgelopen_week}}</p> 
-            <p class="text-xl">nieuwe traject aanmelding<?php if($aanmeldingen_afgelopen_week != 1) echo 'en'; ?></p>
-            <p class="text-sm">sinds vorige week</p> 
-          </div>
           <div onclick="location.href = `{{url('ceremonies')}}`" class="text-center !bg-ceremonies cursor-pointer">
             <p class="text-3xl">{{$ceremonies_afgelopen_week}}</p> 
             <p class="text-xl">nieuwe ceremonie aanmelding<?php if($ceremonies_afgelopen_week != 1) echo 'en'; ?></p>
+            <p class="text-sm">sinds vorige week</p> 
+          </div>
+          <div onclick="location.href = `{{url('trainingen')}}`" class="text-center !bg-trainingen cursor-pointer">
+            <p class="text-3xl">{{$aanmeldingen_afgelopen_week}}</p> 
+            <p class="text-xl">nieuwe traject aanmelding<?php if($aanmeldingen_afgelopen_week != 1) echo 'en'; ?></p>
             <p class="text-sm">sinds vorige week</p> 
           </div>
         </div>
