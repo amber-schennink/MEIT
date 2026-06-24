@@ -33,6 +33,7 @@ class CeremonieCheckoutController extends Controller
       $request->validate([
         'id_ceremonie'  => 'required|integer',
         'betaal_optie' => 'required|in:0,1,2', // 0=deels, 1=contant betaald, 2=volledig via betaal link
+        'duo_optie' => 'required|in:0,1'
       ]);
 
       $ceremonieId = (int) $request->input('id_ceremonie');
@@ -57,10 +58,12 @@ class CeremonieCheckoutController extends Controller
         ->orderByDesc('id')
         ->first();
 
+      $idDuoDeelnemer = $this->handleDuoDeelnemerData($request);
       $prijsEuro   = (float) Config::get('info.prijs');
       $amountFull  = (int) round($prijsEuro * 100);
       $amountHalf  = (int) round(($prijsEuro / 2) * 100);
       $betaalOptie = (int) $request->input('betaal_optie');
+      $duoOptie = (int) $request->input('duo_optie');
 
       // 🔁 FAKE mode (true = Stripe overslaan)
       $skipPayment = filter_var(env('PAYMENT_FAKE', false), FILTER_VALIDATE_BOOLEAN);
@@ -77,6 +80,8 @@ class CeremonieCheckoutController extends Controller
       // Basisvelden alvast updaten (klant, email, due/remaining etc) zodat de betaalflow klopt
       DB::table('ceremonies')->where('id', $ceremonieId)->update([
         'pending_deelnemer_id' => $idDeelnemer,
+        'duo' => $duoOptie,
+        'pending_duo_deelnemer_id' => $idDuoDeelnemer,
         'stripe_customer_id'   => $customerId,
         'customer_email'       => $deelnemer->email,
         'updated_at'           => now(),
@@ -85,6 +90,7 @@ class CeremonieCheckoutController extends Controller
       session([
         'pending_ceremonie_aanmelding_id' => $ceremonieId,
         'pending_deelnemer_id'  => $idDeelnemer,
+        'pending_duo_deelnemer_id'  => $idDuoDeelnemer,
       ]);
       $cancelUrl = route('ceremonie_checkout.cancel') . '?back=' . urlencode($backUrl);
 
@@ -97,6 +103,9 @@ class CeremonieCheckoutController extends Controller
           DB::table('ceremonies')->where('id', $ceremonieId)->update([
             'id_deelnemer'         => $ceremonie->pending_deelnemer_id,
             'pending_deelnemer_id' => null,
+            'duo' => $duoOptie,
+            'id_duo_deelnemer'     => $ceremonie->pending_duo_deelnemer_id,
+            'pending_duo_deelnemer_id' => null,
             'betaal_status'        => 2,
             'amount_paid'          => DB::raw('amount_paid + '.$amountFull),
             'updated_at'           => now(),
@@ -108,6 +117,9 @@ class CeremonieCheckoutController extends Controller
             DB::table('ceremonies')->where('id', $ceremonieId)->update([
                 'id_deelnemer'         => $ceremonie->pending_deelnemer_id,
                 'pending_deelnemer_id' => null,
+                'duo' => $duoOptie,
+                'id_duo_deelnemer'     => $ceremonie->pending_duo_deelnemer_id,
+                'pending_duo_deelnemer_id' => null,
                 'betaal_status'        => 0,
                 'amount_paid'          => DB::raw('amount_paid + '.$amountHalf),
                 'updated_at'           => now(),
@@ -252,6 +264,8 @@ class CeremonieCheckoutController extends Controller
       DB::table('ceremonies')->where('id', $ceremonie->id)->update([
         'id_deelnemer'             => $ceremonie->pending_deelnemer_id,
         'pending_deelnemer_id'     => null,
+        'id_duo_deelnemer'     => $ceremonie->pending_duo_deelnemer_id,
+        'pending_duo_deelnemer_id' => null,
         'betaal_status'            => $nieuweStatus,
         'amount_paid'              => DB::raw('amount_paid + '.$amountReceived),
         'stripe_payment_intent_id' => $pi->id,
@@ -289,6 +303,7 @@ class CeremonieCheckoutController extends Controller
 
     $ceremonieId = (int) session('pending_ceremonie_aanmelding_id');
     $deelnemerId  = (int) session('pending_deelnemer_id');
+    $duoDeelnemerId = (int) session('pending_duo_deelnemer_id');
 
     // 1) aanmelding verwijderen als die nog "pending" is
     if ($ceremonieId) {
@@ -329,6 +344,7 @@ class CeremonieCheckoutController extends Controller
     session()->forget([
       'pending_ceremonie_aanmelding_id',
       'pending_deelnemer_id',
+      'pending_duo_deelnemer_id',
     ]);
 
     return redirect($back)->with('error', 'Betaling geannuleerd.');
@@ -373,6 +389,8 @@ class CeremonieCheckoutController extends Controller
     DB::table('ceremonies')->where('id', $ceremonieId)->update([
       'id_deelnemer'               => null,
       'pending_deelnemer_id'       => null,
+      'duo'                        => 0,
+      'pending_duo_deelnemer_id'   => null,
       'stripe_customer_id'         => null,
       'customer_email'             => null,
       'stripe_checkout_session_id' => null,
@@ -407,6 +425,7 @@ class CeremonieCheckoutController extends Controller
     session()->forget([
       'pending_ceremonie_aanmelding_id',
       'pending_deelnemer_id',
+      'pending_duo_deelnemer_id',
     ]);
 
     return response()->json(['ok' => true]);

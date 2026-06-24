@@ -11,6 +11,8 @@
       $maanden = Config::get('info.maanden');
       $weekDagen = Config::get('info.weekDagen');
       $prijs = Config::get('info.prijs');
+      $prijsDuo = Config::get('info.prijs_duo');
+      $prijsDuoContant = Config::get('info.prijs_duo_contant');
 
       $deadline = New DateTime();
       $deadline->modify('+5 days');
@@ -44,6 +46,49 @@
         @else
           @include('partials.form_info_deelnemer')
         @endif
+        <h3>Duo-ceremonie</h3>
+        <p>Wil je een extra persoon opgeven om er een duo-ceremonie van te maken? Voor de duo-ceremonies wordt er €{{$prijsDuoContant}},- extra in rekening gebracht.</p>
+        
+        <div class="betaal-opties">
+          <label class="bg-second-darker border-second-darker flex flex-col">
+            <h4>Elkel persoon ceremonie</h4>
+            <input onchange="setDuoFalse()" type="radio" name="duo_optie" value="0" checked/>
+          </label>
+          <label class="bg-second-darker border-second-darker flex flex-col">
+            <h4>Duo-ceremonie</h4>
+            <input onchange="setDuo()" type="radio" name="duo_optie" value="1"/>
+          </label>
+        </div>
+        <div id="duo_deelnemer_form" class="my-8 font-semibold flex flex-col gap-4 hidden">
+          <div class="flex flex-col md:flex-row gap-4 mt-1">
+            <label class="flex-1">
+              <p>Voornaam*</p>
+              <input class="w-full mt-1" name="duo_deelnemer_voornaam" type="text"/>
+            </label>
+            <label class="md:max-w-[20%]">
+              <p>Tussenvoegsel</p>
+              <input class="mt-1 w-full" name="duo_deelnemer_tussenvoegsel" type="text"/>
+            </label>
+            <label class="flex-1">
+              <p>Achternaam*</p>
+              <input class="w-full mt-1" name="duo_deelnemer_achternaam" type="text"/>
+            </label>
+          </div>
+          <div class="flex flex-col md:flex-row gap-4 mt-1">
+            <label class="flex-1">
+              <p>Geboorte datum*</p>
+              <input class="w-full mt-1" name="duo_geboorte_datum" type="date"/>
+            </label>
+            <label class="flex-1">
+              <p>Geboorte tijd*</p>
+              <input class="w-full mt-1" name="duo_geboorte_tijd" type="time"/>
+            </label>
+            <label class="flex-1">
+              <p>Geboorte plaats*</p>
+              <input class="w-full mt-1" name="duo_geboorte_plaats" type="text"/>
+            </label>
+          </div>
+        </div>
         <h3>Praktische info</h3>
         <div>
           <?php
@@ -70,13 +115,13 @@
           <div class="betaal-opties">
             <label class="bg-main-payed border-main-payed flex flex-col">
               <h4>Betaal het volledige bedrag</h4>
-              <h4 class="text-xl ml-auto mt-auto !mb-0 font-bold w-fit">€{{$prijs}},-</h4>
+              <h4 class="text-xl ml-auto mt-auto !mb-0 font-bold w-fit">€<span id="betaalOptiesPrijsVol">{{$prijs}}</span>,-</h4>
               <input type="radio" name="betaal_optie" value="2" checked/>
             </label>
             <label class="bg-main-payed border-main-payed flex flex-col">
-              <h4>Helft contant</h4>
-              <p>Betaal €{{$prijs / 2}},- aan en voldoe de overige €{{$prijs / 2}},- contant op de dag van jouw ceremonie</p>
-              <h4 class="text-xl ml-auto mt-auto !mb-0 font-bold w-fit">€{{$prijs / 2}},-</h4>
+              <h4>Deels contant</h4>
+              <p>Betaal €<span class="betaalOptiesPrijsDeels">{{$prijs / 2}}</span>,- aan en voldoe de overige €<span id="betaalOptiesPrijsDeelsContant">{{$prijs / 2}}</span>,- contant op de dag van jouw ceremonie</p>
+              <h4 class="text-xl ml-auto mt-auto !mb-0 font-bold w-fit">€<span class="betaalOptiesPrijsDeels">{{$prijs / 2}}</span>,-</h4>
               <input type="radio" name="betaal_optie" value="0"/>
             </label>
           </div>
@@ -136,6 +181,49 @@
 @endif
 
 <script>
+  function setDuo(){
+    form = document.getElementById('duo_deelnemer_form')
+    form.classList.remove('hidden')
+
+    inputs = [... form.getElementsByTagName('input')]
+    $notRequired = ['duo_deelnemer_tussenvoegsel']
+    inputs.forEach(input => {
+      if(!$notRequired.includes(input.name)){
+        input.required = true;
+      }
+    });
+
+    betaalOptiesPrijsVol = document.getElementById('betaalOptiesPrijsVol')
+    betaalOptiesPrijsVol.innerHTML = <?php echo $prijsDuo ?>
+
+    betaalOptiesPrijsDeels = document.getElementsByClassName('betaalOptiesPrijsDeels')
+    betaalOptiesPrijsDeelsContant = document.getElementById('betaalOptiesPrijsDeelsContant')
+    for (let i = 0; i < betaalOptiesPrijsDeels.length; i++) {
+      betaalOptiesPrijsDeels[i].innerHTML = <?php echo $prijsDuo - $prijsDuoContant ?>
+      
+    }
+    betaalOptiesPrijsDeelsContant.innerHTML = <?php echo $prijsDuoContant ?>
+    
+  }
+  function setDuoFalse(){
+    form = document.getElementById('duo_deelnemer_form')
+    form.classList.add('hidden')
+    inputs = [... form.getElementsByTagName('input')]
+    inputs.forEach(input => {
+      input.required = false;
+    });
+
+    betaalOptiesPrijsVol = document.getElementById('betaalOptiesPrijsVol')
+    betaalOptiesPrijsVol.innerHTML = <?php echo $prijs ?>
+
+    betaalOptiesPrijsDeels = document.getElementsByClassName('betaalOptiesPrijsDeels')
+    betaalOptiesPrijsDeelsContant = document.getElementById('betaalOptiesPrijsDeelsContant')
+    for (let i = 0; i < betaalOptiesPrijsDeels.length; i++) {
+      betaalOptiesPrijsDeels[i].innerHTML = <?php echo $prijs / 2 ?>
+      
+    }
+    betaalOptiesPrijsDeelsContant.innerHTML = <?php echo $prijs / 2 ?>
+  }
   function removeBorder(){
     ww.style.border = ''; 
     wwb.style.border = ''
