@@ -110,6 +110,19 @@
             @if($deelnemer->geboorte_plaats)
                 <p><span class="label">Geboorteplaats:</span> {{ $deelnemer->geboorte_plaats }}</p>
             @endif
+            @if($duo_deelnemer != null)
+              <h3>2de deelnemer gegevens</h3>
+              <p><span class="label">Naam:</span> {{ $duo_deelnemer->voornaam }} {{ $duo_deelnemer->tussenvoegsel }} {{ $duo_deelnemer->achternaam }}</p>
+              @if($duo_deelnemer->geboorte_datum)
+                  <p><span class="label">Geboortedatum:</span> {{ \Carbon\Carbon::parse($duo_deelnemer->geboorte_datum)->format('d-m-Y') }}</p>
+              @endif
+              @if($duo_deelnemer->geboorte_tijd)
+                  <p><span class="label">Geboortetijd:</span> {{ $duo_deelnemer->geboorte_tijd }}</p>
+              @endif
+              @if($duo_deelnemer->geboorte_plaats)
+                  <p><span class="label">Geboorteplaats:</span> {{ $duo_deelnemer->geboorte_plaats }}</p>
+              @endif
+            @endif
         </div>
         
         <div class="dates">

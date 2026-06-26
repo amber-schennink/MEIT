@@ -60,12 +60,22 @@ class CeremoniesController extends Controller {
       return Redirect::to('ceremonies');
       die();
     }
+
+    if($ceremonie->id_duo_deelnemer != null){
+      $duo_deelnemer = DB::table('duo_deelnemers')->where('id', '=', $ceremonie->id_duo_deelnemer)->first();
+      if($duo_deelnemer != null){
+        DB::table('duo_deelnemers')->delete($duo_deelnemer);
+      }
+    }
     
     DB::table('ceremonies')->where([
         ['id', '=', $id]
       ])->update([
       'id_deelnemer' => NULL,
       'pending_deelnemer_id' => NULL,
+      'duo'           => 0,
+      'id_duo_deelnemer' => NULL,
+      'pending_duo_deelnemer_id' => NULL,
       'betaal_status' => NULL,
       'updated_at' => now(),
       'amount_paid' => 0,

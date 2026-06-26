@@ -58,12 +58,34 @@ class CeremonieCheckoutController extends Controller
         ->orderByDesc('id')
         ->first();
 
-      $idDuoDeelnemer = $this->handleDuoDeelnemerData($request);
-      $prijsEuro   = (float) Config::get('info.prijs');
-      $amountFull  = (int) round($prijsEuro * 100);
-      $amountHalf  = (int) round(($prijsEuro / 2) * 100);
       $betaalOptie = (int) $request->input('betaal_optie');
       $duoOptie = (int) $request->input('duo_optie');
+
+      $idDuoDeelnemer = $duoOptie === 1
+        ? $this->handleDuoDeelnemerData($request)
+        : null;
+      // $prijsEuro   = (float) Config::get('info.prijs');
+      // $amountFull  = (int) round($prijsEuro * 100);
+      // $amountHalf  = (int) round(($prijsEuro / 2) * 100);
+
+      // Prijzen
+      $prijsNormaalEuro     = (float) Config::get('info.prijs'); // 444
+      $prijsDuoEuro         = (float) Config::get('info.prijs_duo'); // 777
+      $prijsDuoContantEuro  = (float) Config::get('info.prijs_duo_contant'); // 333
+
+      // Totaalprijs bepalen
+      $totaalEuro = $duoOptie === 1
+          ? $prijsDuoEuro
+          : $prijsNormaalEuro;
+
+      // Contant restbedrag bij deels betalen
+      $contantRestEuro = $duoOptie === 1
+          ? $prijsDuoContantEuro
+          : ($prijsNormaalEuro / 2);
+
+      // Bedragen in centen
+      $amountFull    = (int) round($totaalEuro * 100);
+      $amountHalf = (int) round(($totaalEuro - $contantRestEuro) * 100);
 
       // 🔁 FAKE mode (true = Stripe overslaan)
       $skipPayment = filter_var(env('PAYMENT_FAKE', false), FILTER_VALIDATE_BOOLEAN);
@@ -128,6 +150,7 @@ class CeremonieCheckoutController extends Controller
 
         // Verstuur emails ook bij fake payment
         $deelnemer_mail = DB::table('deelnemers')->where('id', $idDeelnemer)->first();
+        $duo_deelnemer_mail = DB::table('duo_deelnemers')->where('id', $ceremonie->pending_duo_deelnemer_id)->first();
         $ceremonie_mail = DB::table('ceremonies')->where('id', $ceremonieId)->first();
 
         // try {
@@ -151,8 +174,28 @@ class CeremonieCheckoutController extends Controller
         return redirect($nextUrl)->with('msg', $msg);
       }
 
-      $checkoutDescription = "Met deze aanbetaling is jouw plek officieel bevestigd. De overige €222,- betaal je contant op de dag van je ceremonie. "
+      $description = "";
+      if($duoOptie === 0){
+        if($betaalOptie === 2){
+          $description = "Wat moedig dat je hier bent! Met deze betaling is jouw ceremonie officieel bevestigd. "
         ."Na betaling ontvang je een bevestigingsmail en neem ik snel contact met je op!";
+        }elseif($betaalOptie === 0){
+          $description = "Met deze aanbetaling is jouw plek officieel bevestigd. De overige €222,- betaal je contant op de dag van je ceremonie. "
+        ."Na betaling ontvang je een bevestigingsmail en neem ik snel contact met je op!";
+        }
+      }elseif($duoOptie === 1){
+        if($betaalOptie === 2){
+          $description = "Wat moedig dat jullie hier zijn! Met deze betaling is jullie plek voor de ceremonie officieel bevestigd. "
+        ."Na betaling ontvangen jullie een bevestigingsmail en neem ik zo snel mogelijk contact met jullie op om alles verder af te stemmen. ♡";
+        }elseif($betaalOptie === 0){
+          $description = "Met deze aanbetaling is jullie plek officieel bevestigd. Het resterende bedrag van €333,- mogen jullie contant betalen op de dag van de ceremonie. "
+        ."Na betaling ontvangen jullie een bevestigingsmail en neem ik snel contact met jullie op om alles verder af te stemmen. ♡";
+        }
+      }
+
+      $checkoutDescription = $description;
+      // $checkoutDescription = "Met deze aanbetaling is jouw plek officieel bevestigd. De overige €222,- betaal je contant op de dag van je ceremonie. "
+      //   ."Na betaling ontvang je een bevestigingsmail en neem ik snel contact met je op!";
 
       $checkoutImageUrl = secure_asset('assets/logo.png');
 
@@ -276,18 +319,21 @@ class CeremonieCheckoutController extends Controller
       // Haal deelnemer en training op voor de emails
       $ceremonie_mail = DB::table('ceremonies')->where('id', $ceremonie->id)->first();
       $deelnemer_mail = DB::table('deelnemers')->where('id', $ceremonie_mail->id_deelnemer)->first();
+      $duo_deelnemer_mail = $ceremonie->pending_duo_deelnemer_id != null
+        ? DB::table('duo_deelnemers')->where('id', $ceremonie->pending_duo_deelnemer_id)->first()
+        : null;
 
       // Verstuur emails
       try {
         // Email naar admin bij nieuwe aanmelding
         $adminEmail = Config::get('info.admin_email');
         if ($adminEmail) {
-          Mail::to($adminEmail)->send(new NieuweCeremonieAanmelding($deelnemer_mail, $ceremonie_mail));
+          Mail::to($adminEmail)->send(new NieuweCeremonieAanmelding($deelnemer_mail, $ceremonie_mail, $duo_deelnemer_mail));
         }
 
         // Bevestigingsmail naar deelnemer
         if ($deelnemer_mail && $deelnemer_mail->email) {
-          Mail::to($deelnemer_mail->email)->send(new BevestigingCeremonieAanmelding($deelnemer_mail, $ceremonie_mail));
+          Mail::to($deelnemer_mail->email)->send(new BevestigingCeremonieAanmelding($deelnemer_mail, $ceremonie_mail, $duo_deelnemer_mail));
         }
       } catch (\Exception $e) {
         // Log de fout maar laat de redirect doorgaan
@@ -339,6 +385,10 @@ class CeremonieCheckoutController extends Controller
     //     DB::table('deelnemers')->where('id', $deelnemerId)->delete();
     //   }
     // }
+
+    if ($duoDeelnemerId && DB::table('duo_deelnemers')->where('id', $duoDeelnemerId)->first()) {
+      DB::table('duo_deelnemers')->where('id', $duoDeelnemerId)->delete();
+    }
 
     // Uitloggen + sessie opschonen
     session()->forget([

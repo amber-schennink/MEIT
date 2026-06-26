@@ -87,6 +87,9 @@
             <h3>Jouw gegevens</h3>
             <p><strong>Naam:</strong> {{ $deelnemer->voornaam }} {{ $deelnemer->tussenvoegsel }} {{ $deelnemer->achternaam }}</p>
             <p><strong>E-mail:</strong> {{ $deelnemer->email }}</p>
+            @if($duo_deelnemer != null)
+              <p><strong>Naam 2de persoon:</strong> {{ $duo_deelnemer->voornaam }} {{ $duo_deelnemer->tussenvoegsel }} {{ $duo_deelnemer->achternaam }}</p>
+            @endif
         </div>
         
         <div class="dates">
