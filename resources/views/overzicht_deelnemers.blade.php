@@ -6,6 +6,8 @@
       use Illuminate\Support\Facades\Config;
       $maanden = Config::get('info.maanden');
       $prijs = Config::get('info.prijs');
+      $prijsDuo = Config::get('info.prijs_duo');
+      $prijsDuoContant = Config::get('info.prijs_duo_contant');
       $file_type = 'overzicht';
     ?>
     @include('partials.nav')
@@ -86,12 +88,57 @@
                 </div>
                 <div>
                   @if($ceremonie->betaal_status == 0)
+                    @if($ceremonie->duo == 1 && $ceremonie->id_duo_deelnemer != null)
+                    <div>
+                      <p class="text-orange-400">Betaal €{{$prijsDuoContant}} contant op {{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}</p>
+                    </div>
+                    @else
                     <div>
                       <p class="text-orange-400">Betaal €{{$prijs/2}} contant op {{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}</p>
                     </div>
+                    @endif
                   @else
                     <div>
                       <p class="text-green-400">Betaald</p>
+                    </div>
+                  @endif
+                  @if($ceremonie->duo == 1 && $ceremonie->id_duo_deelnemer != NULL)
+                    @php
+                      $duo_deelnemer = $duo_deelnemers->where('id', '=', $ceremonie->id_duo_deelnemer)->first();
+                    @endphp
+                    <div class="cursor-pointer" onclick="this.nextElementSibling.classList.remove('!hidden')">
+                      <p>Met: {{$duo_deelnemer->voornaam}} {{$duo_deelnemer->tussenvoegsel}} {{$duo_deelnemer->achternaam}}</p>
+                    </div>
+                    <div class="!hidden pop-up" onclick="this.classList.add('!hidden')">
+                      <div>
+                        <h4>Info 2de deelnemer duo ceremonie</h4>
+                        <div class="flex items-center !justify-center">
+                          <img src="{{asset('assets/user.svg')}}" /> 
+                          <p>{{$duo_deelnemer->voornaam}} {{$duo_deelnemer->tussenvoegsel}} {{$duo_deelnemer->achternaam}}</p>
+                        </div>
+                        <div class="flex items-center">
+                          @if(isset($duo_deelnemer->geboorte_datum))
+                            <img src="{{asset('assets/date.svg')}}" /> 
+                            <?php 
+                              $datetime = null;
+                              $datetime = new DateTime($duo_deelnemer->geboorte_datum);
+                            ?>
+                            <p>{{$datetime->format('j')}} {{$maanden[$datetime->format('m') - 1]}} {{$datetime->format('Y')}}</p>
+                          @endif
+                          @if(isset($duo_deelnemer->geboorte_tijd))
+                            <img src="{{asset('assets/time.svg')}}" /> 
+                            <?php 
+                              $datetime = null;
+                              $datetime = new DateTime($duo_deelnemer->geboorte_tijd);
+                            ?>
+                            <p>{{$datetime->format('H:i')}}</p>
+                          @endif
+                          @if(isset($duo_deelnemer->geboorte_plaats))
+                            <img src="{{asset('assets/location.svg')}}" /> 
+                            <p>{{$duo_deelnemer->geboorte_plaats}}</p>
+                          @endif
+                        </div>
+                      </div>
                     </div>
                   @endif
                   <a href="https://www.meit.nl/ceremonie"><button>Meer informatie -></button></a>

@@ -15,13 +15,15 @@ class NieuweCeremonieAanmelding extends Mailable
 
     public $deelnemer;
     public $ceremonie;
+    public $duo_deelnemer;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($deelnemer, $ceremonie)
+    public function __construct($deelnemer, $ceremonie, $duo_deelnemer_mail)
     {
         $this->deelnemer = $deelnemer;
+        $this->duo_deelnemer = $duo_deelnemer_mail;
         $this->ceremonie = $ceremonie;
     }
 

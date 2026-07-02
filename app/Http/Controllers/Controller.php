@@ -132,4 +132,32 @@ abstract class Controller
     }
     return $id_deelnemer;
   }
+  public function handleDuoDeelnemerData($request){
+    $request->validate([
+      'duo_deelnemer_voornaam'                  => 'required|string',
+      'duo_deelnemer_achternaam'                => 'required|string',
+      'duo_geboorte_datum'                      => 'required|date',
+      'duo_geboorte_tijd'                       => 'required|string',
+      'duo_geboorte_plaats'                     => 'required|string',
+    ], [
+      'duo_geboorte_datum.required'       => 'Vul je geboortedatum in.',
+      'duo_geboorte_tijd.required'        => 'Vul je geboortetijd in.',
+      'duo_geboorte_plaats.required'      => 'Vul je geboorteplaats in.',
+    ], [
+      'duo_deelnemer_voornaam'                   => 'voornaam',
+      'duo_deelnemer_achternaam'                 => 'achternaam',
+    ]);
+    $data_deelnemer = array(
+      "voornaam" => $request->duo_deelnemer_voornaam,
+      "tussenvoegsel" => $request->duo_deelnemer_tussenvoegsel,
+      "achternaam" => $request->duo_deelnemer_achternaam,
+      "geboorte_datum" => $request->duo_geboorte_datum,
+      "geboorte_tijd" => $request->duo_geboorte_tijd,
+      "geboorte_plaats" => $request->duo_geboorte_plaats,
+    );
+    DB::table('duo_deelnemers')->insert($data_deelnemer);
+    $id_duo_deelnemer = DB::getPdo()->lastInsertId();
+
+    return $id_duo_deelnemer;
+  }
 }

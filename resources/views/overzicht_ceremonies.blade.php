@@ -85,6 +85,49 @@
                   <a onclick="showPopUpDeelnemerToevoegen('{{$ceremonie->id}}', `{{$datum->format('j')}} {{$maanden[$datum->format('m') - 1]}}`)"><button class="w-full !min-w-0 !text-sm">Deelnemer toevoegen</button></a>
                 @endif
               </div>
+              @if($deelnemer && $ceremonie->duo == 1 && $ceremonie->id_duo_deelnemer != NULL)
+                @php
+                  $duo_deelnemer = $duo_deelnemers->where('id', '=', $ceremonie->id_duo_deelnemer)->first();
+                @endphp
+                <div class="cursor-pointer" onclick="this.nextElementSibling.classList.remove('!hidden')">
+                  <p><strong>Duo ceremonie met:</strong></p>
+                  <div class="flex items-center !justify-center">
+                    <img src="{{asset('assets/user.svg')}}" /> 
+                    <p>{{$duo_deelnemer->voornaam}} {{$duo_deelnemer->tussenvoegsel}} {{$duo_deelnemer->achternaam}}</p>
+                  </div>
+                </div>
+                <div class="!hidden pop-up" onclick="this.classList.add('!hidden')">
+                  <div class="!block">
+                    <h4>Info 2de deelnemer duo ceremonie</h4>
+                    <div class="flex items-center !justify-center">
+                      <img src="{{asset('assets/user.svg')}}" /> 
+                      <p>{{$duo_deelnemer->voornaam}} {{$duo_deelnemer->tussenvoegsel}} {{$duo_deelnemer->achternaam}}</p>
+                    </div>
+                    <div class="flex items-center">
+                      @if(isset($duo_deelnemer->geboorte_datum))
+                        <img src="{{asset('assets/date.svg')}}" /> 
+                        <?php 
+                          $datetime = null;
+                          $datetime = new DateTime($duo_deelnemer->geboorte_datum);
+                        ?>
+                        <p>{{$datetime->format('j')}} {{$maanden[$datetime->format('m') - 1]}} {{$datetime->format('Y')}}</p>
+                      @endif
+                      @if(isset($duo_deelnemer->geboorte_tijd))
+                        <img src="{{asset('assets/time.svg')}}" /> 
+                        <?php 
+                          $datetime = null;
+                          $datetime = new DateTime($duo_deelnemer->geboorte_tijd);
+                        ?>
+                        <p>{{$datetime->format('H:i')}}</p>
+                      @endif
+                      @if(isset($duo_deelnemer->geboorte_plaats))
+                        <img src="{{asset('assets/location.svg')}}" /> 
+                        <p>{{$duo_deelnemer->geboorte_plaats}}</p>
+                      @endif
+                    </div>
+                  </div>
+                </div>
+              @endif
               <a class="mt-auto" href="/ceremonie_form/{{$ceremonie->id}}"><button class="w-full mt-10">Aanpassen</button></a>
               <a onclick="showPopUpVerwijderCeremonie('{{$ceremonie->id}}')"><button class="w-full !bg-red-600/90 hover:!bg-red-700/90 mt-3">Verwijderen</button></a>
             </div>

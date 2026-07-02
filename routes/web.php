@@ -102,10 +102,11 @@ Route::get('/overzicht', function () {
     $deelnemers = DB::table('deelnemers')->get();
 
     $ceremonies = DB::table('ceremonies')->get();
+    $duo_deelnemers = DB::table('duo_deelnemers')->get();
 
     return view('overzicht', [
       'trainingen' => $trainingen, 'aanmeldingen' => $aanmeldingen, 'deelnemers' => $deelnemers, 
-      'ceremonies' => $ceremonies
+      'ceremonies' => $ceremonies,'duo_deelnemers' => $duo_deelnemers
     ]);
   }else{
     $deelnemer = DB::table('deelnemers')->where('id', '=', session('id'))->first();
@@ -117,10 +118,11 @@ Route::get('/overzicht', function () {
     $wachtlijst = DB::table('trainingen')->whereIn('id', $aanmeldingen_wachtlijst)->orderBy('id','desc')->get();
     
     $ceremonies = DB::table('ceremonies')->where('id_deelnemer', '=', session('id'))->orderBy('datum')->get();
+    $duo_deelnemers = DB::table('duo_deelnemers')->get();
 
     return view('overzicht_deelnemers', [
       'trainingen' => $trainingen, 'aanmeldingen' => $aanmeldingen, 'deelnemer' => $deelnemer, 'wachtlijst' => $wachtlijst, 
-      'ceremonies' => $ceremonies
+      'ceremonies' => $ceremonies,'duo_deelnemers' => $duo_deelnemers
     ]);
   }
 });
@@ -153,10 +155,11 @@ Route::get('/deelnemers/{id}', function ($id) {
   $wachtlijst = DB::table('trainingen')->whereIn('id', $aanmeldingen_wachtlijst)->orderBy('id','desc')->get();
 
   $ceremonies = DB::table('ceremonies')->where('id_deelnemer', '=', $id)->orderBy('datum')->get();
+  $duo_deelnemers = DB::table('duo_deelnemers')->get();
 
   return view('overzicht_deelnemers', [
       'id' => $id, 'admin' => true, 'trainingen' => $trainingen, 'aanmeldingen' => $aanmeldingen, 'deelnemer' => $deelnemer, 'wachtlijst' => $wachtlijst, 
-      'ceremonies' => $ceremonies,
+      'ceremonies' => $ceremonies, 'duo_deelnemers' => $duo_deelnemers
     ]);
 });
 
@@ -190,9 +193,10 @@ Route::get('ceremonies', function (){
   if(session('admin') == true){
     $deelnemers = DB::table('deelnemers')->get();
     $ceremonies = DB::table('ceremonies')->orderBy('datum')->get();
+    $duo_deelnemers = DB::table('duo_deelnemers')->get();
 
     return view('overzicht_ceremonies', [
-      'deelnemers' => $deelnemers, 'ceremonies' => $ceremonies
+      'deelnemers' => $deelnemers, 'ceremonies' => $ceremonies, 'duo_deelnemers' => $duo_deelnemers
     ]);
   }else{
     $deelnemers = DB::table('deelnemers')->get();

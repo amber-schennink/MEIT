@@ -218,7 +218,7 @@ input[type=text], input[type=email], input[type=tel], input[type=password], inpu
 }
 
 #pop-up, .pop-up {
-  @apply fixed flex top-0 left-0 h-screen w-screen bg-gray-600/30
+  @apply !fixed flex top-0 left-0 !h-screen !w-screen !bg-gray-600/30
 }
 #pop-up > div, .pop-up > div{
   @apply m-auto bg-main px-8 py-6 rounded-xl border-4 border-main-light max-w-screen
