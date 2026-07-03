@@ -296,7 +296,9 @@ class CeremonieCheckoutController extends Controller
       $amountReceived  = (int) ($pi->amount_received ?? 0);
       $paymentMethodId = $pi->payment_method ?? null;
 
-      $prijsEuro    = (float) Config::get('info.prijs');
+      $prijsEuro    = (int) $ceremonie->duo === 1
+        ? (float) Config::get('info.prijs_duo')
+        : (float) Config::get('info.prijs');
       $totaalCents  = (int) round($prijsEuro * 100);
       $nieuweStatus = ($amountReceived >= $totaalCents) ? 2 : 0; // 2=volledig, 0=deels
 

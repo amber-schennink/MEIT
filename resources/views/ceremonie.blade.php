@@ -51,7 +51,7 @@
         
         <div class="betaal-opties">
           <label class="bg-second-darker border-second-darker flex flex-col">
-            <h4>Elkel persoon ceremonie</h4>
+            <h4>Individuele ceremonie</h4>
             <input onchange="setDuoFalse()" type="radio" name="duo_optie" value="0" checked/>
           </label>
           <label class="bg-second-darker border-second-darker flex flex-col">
