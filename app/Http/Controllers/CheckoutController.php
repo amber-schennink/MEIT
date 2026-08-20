@@ -233,7 +233,7 @@ class CheckoutController extends Controller
             return redirect($nextUrl)->with('msg', $msg);
         }
 
-        $checkoutDescription = "Welkom bij de Pilot van het MEIT-traject! Met deze betaling bevestig je jouw deelname. "
+        $checkoutDescription = "Welkom bij het MEIT-traject! Met deze betaling bevestig je jouw deelname. "
             ."Jouw plek is hiermee officieel gereserveerd. Na betaling ontvang je binnen 48 uur een mail met alle details.";
 
         $checkoutImageUrl = secure_asset('assets/logo.png');
@@ -293,7 +293,7 @@ class CheckoutController extends Controller
                     'currency'    => 'eur',
                     'unit_amount' => $amountHalf,
                     'product_data'=> [
-                        'name'        => 'MEIT. Traject (Pilot) – aanbetaling',
+                        'name'        => 'MEIT. Traject – aanbetaling',
                         'description' => $checkoutDescription,
                         'images'      => [$checkoutImageUrl],
                     ],
